@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "node ./src/server/server",
+    "server": "gulp default && node ./src/server/server",
     "client": "cd ./src/client && npm start",
     "test": "./node_modules/mocha/bin/_mocha"
   },
