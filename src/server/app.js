@@ -8,6 +8,7 @@
   const appConfig = require('./config/main-config.js');
   const routeConfig = require('./config/route-config.js');
   const errorConfig = require('./config/error-config.js');
+  const mongoConfig = require('./config/mongo-config.js');
 
   // *** express instance *** //
   const app = express();
@@ -16,6 +17,7 @@
   appConfig.init(app, express);
   routeConfig.init(app);
   errorConfig.init(app);
+  mongoConfig.init(app);
 
   module.exports = app;
 
