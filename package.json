@@ -2,7 +2,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./src/server/server",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "node ./src/server/server",
+    "client": "cd ./src/client && npm start",
     "test": "./node_modules/mocha/bin/_mocha"
   },
   "dependencies": {
@@ -19,6 +21,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
+    "concurrently": "^3.5.0",
     "gulp-jscs": "^4.0.0",
     "gulp-jshint": "^2.0.1",
     "gulp-nodemon": "^2.1.0",
