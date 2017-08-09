@@ -15,4 +15,16 @@ router.get('/', function (req, res, next) {
   });
 });
 
+router.get('/api/test', function (req, res, next) {
+  const renderObject = {};
+  renderObject.title = 'Welcome to Express!';
+  indexController.sum(1, 2, (error, results) => {
+    if (error) return next(error);
+    if (results) {
+      renderObject.sum = results;
+      res.json(renderObject);
+    }
+  });
+});
+
 module.exports = router;
