@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+//^allows params to be undefined?
 function search(query, cb) {
   return fetch(`api/test`, {
     accept: "application/json"
