@@ -30,9 +30,10 @@ AccountSchema.statics = {
   },
   list(){// returns all accounts
     return this.find()
-      .sort({})
+      .sort({name: 1})
+      .exec();
   }
-}
+};
 
 // methods can be called on any instance of a model
 AccountSchema.methods.getBalance = function(coinType){
