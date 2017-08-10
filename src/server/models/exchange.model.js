@@ -14,8 +14,9 @@ const ExchangeSchema = new mongoose.Schema({
   service: Number,// rating
   ux: Number,// rating
   support: Number,// rating
-  verify: Boolean,
+  verify: Boolean,// identity verification
   margin: Boolean,
+  auction: Boolean,
   orderTypes: [String],
   purchaseOptions: [String],// debit/credit, paypal...
   coinsSupported: [String]
