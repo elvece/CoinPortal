@@ -1,5 +1,30 @@
 const Exchange = require('../models/exchange.model.js');
 
+// create new exchange data
+function create(){
+  const exchange = new Exchange({
+    name = req.body.name;
+    fee = req.body.fee;
+    twitter.account = req.body.twitter.account;
+    twitter.url = req.body.twitter.url;
+    twitter.reddit.account = req.body.reddit.account;
+    twitter.reddit.url = req.body.reddit.url;
+    service = req.body.service;
+    ux = req.body.ux;
+    support = req.body.support;
+    verify = req.body.verify;
+    margin = req.body.margin;
+    auction = req.body.auction;
+    orderTypes.push(req.body.newOrderType);
+    purchaseOptions.push(req.body.newPurchaseType);
+    coinSupported.push(req.body.newCoin);
+  });
+
+  exchange.save()
+          .then(savedExchange => res.json(savedExchange))
+          .catch(e => next(e))
+}
+
 // get all exchanges
 function list(req, res, next){
   Exchange.list()
