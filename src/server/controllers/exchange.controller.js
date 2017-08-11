@@ -35,7 +35,7 @@ function list(req, res, next){
           .catch(e => next(e));
 }
 
-// load user and append to req
+// load exchange and append to req
 function load(req, res, next, id){
   Exchange.get(id)
     .then((exchange) => {
@@ -43,6 +43,15 @@ function load(req, res, next, id){
       return next();
     })
     .catch(e => next(e));
+}
+
+// deletes exchange
+function remove(req, res, next){
+  const exchange = req.exchange;
+  exchange.remove()
+          .then(deletedExchange => res.json(deletedExchange))
+          .catch(e => next(e))
+
 }
 
 // update one exchange
@@ -68,5 +77,5 @@ function update(req, res, next){
 }
 
 module.exports = {
-  create, get, list, load, update
+  create, get, list, load, remove, update
 }
