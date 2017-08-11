@@ -1,5 +1,20 @@
 const Exchange = require('../models/exchange.model.js');
 
+// load user and append to req
+function load(req, res, next, id){
+  Exchange.get(id)
+    .then((exchange) => {
+      req.exchange = exchange;
+      return next();
+    })
+    .catch(e => next(e));
+}
+
+// get one exchange
+function get(req, res){
+  return res.json(req.exchange);
+}
+
 // create new exchange data
 function create(){
   const exchange = new Exchange({
