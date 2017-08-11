@@ -5,7 +5,7 @@
   routeConfig.init = function (app) {
 
     // *** routes *** //
-    const routes = require('../routes/index');
+    const routes = require('../routes/index.route');
 
     // *** register routes *** //
     app.use('/', routes);

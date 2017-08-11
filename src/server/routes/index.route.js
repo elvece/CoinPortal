@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const exchangeRoutes = require('./exchange.routes');
+const exchangeRoutes = require('./exchange.route');
 
 // GET /sanity-check - checks service working
 router.get('/sanity-check', function (req, res, next) {

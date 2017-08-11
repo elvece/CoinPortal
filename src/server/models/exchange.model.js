@@ -2,15 +2,15 @@ const mongoose = require('mongoose');
 const Promise = require('bluebird');
 
 const ExchangeSchema = new mongoose.Schema({
-  id: Schema.Types.ObjectId,
+  id: mongoose.Schema.Types.ObjectId,
   name: {
     type: String,
     unique: true,
     required: true
   },
   fee: Number,
-  twitter: Schema.Types.Mixed,// will include boolean and url
-  reddit: Schema.Types.Mixed,// will include boolean and subredddit url
+  twitter: mongoose.Schema.Types.Mixed,// will include boolean and url
+  reddit: mongoose.Schema.Types.Mixed,// will include boolean and subredddit url
   service: Number,// rating
   ux: Number,// rating
   support: Number,// rating
@@ -40,6 +40,4 @@ ExchangeSchema.statics = {
   }
 };
 
-module.exports = {
-  mongoose.model('Exchanges', ExchangeSchema);
-};
+module.exports = mongoose.model('Exchanges', ExchangeSchema);
