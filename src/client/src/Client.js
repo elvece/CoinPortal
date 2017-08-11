@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 //^allows params to be undefined?
 function search(query, cb) {
-  return fetch(`sanity-check`, {
+  return fetch(`api/exchanges/`, {
     accept: "application/json"
   })
     .then(checkStatus)
