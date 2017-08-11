@@ -1,7 +1,8 @@
 const Exchange = require('../models/exchange.model.js');
 
 // create new exchange data
-function create(){
+function create(req, res, next){
+  console.log(req.body)
   const exchange = new Exchange({
     name: req.body.name,
     fee: req.body.fee,

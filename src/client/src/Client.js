@@ -1,13 +1,25 @@
 /* eslint-disable no-undef */
 //^allows params to be undefined?
-function search(query, cb) {
-  return fetch(`api/exchanges/`, {
-    accept: "application/json"
+function getStuff(url, cb) {
+  return fetch(url, {
+    accept: 'application/json'
   })
     .then(checkStatus)
     .then(parseJSON)
     // .then(cb);
     .then(logData);
+}
+
+function postStuff(url, data){
+  console.log(url, data)
+  const formData = new FormData().append( 'json', JSON.stringify(data));
+  return fetch(url, {
+    method: 'POST',
+    headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+    body: formData
+  }).then(checkStatus)
+    .then(parseJSON)
+    .then(logData)
 }
 
 function checkStatus(response) {
@@ -29,5 +41,5 @@ function logData(response){
   console.log(response);
 }
 
-const Client = { search };
+const Client = { getStuff, postStuff };
 export default Client;
