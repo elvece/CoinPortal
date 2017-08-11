@@ -1,20 +1,5 @@
 const Exchange = require('../models/exchange.model.js');
 
-// load user and append to req
-function load(req, res, next, id){
-  Exchange.get(id)
-    .then((exchange) => {
-      req.exchange = exchange;
-      return next();
-    })
-    .catch(e => next(e));
-}
-
-// get one exchange
-function get(req, res){
-  return res.json(req.exchange);
-}
-
 // create new exchange data
 function create(){
   const exchange = new Exchange({
@@ -40,11 +25,26 @@ function create(){
           .catch(e => next(e))
 }
 
+// get one exchange
+function get(req, res){
+  return res.json(req.exchange);
+}
+
 // get all exchanges
 function list(req, res, next){
   Exchange.list()
           .then(exchanges => res.json(exchanges))
           .catch(e => next(e));
+}
+
+// load user and append to req
+function load(req, res, next, id){
+  Exchange.get(id)
+    .then((exchange) => {
+      req.exchange = exchange;
+      return next();
+    })
+    .catch(e => next(e));
 }
 
 // update one exchange
@@ -69,4 +69,8 @@ function update(req, res, next){
   exchange.save()
           .then(updatedExchange => res.json(updatedExchange))
           .catch(e => next(e));
+}
+
+module.exports = {
+  create, get, list, load, update
 }
