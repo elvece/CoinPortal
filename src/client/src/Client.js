@@ -11,12 +11,12 @@ function getStuff(url, cb) {
 }
 
 function postStuff(url, data){
-  console.log(url, data)
-  const formData = new FormData().append( 'json', JSON.stringify(data));
   return fetch(url, {
     method: 'POST',
-    headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
-    body: formData
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
   }).then(checkStatus)
     .then(parseJSON)
     .then(logData)
