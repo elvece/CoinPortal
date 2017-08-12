@@ -6,7 +6,7 @@ function getStuff(url, cb) {
   })
     .then(checkStatus)
     .then(parseJSON)
-    // .then(cb);
+    .then(cb)
     .then(logData);
 }
 
