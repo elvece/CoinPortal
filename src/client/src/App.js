@@ -76,7 +76,7 @@ class ExchangeTable extends Component {
   }
   render(){
     return (
-      <table className="Exchange-table">
+      <table className="table">
         <thead>
           <tr>
             {Object.keys(this.state.exchanges[0]).map(title =>
@@ -87,7 +87,7 @@ class ExchangeTable extends Component {
         <tbody>
           {this.state.exchanges.map((row, i) =>
             <tr key={i}>
-              {Object.keys(row).map((col, j)=>
+              {Object.keys(row).map((col, j) =>
                 <td key={j}>{row[col]}</td>
               )}
             </tr>
