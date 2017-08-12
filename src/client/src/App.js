@@ -78,11 +78,7 @@ class ExchangeTable extends Component {
     return (
       <table className="table">
         <thead>
-          <tr>
-            {Object.keys(this.state.exchanges[0]).map(title =>
-              <th key={title}>{title}</th>
-            )}
-          </tr>
+          <ExchangeHeader titles={Object.keys(this.state.exchanges[0])}></ExchangeHeader>
         </thead>
         <tbody>
           {this.state.exchanges.map((row, i) =>
@@ -91,6 +87,18 @@ class ExchangeTable extends Component {
         </tbody>
       </table>
     );
+  }
+}
+
+class ExchangeHeader extends Component {
+  render() {
+    return(
+      <tr>
+        {this.props.titles.map(title =>
+          <th key={title}>{title}</th>
+        )}
+      </tr>
+    )
   }
 }
 
