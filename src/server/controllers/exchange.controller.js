@@ -6,6 +6,8 @@ function create(req, res, next){
   const exchange = new Exchange({
     name: req.body.name,
     fee: req.body.fee,
+    website: req.body.website,
+    account: req.body.account,
     twitter: req.body.twitter,
     reddit: req.body.reddit,
     service: req.body.service,
@@ -60,6 +62,8 @@ function update(req, res, next){
   const exchange = req.exchange;
   exchange.name = req.body.name;
   exchange.fee = req.body.fee;
+  exchange.website = req.body.account;
+  exchange.account = req.body.account;
   exchange.twitter = req.body.twitter;
   exchange.reddit = req.body.reddit;
   exchange.service = req.body.service;

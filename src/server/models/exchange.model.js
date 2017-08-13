@@ -9,6 +9,8 @@ const ExchangeSchema = new mongoose.Schema({
     required: true
   },
   fee: Number,
+  website: String,
+  account: Boolean,
   twitter: mongoose.Schema.Types.Mixed,// will include boolean and url
   reddit: mongoose.Schema.Types.Mixed,// will include boolean and subredddit url
   service: Number,// rating
