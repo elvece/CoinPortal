@@ -38,11 +38,17 @@ function get(req, res){
 // get all exchanges
 function list(req, res, next){
   Exchange.list()
-          .then(exchanges => res.json(exchanges))
-          // .then((exchanges) => {
-          //   processPriceChange(exchanges).then(exchanges => res.json(exchanges))
-          // })
-          .catch(e => next(e));
+          // .then(exchanges => res.json(exchanges))
+          .then((exchanges) => {
+            processPriceChange(exchanges).then((exchanges) => {
+              console.log('***EXCHANGE TO SEND:'+exchanges)
+              res.json(exchanges);
+            })
+          })
+          .catch((e) => {
+            console.log(e);
+            next(e);
+          });
 }
 
 // load exchange and append to req
@@ -108,8 +114,8 @@ function update(req, res, next){
   exchange.save()
           .then(updatedExchange => res.json(updatedExchange))
           .catch((e) => {
-            console.log(e)
-            next(e)
+            console.log(e);
+            next(e);
           });
 }
 
@@ -123,22 +129,43 @@ function createNewCoin(data){
 }
 
 function getExternalExchangeData(url){
-  const result = {};
-  request(url)
-    .then(result = res)
-    .catch(console.log(e))
-  return Promise.resolve(result);
+   return request(url)
+    .then((data) => {
+      return data;
+    })
+    .catch((err) => {
+      console.log(err);
+      return err;
+    })
 }
 
 function processPriceChange(exchanges){
+  let promises = [];
   exchanges.forEach(function(exchange){
-    getExternalExchangeData(exchange.coinData['BTC'].url)
-      .then((result) => {
-        exchange.coinData['BTC'].price = result.last;
-        exchange.save();
-      })
-  })
-  return Promise.resolve(exchanges)
+    exchange.coinData.forEach(function(coin){
+      promises.push(getExternalExchangeData(coin.url)
+        .then((result) => {
+          result = JSON.parse(result);
+          coin.set({'price': result.last})
+          coin.save();
+          exchange.save();
+        })
+        .catch((e) => {
+          console.log(e);
+          next(e);
+        })
+    )});
+  });
+  // ensure all exchanges have processed updates before resolving
+  return Promise.all(promises)
+    .then(() => {
+      // need to return a promise for proper handling in route method
+      return new Promise((resolve) => {
+        return resolve(exchanges);
+      });
+    }).catch((e) => {
+        console.log(e)
+    });
 }
 
 function updatePriceData(data, id){
