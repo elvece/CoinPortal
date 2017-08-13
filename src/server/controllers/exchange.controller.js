@@ -1,4 +1,7 @@
-const Exchange = require('../models/exchange.model.js');
+const Exchange = require('../models/exchange.model.js').Exchange;
+const Coin = require('../models/exchange.model.js').Coin;
+const request = require('request-promise');
+const Promise = require('bluebird');
 
 // create new exchange data
 function create(req, res, next){
@@ -18,7 +21,8 @@ function create(req, res, next){
     auction: req.body.auction,
     orderTypes: req.body.orderTypes,
     purchaseOptions: req.body.purchaseTypes,
-    coinsSupported: req.body.coins
+    coinsSupported: req.body.coins,
+    coinData: req.body.coinData
   });
 
   exchange.save()
@@ -35,6 +39,9 @@ function get(req, res){
 function list(req, res, next){
   Exchange.list()
           .then(exchanges => res.json(exchanges))
+          // .then((exchanges) => {
+          //   processPriceChange(exchanges).then(exchanges => res.json(exchanges))
+          // })
           .catch(e => next(e));
 }
 
@@ -72,15 +79,64 @@ function update(req, res, next){
   exchange.verify = req.body.verify;
   exchange.margin = req.body.margin;
   exchange.auction = req.body.auction;
-  exchange.orderTypes.push(req.body.newOrderType);
-  exchange.purchaseOptions.push(req.body.newPurchaseType);
-  exchange.coinsSupported.push(req.body.newCoin);
+  // exchange.orderTypes.push(req.body.newOrderType);
+  // exchange.purchaseOptions.push(req.body.newPurchaseType);
+  // exchange.coinsSupported.push(req.body.newCoin);
+  if(exchange.coinData && exchange.coinData.length <= 0){
+    let newCoin = new Coin({
+      name: req.body.coinData.name,
+      url: req.body.coinData.url,
+      price: req.body.coinData.price,
+    });
+    exchange.coinData.push(newCoin);
+  } else {
+    //coins already exist - updating
+    exchange.coinData.forEach(function(coin, i){
+      if(coin.name === 'BTC' && req.body.coinData.name === 'BTC'){
+        exchange.coinData.set(i, req.body.coinData);
+      }
+      if(coin.name === 'ETH' && req.body.coinData.name === 'ETH'){
+        exchange.coinData.set(i, req.body.coinData);
+      }
+    })
+  }
+
+  console.log(req.body)
 
   exchange.save()
           .then(updatedExchange => res.json(updatedExchange))
-          .catch(e => next(e));
+          .catch((e) => {
+            console.log(e)
+            next(e)
+          });
+}
+
+function getExternalExchangeData(url){
+  const result = {};
+  request(url)
+    .then(result = res)
+    .catch(console.log(e))
+  return Promise.resolve(result);
+}
+
+function processPriceChange(exchanges){
+  exchanges.forEach(function(exchange){
+    getExternalExchangeData(exchange.coinData['BTC'].url)
+      .then((result) => {
+        exchange.coinData['BTC'].price = result.last;
+        exchange.save();
+      })
+  })
+  return Promise.resolve(exchanges)
+}
+
+function updatePriceData(data, id){
+  Exchange.get(id)
+    .then((exchange) => {
+      exchange.coinData = data
+    })
 }
 
 module.exports = {
-  create, get, list, load, remove, update
+  create, get, list, load, remove, update, processPriceChange
 }

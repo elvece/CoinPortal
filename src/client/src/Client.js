@@ -22,6 +22,18 @@ function postStuff(url, data){
     .then(logData)
 }
 
+function putStuff(url, data){
+  return fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  }).then(checkStatus)
+    .then(parseJSON)
+    .then(logData)
+}
+
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
@@ -41,5 +53,5 @@ function logData(response){
   console.log(response);
 }
 
-const Client = { getStuff, postStuff };
+const Client = { getStuff, postStuff, putStuff};
 export default Client;

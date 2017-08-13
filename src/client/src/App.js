@@ -74,15 +74,32 @@ class ExchangeTable extends Component {
         });
       })
   }
+  putStuff = (id) => {
+    const data = {
+      name: 'lvcEx',
+      coinData:
+        {
+          name: 'BTC',
+          url: 'https://api.gemini.com/v1/pubticker/btcusd',
+          price: 3600
+        }
+        // { name: 'ETH',
+        //   url: 'https://api.gemini.com/v1/pubticker/ethusd',
+        //   price: 300
+        // }
+    };
+    Client.putStuff(`api/exchanges/`+id, data);
+  }
+
   render(){
     return (
       <table className="table">
         <thead>
-          <ExchangeHeader titles={Object.keys(this.state.exchanges[0])}/>
+          <ExchangeHeader titles={this.state.exchanges[0] ? Object.keys(this.state.exchanges[0]) : []}/>
         </thead>
         <tbody>
           {this.state.exchanges.map((row, i) =>
-            <ExchangeRow row={row} key={i}/>
+            <ExchangeRow onClick={(id) => this.putStuff(id)} row={row} key={i}/>
           )}
         </tbody>
       </table>
@@ -107,8 +124,9 @@ class ExchangeRow extends Component {
     return (
       <tr>
         {Object.keys(this.props.row).map((col, j) =>
-          <td key={j}>{this.props.row[col]}</td>
+          this.props.row[col][0] && col === 'coinData' ? <td key={j}>{this.props.row[col][0].name+':'+ this.props.row[col][0].price}</td> : <td key={j}>{this.props.row[col]}</td>
         )}
+          <td><button onClick={() => this.props.onClick(this.props.row._id)}>Update</button></td>
       </tr>
     );
   }

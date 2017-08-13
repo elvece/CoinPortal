@@ -1,5 +1,13 @@
 const mongoose = require('mongoose');
+mongoose.set('debug', true)
+
 const Promise = require('bluebird');
+
+const CoinSchema = new mongoose.Schema({
+  name: String,
+  url: String,
+  price: Number
+});
 
 const ExchangeSchema = new mongoose.Schema({
   id: mongoose.Schema.Types.ObjectId,
@@ -22,7 +30,7 @@ const ExchangeSchema = new mongoose.Schema({
   orderTypes: [String],
   purchaseOptions: [String],// debit/credit, paypal...
   coinsSupported: [String],
-  coinData: mongoose.Schema.Types.Mixed //objects of coins, api url, and current price
+  coinData: [CoinSchema] //objects of coin name, api url, and current price
 });
 
 ExchangeSchema.statics = {
@@ -43,4 +51,7 @@ ExchangeSchema.statics = {
   }
 };
 
-module.exports = mongoose.model('Exchanges', ExchangeSchema);
+module.exports = {
+  Exchange: mongoose.model('Exchanges', ExchangeSchema),
+  Coin: mongoose.model('Coins', CoinSchema)
+};
