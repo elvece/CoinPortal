@@ -22,7 +22,7 @@ function create(req, res, next){
     orderTypes: req.body.orderTypes,
     purchaseOptions: req.body.purchaseTypes,
     coinsSupported: req.body.coins,
-    coinData: req.body.coinData
+    coinData: req.body.coinData//TODO change this to new coin schema
   });
 
   exchange.save()
@@ -82,25 +82,27 @@ function update(req, res, next){
   // exchange.orderTypes.push(req.body.newOrderType);
   // exchange.purchaseOptions.push(req.body.newPurchaseType);
   // exchange.coinsSupported.push(req.body.newCoin);
+
+  //if no coins yet exist in exchange.coinData
   if(exchange.coinData && exchange.coinData.length <= 0){
-    let newCoin = new Coin({
-      name: req.body.coinData.name,
-      url: req.body.coinData.url,
-      price: req.body.coinData.price,
-    });
-    exchange.coinData.push(newCoin);
-  } else {
-    //coins already exist - updating
-    exchange.coinData.forEach(function(coin, i){
-      if(coin.name === 'BTC' && req.body.coinData.name === 'BTC'){
-        exchange.coinData.set(i, req.body.coinData);
-      }
-      if(coin.name === 'ETH' && req.body.coinData.name === 'ETH'){
-        exchange.coinData.set(i, req.body.coinData);
-      }
+    //loop through all new coins in req.body
+    req.body.coinData.forEach(function(coin){
+      let newCoin = createNewCoin(coin);
+      exchange.coinData.push(newCoin);
     })
   }
-
+  //else if coins exist in exchange.coinData, does it match one that exists? if not, create it
+  else if(exchange.coinData && exchange.coinData.length > 0){
+    //use for loop for better performance, this is more readable imo
+    exchange.coinData.forEach(function(coin, i){
+      req.body.coinData.forEach(function(bodyCoin, j){
+        //coins match on name - updating
+        if(coin.name === bodyCoin.name){
+          exchange.coinData.set(i, bodyCoin);
+        }
+      })
+    })
+  }
   console.log(req.body)
 
   exchange.save()
@@ -109,6 +111,15 @@ function update(req, res, next){
             console.log(e)
             next(e)
           });
+}
+
+function createNewCoin(data){
+  let newCoin = new Coin({
+    name: data.name,
+    url: data.url,
+    price: data.price,
+  });
+  return newCoin;
 }
 
 function getExternalExchangeData(url){

@@ -77,16 +77,19 @@ class ExchangeTable extends Component {
   putStuff = (id) => {
     const data = {
       name: 'lvcEx',
-      coinData:
+      coinData: [
         {
+          _id:'599096e1b30477a081a26e89',
           name: 'BTC',
           url: 'https://api.gemini.com/v1/pubticker/btcusd',
-          price: 3600
+          price: 3900
+        },
+        { _id: '599096e1b30477a081a26e8a',
+          name: 'ETH',
+          url: 'https://api.gemini.com/v1/pubticker/ethusd',
+          price: 350
         }
-        // { name: 'ETH',
-        //   url: 'https://api.gemini.com/v1/pubticker/ethusd',
-        //   price: 300
-        // }
+      ]
     };
     Client.putStuff(`api/exchanges/`+id, data);
   }
@@ -120,6 +123,7 @@ class ExchangeHeader extends Component {
 }
 
 class ExchangeRow extends Component {
+  //TODO make data proper before rendering; make dynamic to account for multiple coins
  render() {
     return (
       <tr>
