@@ -21,7 +21,8 @@ const ExchangeSchema = new mongoose.Schema({
   auction: Boolean,
   orderTypes: [String],
   purchaseOptions: [String],// debit/credit, paypal...
-  coinsSupported: [String]
+  coinsSupported: [String],
+  coinData: mongoose.Schema.Types.Mixed //objects of coins, api url, and current price
 });
 
 ExchangeSchema.statics = {
