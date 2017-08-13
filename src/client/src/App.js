@@ -53,7 +53,7 @@ class ExchangeForm extends Component {
           </label>
           <input type="submit" value="Submit"/>
         </form>
-        <ExchangeTable></ExchangeTable>
+        <ExchangeTable/>
       </div>
     );
   }
@@ -63,7 +63,7 @@ class ExchangeTable extends Component {
   constructor(props){
     super(props);
     this.state = {
-      exchanges: [{test: 1}]
+      exchanges: [{}]
     };
   }
   componentDidMount(){
@@ -78,11 +78,11 @@ class ExchangeTable extends Component {
     return (
       <table className="table">
         <thead>
-          <ExchangeHeader titles={Object.keys(this.state.exchanges[0])}></ExchangeHeader>
+          <ExchangeHeader titles={Object.keys(this.state.exchanges[0])}/>
         </thead>
         <tbody>
           {this.state.exchanges.map((row, i) =>
-            <ExchangeRow row={row} key={i}></ExchangeRow>
+            <ExchangeRow row={row} key={i}/>
           )}
         </tbody>
       </table>
@@ -98,7 +98,7 @@ class ExchangeHeader extends Component {
           <th key={title}>{title}</th>
         )}
       </tr>
-    )
+    );
   }
 }
 
@@ -110,7 +110,7 @@ class ExchangeRow extends Component {
           <td key={j}>{this.props.row[col]}</td>
         )}
       </tr>
-    )
+    );
   }
 }
 
