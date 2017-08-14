@@ -77,7 +77,9 @@ class ExchangeTable extends Component {
       })
   }
   handleUpdateExchange = (id, index) => {
+    // persist this for use in callback function
     const _this = this;
+    // temp data for simulating form update
     const data = {
       name: 'lvcEx2',
       coinData: [
@@ -98,8 +100,6 @@ class ExchangeTable extends Component {
       ]
     };
     Client.putStuff(`api/exchanges/`+id, data, function(result){
-      //TODO: refactor this into table row component
-
       // use update to persist state immutability - update certain exchange coinData with result
       const updatedExchange = update(_this.state.exchanges[index], {coinData: {$set: result.coinData}});
       // replace certain exchange with updated exchange data

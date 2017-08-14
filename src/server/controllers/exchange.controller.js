@@ -41,7 +41,6 @@ function list(req, res, next){
           // .then(exchanges => res.json(exchanges))
           .then((exchanges) => {
             processPriceChange(exchanges).then((exchanges) => {
-              console.log('***EXCHANGE TO SEND:'+exchanges)
               res.json(exchanges);
             })
           })
