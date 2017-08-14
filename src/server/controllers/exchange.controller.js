@@ -1,28 +1,35 @@
 const Exchange = require('../models/exchange.model.js').Exchange;
 const Coin = require('../models/exchange.model.js').Coin;
+const Social = require('../models/exchange.model.js').Social;
+const Trade = require('../models/exchange.model.js').Trade;
 const request = require('request-promise');
 const Promise = require('bluebird');
 
 // create new exchange data
 function create(req, res, next){
   console.log(req.body)
+  const btc = createNewCoinSchema(req.body.btc);
+  const twitter = createNewSocialSchema(req.body.twitter);
+  const reddit = createNewSocialSchema(req.body.reddit);
+  const tradeInfo = createNewTradeSchema(req.body.tradeInfo);
+
   const exchange = new Exchange({
     name: req.body.name,
     fee: req.body.fee,
     website: req.body.website,
     account: req.body.account,
-    twitter: req.body.twitter,
-    reddit: req.body.reddit,
+    twitter: req.body.twitter,//TODO change this to new schema
+    reddit: req.body.reddit,//TODO change this to new schema
     service: req.body.service,
     ux: req.body.ux,
     support: req.body.support,
     verify: req.body.verify,
-    margin: req.body.margin,
-    auction: req.body.auction,
-    orderTypes: req.body.orderTypes,
+    margin: req.body.margin,//TODO change this to new schema
+    auction: req.body.auction,//TODO change this to new schema
+    orderTypes: req.body.orderTypes,//TODO change this to new schema
     purchaseOptions: req.body.purchaseTypes,
     coinsSupported: req.body.coins,
-    coinData: req.body.coinData//TODO change this to new coin schema
+    coinData: req.body.coinData//TODO change this to new schema
   });
 
   exchange.save()
@@ -71,44 +78,68 @@ function remove(req, res, next){
 
 // update one exchange
 function update(req, res, next){
+  console.log(req.body)
   const exchange = req.exchange;
   exchange.name = req.body.name;
   exchange.fee = req.body.fee;
-  exchange.website = req.body.account;
+  exchange.website = req.body.website;
   exchange.account = req.body.account;
-  exchange.twitter = req.body.twitter;
-  exchange.reddit = req.body.reddit;
   exchange.service = req.body.service;
   exchange.ux = req.body.ux;
   exchange.support = req.body.support;
   exchange.verify = req.body.verify;
-  exchange.margin = req.body.margin;
-  exchange.auction = req.body.auction;
+  // TODO :
+  // exchange.margin = req.body.margin;
+  // exchange.auction = req.body.auction;
   // exchange.orderTypes.push(req.body.newOrderType);
   // exchange.purchaseOptions.push(req.body.newPurchaseType);
   // exchange.coinsSupported.push(req.body.newCoin);
 
-  //if no coins yet exist in exchange.coinData
-  if(exchange.coinData && exchange.coinData.length <= 0){
-    //loop through all new coins in req.body
-    req.body.coinData.forEach(function(coin){
-      let newCoin = createNewCoin(coin);
-      exchange.coinData.push(newCoin);
-    })
-  }
-  //else if coins exist in exchange.coinData, does it match one that exists? if not, create it
-  else if(exchange.coinData && exchange.coinData.length > 0){
-    //use for loop for better performance, this is more readable imo
-    exchange.coinData.forEach(function(coin, i){
-      req.body.coinData.forEach(function(bodyCoin, j){
-        //coins match on name - updating
-        if(coin.name === bodyCoin.name){
-          exchange.coinData.set(i, bodyCoin);
-        }
+  if(req.body.coinData){
+    //if no coins yet exist in exchange.coinData
+    if(exchange.coinData && exchange.coinData.length <= 0){
+      //loop through all new coins in req.body
+      req.body.coinData.forEach(function(coin){
+        let newCoin = createNewCoinSchema(coin);
+        exchange.coinData.push(newCoin);
       })
-    })
+    }
+    //else if coins exist in exchange.coinData, does it match one that exists? if not, create it
+    else if(exchange.coinData && exchange.coinData.length > 0){
+      //use for loop for better performance, this is more readable imo
+      exchange.coinData.forEach(function(coin, i){
+        req.body.coinData.forEach(function(bodyCoin, j){
+          //coins match on name - updating
+          if(coin.name === bodyCoin.name){
+            exchange.coinData.set(i, bodyCoin);
+          }
+        })
+      })
+    }
   }
-  console.log(req.body)
+
+  if(req.body.social){
+    //if no accounts yet exist in exchange.social
+    if(exchange.social && exchange.social.length <= 0){
+      //loop through all new accounts in req.body
+      req.body.social.forEach(function(acct){
+        let newAcct = createNewSocialSchema(acct);
+        exchange.social.push(newAcct);
+      })
+    }
+    //else if accounts exist in exchange.social, does it match one that exists? if not, create it
+    else if(exchange.social && exchange.social.length > 0){
+      //use for loop for better performance, this is more readable imo
+      exchange.social.forEach(function(acct, i){
+        req.body.social.forEach(function(bodyAcct, j){
+          //accts match on name - updating
+          if(acct.name === bodyAcct.name){
+            exchange.social.set(i, bodyAcct);
+          }
+        })
+      })
+    }
+  }
 
   exchange.save()
           .then(updatedExchange => res.json(updatedExchange))
@@ -118,13 +149,30 @@ function update(req, res, next){
           });
 }
 
-function createNewCoin(data){
+function createNewCoinSchema(data){
   let newCoin = new Coin({
     name: data.name,
     url: data.url,
     price: data.price,
   });
   return newCoin;
+}
+
+function createNewSocialSchema(data){
+  let newAcct = new Social({
+    name: data.name,
+    url: data.url
+  });
+  return newAcct;
+}
+
+function createNewTradeSchema(data){
+  let newTrade = new Trade({
+    orderTypes: data.orderTypes,
+    auction: data.auction,
+    margin: data.margin,
+  });
+  return newTrade;
 }
 
 function getExternalExchangeData(url){

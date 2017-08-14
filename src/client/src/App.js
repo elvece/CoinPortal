@@ -78,7 +78,8 @@ class ExchangeTable extends Component {
         });
       })
   }
-  handleUpdateExchange = (row, index) => {
+  handleUpdateExchange = (row) => {
+    const ogRow = row.original;
     // persist this for use in callback function
     const _this = this;
     // temp data for simulating form update
@@ -90,22 +91,26 @@ class ExchangeTable extends Component {
           _id:'5990d89be937d9aa5f0f3fe1', //lvcEx2
           name: 'BTC',
           url: 'https://api.gemini.com/v1/pubticker/btcusd',
-          price: 4100
+          price: 4200
         },
         {
           // _id: '599096e1b30477a081a26e8a', //lvcEx
           _id: '5990d89be937d9aa5f0f3fe2', //lvcEx2
           name: 'ETH',
           url: 'https://api.gemini.com/v1/pubticker/ethusd',
-          price: 410
+          price: 420
         }
-      ]
+      ],
+      social: [{
+        name: 'Twitter',
+        url: 'https://twitter.com/GeminiDotCom'
+      }]
     };
-    Client.putStuff(`api/exchanges/`+row._id, data, function(result){
+    Client.putStuff(`api/exchanges/`+ogRow._id, data, function(result){
       // use update to persist state immutability - update certain exchange coinData with result
-      const updatedExchange = update(row, {coinData: {$set: result.coinData}});
+      const updatedExchange = update(ogRow, {coinData: {$set: result.coinData}});
       // replace certain exchange with updated exchange data
-      const newExchanges = update(_this.state.exchanges, {$splice: [[index, 1, updatedExchange]]})
+      const newExchanges = update(_this.state.exchanges, {$splice: [[row.index, 1, updatedExchange]]})
       // set state with updated exchanges, leaving original state record
       _this.setState({
         exchanges: newExchanges
@@ -126,7 +131,20 @@ class ExchangeTable extends Component {
       return output;
     }
 
-    const columns = [{
+    function getSocialInfo(data, name){
+      let output = '--';
+      if(data.social){
+        data.social.forEach((acct) => {
+          if(acct.name === name){
+            output = acct;
+          }
+        })
+      }
+      return output;
+    }
+
+    const columns = [
+    {
       Header: 'Name',
       columns: [{
         Header: '<>',
@@ -163,6 +181,13 @@ class ExchangeTable extends Component {
       columns: [{
         Header: '<>',
         accessor: 'fee'
+      }]
+    },
+    {
+      Header: 'Account',
+      columns: [{
+        Header: '<>',
+        accessor: 'account'
       }]
     },
     {
@@ -205,11 +230,15 @@ class ExchangeTable extends Component {
       columns: [
         {
           Header: 'Twitter',
-          accessor: 'social'
+          id: 'twitter',
+          accessor: data => getSocialInfo(data, 'Twitter'),
+          Cell: row => (<a href={row.row.twitter ? row.row.twitter.url : '/'}>Tweet</a>)
         },
         {
           Header: 'Reddit',
-          accessor: 'social'
+          id: 'reddit',
+          accessor: data => getSocialInfo(data, 'Reddit'),
+          Cell: row => (<a href={row.row.reddit ? row.row.reddit.url : '/'}>Arrr</a>)
         }
       ]
     },
@@ -218,54 +247,22 @@ class ExchangeTable extends Component {
       columns: [{
         Header: '<>',
         accessor: 'ux'
+      }],
+    },
+    {
+      Header: 'Options',
+      columns: [{
+        Header: 'Edit',
+        accessor: '_id',
+        Cell: row => (<button onClick={() => this.handleUpdateExchange(row)}>Update</button>)
       }]
     }];
-    // const exchangeRows = exchanges.map((row, i) => (
-    //     <ExchangeRow onClick={(id) => this.handleUpdateExchange(row, i)} row={row} key={i}/>
-    //   ));
 
     return (
       <ReactTable
         data={exchanges}
         columns={columns}
       />
-    );
-  }
-}
-
-class ExchangeHeader extends Component {
-  //TODO make sortable
-  render() {
-    const headers = this.props.titles;
-    const headerRows = headers.map(title => <th key={title}>{title}</th>);
-
-    return(
-      <tr>
-        {headerRows}
-      </tr>
-    );
-  }
-}
-
-class ExchangeRow extends Component {
-  render() {
-    const dataKeys = Object.keys(this.props.row) ? Object.keys(this.props.row) : [{}];
-    // const row =
-    // dataKeys.map((key, i) => {
-    //   if(key === 'name'){
-    //     <td key={i}>{this.props.row[col]}</td>
-    //   } else if(key === 'coinData'){
-
-    //   }
-    // })
-
-    return (
-      <tr>
-        {dataKeys.map((col, j) =>
-          this.props.row[col][0] && col === 'coinData' ? <td key={j}>{this.props.row[col][0].name+':'+ this.props.row[col][0].price}</td> : <td key={j}>{this.props.row[col]}</td>
-        )}
-          <td><button onClick={() => this.props.onClick(this.props.row._id)}>Update</button></td>
-      </tr>
     );
   }
 }
