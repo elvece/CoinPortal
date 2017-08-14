@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Client from "./Client";
 import './App.css';
+import update from 'immutability-helper';
 
 class App extends Component {
 
@@ -65,6 +66,7 @@ class ExchangeTable extends Component {
     this.state = {
       exchanges: [{}]
     };
+    this.handleUpdateExchange = this.handleUpdateExchange.bind(this);
   }
   componentDidMount(){
     const _this = this;
@@ -74,24 +76,39 @@ class ExchangeTable extends Component {
         });
       })
   }
-  putStuff = (id) => {
+  handleUpdateExchange = (id, index) => {
+    const _this = this;
     const data = {
-      name: 'lvcEx',
+      name: 'lvcEx2',
       coinData: [
         {
-          _id:'599096e1b30477a081a26e89',
+          // _id:'599096e1b30477a081a26e89', //lvcEx
+          _id:'5990d89be937d9aa5f0f3fe1', //lvcEx2
           name: 'BTC',
           url: 'https://api.gemini.com/v1/pubticker/btcusd',
-          price: 3900
+          price: 4000
         },
-        { _id: '599096e1b30477a081a26e8a',
+        {
+          // _id: '599096e1b30477a081a26e8a', //lvcEx
+          _id: '5990d89be937d9aa5f0f3fe2', //lvcEx2
           name: 'ETH',
           url: 'https://api.gemini.com/v1/pubticker/ethusd',
-          price: 350
+          price: 400
         }
       ]
     };
-    Client.putStuff(`api/exchanges/`+id, data);
+    Client.putStuff(`api/exchanges/`+id, data, function(result){
+      //TODO: refactor this into table row component
+
+      // use update to persist state immutability - update certain exchange coinData with result
+      const updatedExchange = update(_this.state.exchanges[index], {coinData: {$set: result.coinData}});
+      // replace certain exchange with updated exchange data
+      const newExchanges = update(_this.state.exchanges, {$splice: [[index, 1, updatedExchange]]})
+      // set state with updated exchanges, leaving original state record
+      _this.setState({
+        exchanges: newExchanges
+      })
+    });
   }
 
   render(){
@@ -102,7 +119,7 @@ class ExchangeTable extends Component {
         </thead>
         <tbody>
           {this.state.exchanges.map((row, i) =>
-            <ExchangeRow onClick={(id) => this.putStuff(id)} row={row} key={i}/>
+            <ExchangeRow onClick={(id) => this.handleUpdateExchange(id, i)} row={row} key={i}/>
           )}
         </tbody>
       </table>
@@ -124,10 +141,11 @@ class ExchangeHeader extends Component {
 
 class ExchangeRow extends Component {
   //TODO make data proper before rendering; make dynamic to account for multiple coins
- render() {
+  render() {
+    const row = Object.keys(this.props.row) ? Object.keys(this.props.row) : [{}];
     return (
       <tr>
-        {Object.keys(this.props.row).map((col, j) =>
+        {row.map((col, j) =>
           this.props.row[col][0] && col === 'coinData' ? <td key={j}>{this.props.row[col][0].name+':'+ this.props.row[col][0].price}</td> : <td key={j}>{this.props.row[col]}</td>
         )}
           <td><button onClick={() => this.props.onClick(this.props.row._id)}>Update</button></td>

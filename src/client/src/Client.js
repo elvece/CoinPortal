@@ -10,7 +10,7 @@ function getStuff(url, cb) {
     .then(logData);
 }
 
-function postStuff(url, data){
+function postStuff(url, data, cb){
   return fetch(url, {
     method: 'POST',
     headers: {
@@ -20,9 +20,10 @@ function postStuff(url, data){
   }).then(checkStatus)
     .then(parseJSON)
     .then(logData)
+    .then(cb);
 }
 
-function putStuff(url, data){
+function putStuff(url, data, cb){
   return fetch(url, {
     method: 'PUT',
     headers: {
@@ -31,6 +32,7 @@ function putStuff(url, data){
     body: JSON.stringify(data)
   }).then(checkStatus)
     .then(parseJSON)
+    .then(cb)
     .then(logData)
 }
 
