@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Client from "./Client";
 import './App.css';
 import update from 'immutability-helper';
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
 
 class App extends Component {
 
@@ -64,7 +66,7 @@ class ExchangeTable extends Component {
   constructor(props){
     super(props);
     this.state = {
-      exchanges: [{}]
+      exchanges: [{coinData: []}]
     };
     this.handleUpdateExchange = this.handleUpdateExchange.bind(this);
   }
@@ -113,42 +115,153 @@ class ExchangeTable extends Component {
 
   render(){
     const { exchanges } = this.state;
-    const exchangeRows = exchanges.map((row, i) => (
-        <ExchangeRow onClick={(id) => this.handleUpdateExchange(row, i)} row={row} key={i}/>
-      ));
+
+    function getCoinPrice(data, name){
+      let output = '--';
+      data.coinData.forEach((coin) => {
+        if(coin.name === name){
+          output = coin.price;
+        }
+      })
+      return output;
+    }
+
+    const columns = [{
+      Header: 'Name',
+      columns: [{
+        Header: '<>',
+        accessor: 'name',
+      }]
+    },
+    {
+      Header: 'Coin Prices',
+      columns: [
+        {
+          Header: 'BTC',
+          id: 'btc',
+          accessor: data => getCoinPrice(data, 'BTC')
+        },
+        {
+          Header: 'ETH',
+          id: 'eth',
+          accessor: data => getCoinPrice(data, 'ETH')
+        },
+        {
+          Header: 'LTC',
+          id: 'ltc',
+          accessor: data => getCoinPrice(data, 'LTC')
+        },
+        {
+          Header: 'DASH',
+          id: 'dash',
+          accessor: data => getCoinPrice(data, 'DASH')
+        }
+      ]
+    },
+    {
+      Header: 'Fee',
+      columns: [{
+        Header: '<>',
+        accessor: 'fee'
+      }]
+    },
+    {
+      Header: 'Purchase Options',
+      columns: [{
+        Header: '<>',
+        accessor: 'purchaseOptions'
+      }]
+    },
+    {
+      Header: 'Identity Verification',
+      columns: [{
+        Header: '<>',
+        accessor: 'verify'
+      }]
+    },
+    {
+      Header: 'Coins Supported',
+      columns: [{
+        Header: '<>',
+        accessor: 'coinsSupported'
+      }]
+    },
+    {
+      Header: 'Trading',
+      columns: [{
+        Header: '<>',
+        accessor: 'trading'
+      }]
+    },
+    {
+      Header: 'Customer Service',
+      columns: [{
+        Header: '<>',
+        accessor: 'service'
+      }]
+    },
+    {
+      Header: 'Social',
+      columns: [
+        {
+          Header: 'Twitter',
+          accessor: 'social'
+        },
+        {
+          Header: 'Reddit',
+          accessor: 'social'
+        }
+      ]
+    },
+    {
+      Header: 'Interface',
+      columns: [{
+        Header: '<>',
+        accessor: 'ux'
+      }]
+    }];
+    // const exchangeRows = exchanges.map((row, i) => (
+    //     <ExchangeRow onClick={(id) => this.handleUpdateExchange(row, i)} row={row} key={i}/>
+    //   ));
 
     return (
-      <table className="table">
-        <thead>
-          <ExchangeHeader titles={this.state.exchanges[0] ? Object.keys(this.state.exchanges[0]) : []}/>
-        </thead>
-        <tbody>
-          {exchangeRows}
-        </tbody>
-      </table>
+      <ReactTable
+        data={exchanges}
+        columns={columns}
+      />
     );
   }
 }
 
 class ExchangeHeader extends Component {
+  //TODO make sortable
   render() {
+    const headers = this.props.titles;
+    const headerRows = headers.map(title => <th key={title}>{title}</th>);
+
     return(
       <tr>
-        {this.props.titles.map(title =>
-          <th key={title}>{title}</th>
-        )}
+        {headerRows}
       </tr>
     );
   }
 }
 
 class ExchangeRow extends Component {
-  //TODO make data proper before rendering; make dynamic to account for multiple coins
   render() {
-    const row = Object.keys(this.props.row) ? Object.keys(this.props.row) : [{}];
+    const dataKeys = Object.keys(this.props.row) ? Object.keys(this.props.row) : [{}];
+    // const row =
+    // dataKeys.map((key, i) => {
+    //   if(key === 'name'){
+    //     <td key={i}>{this.props.row[col]}</td>
+    //   } else if(key === 'coinData'){
+
+    //   }
+    // })
+
     return (
       <tr>
-        {row.map((col, j) =>
+        {dataKeys.map((col, j) =>
           this.props.row[col][0] && col === 'coinData' ? <td key={j}>{this.props.row[col][0].name+':'+ this.props.row[col][0].price}</td> : <td key={j}>{this.props.row[col]}</td>
         )}
           <td><button onClick={() => this.props.onClick(this.props.row._id)}>Update</button></td>

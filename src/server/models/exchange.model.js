@@ -9,6 +9,17 @@ const CoinSchema = new mongoose.Schema({
   price: String // String rather than Number so can accept decimal places
 });
 
+const TradeSchema = new mongoose.Schema({
+  orderTypes: [String],
+  auction: Boolean,
+  margin: Boolean
+});
+
+const SocialSchema = new mongoose.Schema({
+  name: String,
+  url: String
+});
+
 const ExchangeSchema = new mongoose.Schema({
   id: mongoose.Schema.Types.ObjectId,
   name: {
@@ -19,15 +30,12 @@ const ExchangeSchema = new mongoose.Schema({
   fee: Number,
   website: String,
   account: Boolean,
-  twitter: mongoose.Schema.Types.Mixed,// will include boolean and url
-  reddit: mongoose.Schema.Types.Mixed,// will include boolean and subredddit url
+  social: [SocialSchema],
   service: Number,// rating
   ux: Number,// rating
   support: Number,// rating
   verify: Boolean,// identity verification
-  margin: Boolean,
-  auction: Boolean,
-  orderTypes: [String],
+  trading: TradeSchema,
   purchaseOptions: [String],// debit/credit, paypal...
   coinsSupported: [String],
   coinData: [CoinSchema] //objects of coin name, api url, and current price
@@ -53,5 +61,7 @@ ExchangeSchema.statics = {
 
 module.exports = {
   Exchange: mongoose.model('Exchanges', ExchangeSchema),
-  Coin: mongoose.model('Coins', CoinSchema)
+  Coin: mongoose.model('Coins', CoinSchema),
+  Trade: mongoose.model('TradeInfo', TradeSchema),
+  Social: mongoose.model('SocialInfo', SocialSchema)
 };
