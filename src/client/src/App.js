@@ -76,7 +76,7 @@ class ExchangeTable extends Component {
         });
       })
   }
-  handleUpdateExchange = (id, index) => {
+  handleUpdateExchange = (row, index) => {
     // persist this for use in callback function
     const _this = this;
     // temp data for simulating form update
@@ -88,20 +88,20 @@ class ExchangeTable extends Component {
           _id:'5990d89be937d9aa5f0f3fe1', //lvcEx2
           name: 'BTC',
           url: 'https://api.gemini.com/v1/pubticker/btcusd',
-          price: 4000
+          price: 4100
         },
         {
           // _id: '599096e1b30477a081a26e8a', //lvcEx
           _id: '5990d89be937d9aa5f0f3fe2', //lvcEx2
           name: 'ETH',
           url: 'https://api.gemini.com/v1/pubticker/ethusd',
-          price: 400
+          price: 410
         }
       ]
     };
-    Client.putStuff(`api/exchanges/`+id, data, function(result){
+    Client.putStuff(`api/exchanges/`+row._id, data, function(result){
       // use update to persist state immutability - update certain exchange coinData with result
-      const updatedExchange = update(_this.state.exchanges[index], {coinData: {$set: result.coinData}});
+      const updatedExchange = update(row, {coinData: {$set: result.coinData}});
       // replace certain exchange with updated exchange data
       const newExchanges = update(_this.state.exchanges, {$splice: [[index, 1, updatedExchange]]})
       // set state with updated exchanges, leaving original state record
@@ -112,15 +112,18 @@ class ExchangeTable extends Component {
   }
 
   render(){
+    const { exchanges } = this.state;
+    const exchangeRows = exchanges.map((row, i) => (
+        <ExchangeRow onClick={(id) => this.handleUpdateExchange(row, i)} row={row} key={i}/>
+      ));
+
     return (
       <table className="table">
         <thead>
           <ExchangeHeader titles={this.state.exchanges[0] ? Object.keys(this.state.exchanges[0]) : []}/>
         </thead>
         <tbody>
-          {this.state.exchanges.map((row, i) =>
-            <ExchangeRow onClick={(id) => this.handleUpdateExchange(id, i)} row={row} key={i}/>
-          )}
+          {exchangeRows}
         </tbody>
       </table>
     );
