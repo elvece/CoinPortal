@@ -79,23 +79,20 @@ class ExchangeTable extends Component {
       })
   }
   handleUpdateExchange = (row) => {
+    console.log(row)
     const ogRow = row.original;
     // persist this for use in callback function
     const _this = this;
     // temp data for simulating form update
     const data = {
-      name: 'lvcEx2',
+      name: 'Gemini',
       coinData: [
         {
-          // _id:'599096e1b30477a081a26e89', //lvcEx
-          _id:'5990d89be937d9aa5f0f3fe1', //lvcEx2
           name: 'BTC',
           url: 'https://api.gemini.com/v1/pubticker/btcusd',
           price: 4200
         },
         {
-          // _id: '599096e1b30477a081a26e8a', //lvcEx
-          _id: '5990d89be937d9aa5f0f3fe2', //lvcEx2
           name: 'ETH',
           url: 'https://api.gemini.com/v1/pubticker/ethusd',
           price: 420
@@ -104,7 +101,12 @@ class ExchangeTable extends Component {
       social: [{
         name: 'Twitter',
         url: 'https://twitter.com/GeminiDotCom'
-      }]
+      }],
+      trading: {
+        orderTypes: ['Market','Limit', 'IOC', 'MOC'],
+        auction: true,
+        margin: false
+      }
     };
     Client.putStuff(`api/exchanges/`+ogRow._id, data, function(result){
       // use update to persist state immutability - update certain exchange coinData with result
@@ -213,10 +215,21 @@ class ExchangeTable extends Component {
     },
     {
       Header: 'Trading',
-      columns: [{
-        Header: '<>',
-        accessor: 'trading'
-      }]
+      columns: [
+        {
+          Header: 'Order Types',
+          accessor: 'trading.orderTypes'
+        },
+        {
+          Header: 'Margin',
+          accessor: 'trading.margin'
+        },
+        {
+          Header: 'Auction',
+          id: 'auction',
+          accessor: data => data.trading ? data.trading.auction.toString() : ''
+        }
+      ]
     },
     {
       Header: 'Customer Service',

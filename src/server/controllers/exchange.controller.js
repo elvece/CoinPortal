@@ -7,30 +7,44 @@ const Promise = require('bluebird');
 
 // create new exchange data
 function create(req, res, next){
-  console.log(req.body)
-  const btc = createNewCoinSchema(req.body.btc);
-  const twitter = createNewSocialSchema(req.body.twitter);
-  const reddit = createNewSocialSchema(req.body.reddit);
-  const tradeInfo = createNewTradeSchema(req.body.tradeInfo);
-
+  console.log('**********CREATE REQ BODY:'+req.body)
   const exchange = new Exchange({
-    name: req.body.name,
-    fee: req.body.fee,
-    website: req.body.website,
     account: req.body.account,
-    twitter: req.body.twitter,//TODO change this to new schema
-    reddit: req.body.reddit,//TODO change this to new schema
-    service: req.body.service,
-    ux: req.body.ux,
-    support: req.body.support,
-    verify: req.body.verify,
-    margin: req.body.margin,//TODO change this to new schema
-    auction: req.body.auction,//TODO change this to new schema
-    orderTypes: req.body.orderTypes,//TODO change this to new schema
-    purchaseOptions: req.body.purchaseTypes,
+    depositFee: req.body.depositFee,
+    coinData: [],
     coinsSupported: req.body.coins,
-    coinData: req.body.coinData//TODO change this to new schema
+    name: req.body.name,
+    purchaseOptions: req.body.purchaseTypes,
+    service: req.body.service,
+    social: [],
+    support: req.body.support,
+    trading: null,
+    ux: req.body.ux,
+    verify: req.body.verify,
+    website: req.body.website,
+    withdrawalFee: req.body.withdrawalFee
   });
+
+  console.log('********* NEW EXCHANGE:'+exchange)
+
+  if(req.body.trading){
+    //TODO set as ternary above
+    let trading = createNewTradeSchema(req.body.trading);
+    exchange.trading = trading;
+  }
+  if(req.body.social){
+    req.body.social.forEach(function(acct){
+      //TODO reafactor into dynamic method
+      let newAcct = createNewSocialSchema(acct);
+      exchange.social.push(newAcct);
+    })
+  }
+  if(req.body.coinData){
+    req.body.coinData.forEach(function(coin){
+      let newCoin = createNewCoinSchema(coin);
+      exchange.coinData.push(newCoin);
+    })
+  }
 
   exchange.save()
           .then(savedExchange => res.json(savedExchange))
@@ -78,6 +92,7 @@ function remove(req, res, next){
 
 // update one exchange
 function update(req, res, next){
+  console.log('************UPDATE REQ.BODY:'+req.body)
   console.log(req.body)
   const exchange = req.exchange;
   exchange.name = req.body.name;
@@ -89,11 +104,20 @@ function update(req, res, next){
   exchange.support = req.body.support;
   exchange.verify = req.body.verify;
   // TODO :
-  // exchange.margin = req.body.margin;
-  // exchange.auction = req.body.auction;
-  // exchange.orderTypes.push(req.body.newOrderType);
   // exchange.purchaseOptions.push(req.body.newPurchaseType);
   // exchange.coinsSupported.push(req.body.newCoin);
+  if(req.body.trading){
+    //if no trading details yet exist for this exchange
+    if((exchange.trading && exchange.trading.length <=0) || !exchange.trading){
+      let newTradeData = createNewTradeSchema(req.body.trading);
+      exchange.trading = newTradeData;
+    }
+    else if(exchange.trading && exchange.trading.length > 0){
+      exchange.trading.set(exchange.trading.orderTypes, req.body.orderTypes);
+      exchange.trading.set(exchange.trading.margin, req.body.margin);
+      exchange.trading.set(exchange.trading.auction, req.body.auction);
+    }
+  }
 
   if(req.body.coinData){
     //if no coins yet exist in exchange.coinData

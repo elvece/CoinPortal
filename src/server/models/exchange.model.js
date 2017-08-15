@@ -27,18 +27,19 @@ const ExchangeSchema = new mongoose.Schema({
     unique: true,
     required: true
   },
-  fee: Number,
-  website: String,
   account: Boolean,
-  social: [SocialSchema],
-  service: Number,// rating
-  ux: Number,// rating
-  support: Number,// rating
-  verify: Boolean,// identity verification
-  trading: TradeSchema,
-  purchaseOptions: [String],// debit/credit, paypal...
+  coinData: [CoinSchema], //objects of coin name, api url, and current price
   coinsSupported: [String],
-  coinData: [CoinSchema] //objects of coin name, api url, and current price
+  depositFee: String,
+  purchaseOptions: [String],// debit/credit, paypal...
+  service: Number,// rating
+  social: [SocialSchema],
+  support: Number,// rating
+  trading: TradeSchema,
+  ux: Number,// rating
+  verify: Boolean,// identity verification
+  website: String,
+  withdrawalFee: String
 });
 
 ExchangeSchema.statics = {
