@@ -117,7 +117,10 @@ class ExchangeTable extends Component {
       verify: true,
       depositFee: 'none',
       withdrawalFee: '0.25%',
-      website: 'https://gemini.com/'
+      website: 'https://gemini.com/',
+      service: 4,
+      support: 4,
+      ux: 4
     };
     Client.putStuff(`api/exchanges/`+ogRow._id, data, function(result){
       // use update to persist state immutability - update certain exchange coinData with result
@@ -128,11 +131,14 @@ class ExchangeTable extends Component {
         coinsSupported: {$set: result.coinsSupported},
         depositFee: {$set: result.depositFee},
         purchaseOptions: {$set: result.purchaseOptions},
+        service: {$set: result.service},
         social: {$set: result.social},
+        support: {$set: result.support},
         trading: {$set: result.trading},
         verify: {$set: result.verify},
         website: {$set: result.website},
-        withdrawalFee: {$set: result.withdrawalFee}
+        withdrawalFee: {$set: result.withdrawalFee},
+        ux: {$set: result.ux}
       });
       // replace certain exchange with updated exchange data
       const newExchanges = update(_this.state.exchanges, {$splice: [[row.index, 1, updatedExchange]]})
@@ -294,13 +300,6 @@ class ExchangeTable extends Component {
       ]
     },
     {
-      Header: 'Customer Service',
-      columns: [{
-        Header: '<>',
-        accessor: 'service'
-      }]
-    },
-    {
       Header: 'Social',
       columns: [
         {
@@ -318,11 +317,21 @@ class ExchangeTable extends Component {
       ]
     },
     {
-      Header: 'Interface',
-      columns: [{
-        Header: '<>',
-        accessor: 'ux'
-      }],
+      Header: 'Ratings',
+      columns: [
+        {
+          Header: 'Interface',
+          accessor: 'ux',
+        },
+        {
+          Header: 'Customer Service',
+          accessor: 'service',
+        },
+        {
+          Header: 'Support',
+          accessor: 'support',
+        }
+      ],
     },
     {
       Header: 'Options',
