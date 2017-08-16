@@ -1,8 +1,7 @@
 const Promise = require('bluebird');
 const request = require('request-promise');
 const Exchange = require('../models/exchange.model.js');
-
-const Helper = require('../helpers/exchange.helpers.js');
+const Helper = require('../helpers/schema.helpers.js');
 
 const SOCIAL = 'social';
 const TRADE = 'trade';
@@ -117,7 +116,6 @@ function update(req, res, next){
     }
     //else if coins exist in exchange.coinData, does it match one that exists? if not, create it
     else if(exchange.coinData && exchange.coinData.length > 0){
-      console.log(Helper)
       Helper.setUpdateSchema(exchange.coinData, req.body.coinData);
     }
   }
