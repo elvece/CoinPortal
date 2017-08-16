@@ -88,21 +88,25 @@ class ExchangeTable extends Component {
       name: 'Gemini',
       coinData: [
         {
+          _id: '5993a24a615a9ddef5724f05',
           name: 'BTC',
           url: 'https://api.gemini.com/v1/pubticker/btcusd',
           price: 4200
         },
         {
+          _id: '5993a24a615a9ddef5724f04',
           name: 'ETH',
           url: 'https://api.gemini.com/v1/pubticker/ethusd',
           price: 420
         }
       ],
       social: [{
+        _id: '5993a24a615a9ddef5724f06',
         name: 'Twitter',
         url: 'https://twitter.com/GeminiDotCom'
       }],
       trading: {
+        _id:'5993a24a615a9ddef5724f02',
         orderTypes: ['Market','Limit', 'IOC', 'MOC'],
         auction: true,
         margin: false
@@ -123,6 +127,8 @@ class ExchangeTable extends Component {
   render(){
     const { exchanges } = this.state;
 
+    console.log(exchanges)
+
     function getCoinPrice(data, name){
       let output = '--';
       data.coinData.forEach((coin) => {
@@ -139,6 +145,20 @@ class ExchangeTable extends Component {
         data.social.forEach((acct) => {
           if(acct.name === name){
             output = acct;
+          }
+        })
+      }
+      return output;
+    }
+
+    function displayOrderTypes(data){
+      let output = '';
+      if(data.trading){
+        data.trading.orderTypes.forEach((type, i) => {
+          if(i !== data.trading.orderTypes.length - 1){
+            output += type + ', ';
+          } else {
+            output += type;
           }
         })
       }
@@ -218,11 +238,13 @@ class ExchangeTable extends Component {
       columns: [
         {
           Header: 'Order Types',
-          accessor: 'trading.orderTypes'
+          id: 'orderTypes',
+          accessor: data => displayOrderTypes(data)
         },
         {
           Header: 'Margin',
-          accessor: 'trading.margin'
+          id: 'margin',
+          accessor: data => data.trading ? data.trading.margin.toString() : ''
         },
         {
           Header: 'Auction',
