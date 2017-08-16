@@ -112,6 +112,7 @@ class ExchangeTable extends Component {
         margin: false
       },
       coinsSupported: ['BTC', 'ETH'],
+      purchaseOptions: ['Wire', 'ACH Debit'],
       accountNeeded: false
     };
     Client.putStuff(`api/exchanges/`+ogRow._id, data, function(result){
@@ -121,6 +122,7 @@ class ExchangeTable extends Component {
         accountNeeded: {$set: result.accountNeeded},
         coinData: {$set: result.coinData},
         coinsSupported: {$set: result.coinsSupported},
+        purchaseOptions: {$set: result.purchaseOptions},
         social: {$set: result.social},
         trading: {$set: result.trading}
       });
@@ -236,7 +238,8 @@ class ExchangeTable extends Component {
       Header: 'Purchase Options',
       columns: [{
         Header: '<>',
-        accessor: 'purchaseOptions'
+        id: 'purchaseOptions',
+        accessor: data => data.purchaseOptions ? displayArrayAsList(data.purchaseOptions) : ''
       }]
     },
     {
