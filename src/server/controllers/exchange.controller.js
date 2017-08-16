@@ -4,10 +4,55 @@ const Social = require('../models/exchange.model.js').Social;
 const Trade = require('../models/exchange.model.js').Trade;
 const request = require('request-promise');
 const Promise = require('bluebird');
+const SOCIAL = 'social';
+const TRADE = 'trade';
+const COIN = 'coin';
+const createSchema = {
+  coin: function(data){
+    let newCoin = new Coin({
+      name: data.name,
+      url: data.url,
+      price: data.price,
+    });
+    return newCoin;
+  },
+  social: function(data){
+    let newAcct = new Social({
+      name: data.name,
+      url: data.url
+    });
+    return newAcct;
+  },
+  trade: function(data){
+    let newTrade = new Trade({
+      orderTypes: data.orderTypes,
+      auction: data.auction,
+      margin: data.margin,
+    });
+    return newTrade;
+  }
+}
+
+// for setting new sub-schema to parent schema
+function setSubSchemaData(body, prop, type){
+  for (let i = body.length - 1; i >= 0; i--) {
+    prop.push(createSchema[type](body[i]));
+  }
+}
+
+function setUpdateSchema(exchangeProp, body){
+  for (let i = 0; i < exchangeProp.length; i++) {
+    for (let j = 0; j < body.length; j++) {
+      if(exchangeProp[i]._id.toString() === body[j]._id){
+        exchangeProp.set(i, body[j])
+      }
+    }
+  }
+}
 
 // create new exchange data
 function create(req, res, next){
-  console.log('**********CREATE REQ BODY:'+req.body)
+  console.log('**********CREATE REQ BODY:',req.body)
   const exchange = new Exchange({
     account: req.body.account,
     depositFee: req.body.depositFee,
@@ -18,32 +63,20 @@ function create(req, res, next){
     service: req.body.service,
     social: [],
     support: req.body.support,
-    trading: null,
+    trading: req.body.trading ? createSchema[TRADE](req.body.trading): null,
     ux: req.body.ux,
     verify: req.body.verify,
     website: req.body.website,
     withdrawalFee: req.body.withdrawalFee
   });
 
-  console.log('********* NEW EXCHANGE:'+exchange)
+  console.log('********* NEW EXCHANGE:',exchange)
 
-  if(req.body.trading){
-    //TODO set as ternary above
-    let trading = createNewTradeSchema(req.body.trading);
-    exchange.trading = trading;
-  }
   if(req.body.social){
-    req.body.social.forEach(function(acct){
-      //TODO reafactor into dynamic method
-      let newAcct = createNewSocialSchema(acct);
-      exchange.social.push(newAcct);
-    })
+    setSubSchemaData(req.body.social, exchange.social, SOCIAL);
   }
   if(req.body.coinData){
-    req.body.coinData.forEach(function(coin){
-      let newCoin = createNewCoinSchema(coin);
-      exchange.coinData.push(newCoin);
-    })
+    setSubSchemaData(req.body.coinData, exchange.coinData, COIN);
   }
 
   exchange.save()
@@ -92,8 +125,7 @@ function remove(req, res, next){
 
 // update one exchange
 function update(req, res, next){
-  console.log('************UPDATE REQ.BODY:'+req.body)
-  console.log(req.body)
+  console.log('************UPDATE REQ.BODY:',req.body)
   const exchange = req.exchange;
   exchange.name = req.body.name;
   exchange.fee = req.body.fee;
@@ -109,10 +141,10 @@ function update(req, res, next){
   if(req.body.trading){
     //if no trading details yet exist for this exchange
     if((exchange.trading && exchange.trading.length <=0) || !exchange.trading){
-      let newTradeData = createNewTradeSchema(req.body.trading);
-      exchange.trading = newTradeData;
+      exchange.trading = createSchema[TRADE](req.body.trading);
     }
     else if(exchange.trading && exchange.trading.length > 0){
+      // NOTE: need if conditions for each sub prop (ie exchange.trading.margin)?
       exchange.trading.set(exchange.trading.orderTypes, req.body.orderTypes);
       exchange.trading.set(exchange.trading.margin, req.body.margin);
       exchange.trading.set(exchange.trading.auction, req.body.auction);
@@ -122,46 +154,22 @@ function update(req, res, next){
   if(req.body.coinData){
     //if no coins yet exist in exchange.coinData
     if(exchange.coinData && exchange.coinData.length <= 0){
-      //loop through all new coins in req.body
-      req.body.coinData.forEach(function(coin){
-        let newCoin = createNewCoinSchema(coin);
-        exchange.coinData.push(newCoin);
-      })
+      setSubSchemaData(req.body.coinData, exchange.coinData, COIN);
     }
     //else if coins exist in exchange.coinData, does it match one that exists? if not, create it
     else if(exchange.coinData && exchange.coinData.length > 0){
-      //use for loop for better performance, this is more readable imo
-      exchange.coinData.forEach(function(coin, i){
-        req.body.coinData.forEach(function(bodyCoin, j){
-          //coins match on name - updating
-          if(coin.name === bodyCoin.name){
-            exchange.coinData.set(i, bodyCoin);
-          }
-        })
-      })
+      setUpdateSchema(exchange.coinData, req.body.coinData);
     }
   }
 
   if(req.body.social){
     //if no accounts yet exist in exchange.social
     if(exchange.social && exchange.social.length <= 0){
-      //loop through all new accounts in req.body
-      req.body.social.forEach(function(acct){
-        let newAcct = createNewSocialSchema(acct);
-        exchange.social.push(newAcct);
-      })
+      setSubSchemaData(req.body.social, exchange.social, SOCIAL)
     }
     //else if accounts exist in exchange.social, does it match one that exists? if not, create it
     else if(exchange.social && exchange.social.length > 0){
-      //use for loop for better performance, this is more readable imo
-      exchange.social.forEach(function(acct, i){
-        req.body.social.forEach(function(bodyAcct, j){
-          //accts match on name - updating
-          if(acct.name === bodyAcct.name){
-            exchange.social.set(i, bodyAcct);
-          }
-        })
-      })
+      setUpdateSchema(exchange.social, req.body.social);
     }
   }
 
@@ -171,32 +179,6 @@ function update(req, res, next){
             console.log(e);
             next(e);
           });
-}
-
-function createNewCoinSchema(data){
-  let newCoin = new Coin({
-    name: data.name,
-    url: data.url,
-    price: data.price,
-  });
-  return newCoin;
-}
-
-function createNewSocialSchema(data){
-  let newAcct = new Social({
-    name: data.name,
-    url: data.url
-  });
-  return newAcct;
-}
-
-function createNewTradeSchema(data){
-  let newTrade = new Trade({
-    orderTypes: data.orderTypes,
-    auction: data.auction,
-    margin: data.margin,
-  });
-  return newTrade;
 }
 
 function getExternalExchangeData(url){
