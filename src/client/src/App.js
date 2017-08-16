@@ -349,6 +349,24 @@ class ExchangeTable extends Component {
         columns={columns}
         defaultPageSize={5}
         loading={loading}
+        defaultSorted={[
+          {
+            id: 'name',
+            desc: true
+          }
+        ]}
+        showPagination={false}
+        showPageJump={false}
+        sortabl={true}
+        PadRowComponent ={() => <span>&nbsp;</span>}
+        className={{}}
+        style={{}}
+        column={[
+          {
+            resizeable: true,
+            minWidth: 150
+          }
+        ]}
       />
     );
   }
