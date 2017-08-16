@@ -113,7 +113,8 @@ class ExchangeTable extends Component {
       },
       coinsSupported: ['BTC', 'ETH'],
       purchaseOptions: ['Wire', 'ACH Debit'],
-      accountNeeded: false
+      accountNeeded: true,
+      verify: true
     };
     Client.putStuff(`api/exchanges/`+ogRow._id, data, function(result){
       // use update to persist state immutability - update certain exchange coinData with result
@@ -124,7 +125,8 @@ class ExchangeTable extends Component {
         coinsSupported: {$set: result.coinsSupported},
         purchaseOptions: {$set: result.purchaseOptions},
         social: {$set: result.social},
-        trading: {$set: result.trading}
+        trading: {$set: result.trading},
+        verify: {$set: result.verify}
       });
       // replace certain exchange with updated exchange data
       const newExchanges = update(_this.state.exchanges, {$splice: [[row.index, 1, updatedExchange]]})
@@ -176,7 +178,7 @@ class ExchangeTable extends Component {
       return output;
     }
 
-    function setAccountNeeded(data){
+    function setFriendlyBoolean(data){
       let output = '';
       if(data === true){
         output = 'yes';
@@ -231,7 +233,7 @@ class ExchangeTable extends Component {
       columns: [{
         Header: '<>',
         id: 'accountNeeded',
-        accessor: data => setAccountNeeded(data.accountNeeded)
+        accessor: data => setFriendlyBoolean(data.accountNeeded)
       }]
     },
     {
@@ -246,7 +248,8 @@ class ExchangeTable extends Component {
       Header: 'Identity Verification', // make popover for coinbase that says depends on amount wanting to purchase
       columns: [{
         Header: '<>',
-        accessor: 'verify'
+        id: 'verify',
+        accessor: data => setFriendlyBoolean(data.verify)
       }]
     },
     {
