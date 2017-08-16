@@ -12,7 +12,7 @@ const ExchangeSchema = new mongoose.Schema({
     unique: true,
     required: true
   },
-  account: Boolean,
+  accountNeeded: Boolean,
   coinData: [Coin.schema], //objects of coin name, api url, and current price
   coinsSupported: [String],
   depositFee: String,

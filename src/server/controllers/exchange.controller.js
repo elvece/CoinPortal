@@ -12,10 +12,10 @@ const COIN = 'coin';
 function create(req, res, next){
   console.log('**********CREATE REQ BODY:',req.body)
   const exchange = new Exchange({
-    account: req.body.account,
+    accountNeeded: req.body.accountNeeded,
     depositFee: req.body.depositFee,
     coinData: [],
-    coinsSupported: req.body.coins,
+    coinsSupported: req.body.coinsSupported,
     name: req.body.name,
     purchaseOptions: req.body.purchaseTypes,
     service: req.body.service,
@@ -85,17 +85,18 @@ function remove(req, res, next){
 function update(req, res, next){
   console.log('************UPDATE REQ.BODY:',req.body)
   const exchange = req.exchange;
+  exchange.accountNeeded = req.body.accountNeeded;
+  exchange.depositFee = req.body.depositFee;
+  exchange.coinsSupported = req.body.coinsSupported;// push one in?
   exchange.name = req.body.name;
-  exchange.fee = req.body.fee;
-  exchange.website = req.body.website;
-  exchange.account = req.body.account;
+  exchange.purchaseOptions = req.body.purchaseOptions;// rather than rewriting everytime, think about just adding one in
   exchange.service = req.body.service;
-  exchange.ux = req.body.ux;
   exchange.support = req.body.support;
+  exchange.ux = req.body.ux;
   exchange.verify = req.body.verify;
-  // TODO :
-  // exchange.purchaseOptions.push(req.body.newPurchaseType);
-  // exchange.coinsSupported.push(req.body.newCoin);
+  exchange.website = req.body.website;
+  exchange.withdrawalFee = req.body.withdrawalFee;
+
   if(req.body.trading){
     //if no trading details yet exist for this exchange
     if((exchange.trading && exchange.trading.length <=0) || !exchange.trading){

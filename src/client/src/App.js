@@ -110,7 +110,9 @@ class ExchangeTable extends Component {
         orderTypes: ['Market','Limit', 'IOC', 'MOC'],
         auction: true,
         margin: false
-      }
+      },
+      coinsSupported: ['BTC', 'ETH'],
+      accountNeeded: true
     };
     Client.putStuff(`api/exchanges/`+ogRow._id, data, function(result){
       // use update to persist state immutability - update certain exchange coinData with result
@@ -128,6 +130,20 @@ class ExchangeTable extends Component {
     const { exchanges } = this.state;
 
     console.log(exchanges)
+
+    function displayArrayAsList(data){
+      let output = '';
+      if(data){
+        data.forEach((item, i) => {
+          if(i !== data.length - 1){
+            output += item + ', ';
+          } else {
+            output += item;
+          }
+        })
+      }
+      return output;
+    }
 
     function getCoinPrice(data, name){
       let output = '--';
@@ -151,16 +167,12 @@ class ExchangeTable extends Component {
       return output;
     }
 
-    function displayOrderTypes(data){
+    function setAccountNeeded(data){
       let output = '';
-      if(data.trading){
-        data.trading.orderTypes.forEach((type, i) => {
-          if(i !== data.trading.orderTypes.length - 1){
-            output += type + ', ';
-          } else {
-            output += type;
-          }
-        })
+      if(data){
+        output = 'yes';
+      } else {
+        output = 'no';
       }
       return output;
     }
@@ -206,10 +218,11 @@ class ExchangeTable extends Component {
       }]
     },
     {
-      Header: 'Account',
+      Header: 'Account Needed',
       columns: [{
         Header: '<>',
-        accessor: 'account'
+        id: 'accountNeeded',
+        accessor: data => data.accountNeeded ? setAccountNeeded(data.accountNeeded) : ''
       }]
     },
     {
@@ -230,7 +243,8 @@ class ExchangeTable extends Component {
       Header: 'Coins Supported',
       columns: [{
         Header: '<>',
-        accessor: 'coinsSupported'
+        id: 'coinsSupported',
+          accessor: data => data.coinsSupported ? displayArrayAsList(data.coinsSupported) : ''
       }]
     },
     {
@@ -239,7 +253,7 @@ class ExchangeTable extends Component {
         {
           Header: 'Order Types',
           id: 'orderTypes',
-          accessor: data => displayOrderTypes(data)
+          accessor: data => data.trading ? displayArrayAsList(data.trading.orderTypes) : ''
         },
         {
           Header: 'Margin',
@@ -297,6 +311,7 @@ class ExchangeTable extends Component {
       <ReactTable
         data={exchanges}
         columns={columns}
+        defaultPageSize={5}
       />
     );
   }
