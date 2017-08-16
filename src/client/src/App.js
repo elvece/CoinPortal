@@ -112,11 +112,18 @@ class ExchangeTable extends Component {
         margin: false
       },
       coinsSupported: ['BTC', 'ETH'],
-      accountNeeded: true
+      accountNeeded: false
     };
     Client.putStuff(`api/exchanges/`+ogRow._id, data, function(result){
       // use update to persist state immutability - update certain exchange coinData with result
-      const updatedExchange = update(ogRow, {coinData: {$set: result.coinData}});
+      console.log('result: ', result)
+      const updatedExchange = update(ogRow, {
+        accountNeeded: {$set: result.accountNeeded},
+        coinData: {$set: result.coinData},
+        coinsSupported: {$set: result.coinsSupported},
+        social: {$set: result.social},
+        trading: {$set: result.trading}
+      });
       // replace certain exchange with updated exchange data
       const newExchanges = update(_this.state.exchanges, {$splice: [[row.index, 1, updatedExchange]]})
       // set state with updated exchanges, leaving original state record
@@ -169,9 +176,9 @@ class ExchangeTable extends Component {
 
     function setAccountNeeded(data){
       let output = '';
-      if(data){
+      if(data === true){
         output = 'yes';
-      } else {
+      } else if (data === false){
         output = 'no';
       }
       return output;
@@ -222,7 +229,7 @@ class ExchangeTable extends Component {
       columns: [{
         Header: '<>',
         id: 'accountNeeded',
-        accessor: data => data.accountNeeded ? setAccountNeeded(data.accountNeeded) : ''
+        accessor: data => setAccountNeeded(data.accountNeeded)
       }]
     },
     {
@@ -233,7 +240,7 @@ class ExchangeTable extends Component {
       }]
     },
     {
-      Header: 'Identity Verification',
+      Header: 'Identity Verification', // make popover for coinbase that says depends on amount wanting to purchase
       columns: [{
         Header: '<>',
         accessor: 'verify'
