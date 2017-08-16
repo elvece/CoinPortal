@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Promise = require('bluebird');
 
 const WalletSchema = new mongoose.Schema({
-  id: Schema.Types.ObjectId,
+  id: mongoose.Schema.Types.ObjectId,
   address: String,
   balance: Number,
   coin: String,

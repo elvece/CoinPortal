@@ -3,7 +3,7 @@ const Wallet = require('../models/wallet.model.js');
 const Promise = require('bluebird');
 
 const AccountSchema = new mongoose.Schema({
-  id: Schema.Types.ObjectId,
+  id: mongoose.Schema.Types.ObjectId,
   username: {
     type: String,
     unique: true,
@@ -11,7 +11,10 @@ const AccountSchema = new mongoose.Schema({
     trim: true,
     required: true
   },
-  name: String,
+  name: {
+    type: String,
+    required: true
+  },
   wallets: [Wallet.schema],
 });
 
@@ -41,6 +44,4 @@ AccountSchema.methods.getWallet = function(coin){
     .exec();
 }
 
-module.exports = {
-  mongoose.model('Accounts', AccountSchema);
-};
+module.exports = mongoose.model('Accounts', AccountSchema);
