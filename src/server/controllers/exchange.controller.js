@@ -1,12 +1,15 @@
+const Promise = require('bluebird');
+const request = require('request-promise');
 const Exchange = require('../models/exchange.model.js').Exchange;
 const Coin = require('../models/exchange.model.js').Coin;
 const Social = require('../models/exchange.model.js').Social;
 const Trade = require('../models/exchange.model.js').Trade;
-const request = require('request-promise');
-const Promise = require('bluebird');
+const Helper = require('../helpers/exchange.helpers.js');
+
 const SOCIAL = 'social';
 const TRADE = 'trade';
 const COIN = 'coin';
+
 const createSchema = {
   coin: function(data){
     let newCoin = new Coin({
@@ -33,23 +36,6 @@ const createSchema = {
   }
 }
 
-// for setting new sub-schema to parent schema
-function setSubSchemaData(body, prop, type){
-  for (let i = body.length - 1; i >= 0; i--) {
-    prop.push(createSchema[type](body[i]));
-  }
-}
-
-function setUpdateSchema(exchangeProp, body){
-  for (let i = 0; i < exchangeProp.length; i++) {
-    for (let j = 0; j < body.length; j++) {
-      if(exchangeProp[i]._id.toString() === body[j]._id){
-        exchangeProp.set(i, body[j])
-      }
-    }
-  }
-}
-
 // create new exchange data
 function create(req, res, next){
   console.log('**********CREATE REQ BODY:',req.body)
@@ -73,10 +59,10 @@ function create(req, res, next){
   console.log('********* NEW EXCHANGE:',exchange)
 
   if(req.body.social){
-    setSubSchemaData(req.body.social, exchange.social, SOCIAL);
+    Helper.setSubSchemaData(req.body.social, exchange.social, SOCIAL);
   }
   if(req.body.coinData){
-    setSubSchemaData(req.body.coinData, exchange.coinData, COIN);
+    Helper.setSubSchemaData(req.body.coinData, exchange.coinData, COIN);
   }
 
   exchange.save()
@@ -154,22 +140,23 @@ function update(req, res, next){
   if(req.body.coinData){
     //if no coins yet exist in exchange.coinData
     if(exchange.coinData && exchange.coinData.length <= 0){
-      setSubSchemaData(req.body.coinData, exchange.coinData, COIN);
+      Helper.setSubSchemaData(req.body.coinData, exchange.coinData, COIN);
     }
     //else if coins exist in exchange.coinData, does it match one that exists? if not, create it
     else if(exchange.coinData && exchange.coinData.length > 0){
-      setUpdateSchema(exchange.coinData, req.body.coinData);
+      console.log(Helper)
+      Helper.setUpdateSchema(exchange.coinData, req.body.coinData);
     }
   }
 
   if(req.body.social){
     //if no accounts yet exist in exchange.social
     if(exchange.social && exchange.social.length <= 0){
-      setSubSchemaData(req.body.social, exchange.social, SOCIAL)
+      Helper.setSubSchemaData(req.body.social, exchange.social, SOCIAL)
     }
     //else if accounts exist in exchange.social, does it match one that exists? if not, create it
     else if(exchange.social && exchange.social.length > 0){
-      setUpdateSchema(exchange.social, req.body.social);
+      Helper.setUpdateSchema(exchange.social, req.body.social);
     }
   }
 
