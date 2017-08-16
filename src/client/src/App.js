@@ -79,7 +79,7 @@ class ExchangeTable extends Component {
       })
   }
   handleUpdateExchange = (row) => {
-    console.log(row)
+    console.log('UPDATE ROW: ', row)
     const ogRow = row.original;
     // persist this for use in callback function
     const _this = this;
@@ -114,7 +114,10 @@ class ExchangeTable extends Component {
       coinsSupported: ['BTC', 'ETH'],
       purchaseOptions: ['Wire', 'ACH Debit'],
       accountNeeded: true,
-      verify: true
+      verify: true,
+      depositFee: 'none',
+      withdrawalFee: '0.25%',
+      website: 'https://gemini.com/'
     };
     Client.putStuff(`api/exchanges/`+ogRow._id, data, function(result){
       // use update to persist state immutability - update certain exchange coinData with result
@@ -123,10 +126,13 @@ class ExchangeTable extends Component {
         accountNeeded: {$set: result.accountNeeded},
         coinData: {$set: result.coinData},
         coinsSupported: {$set: result.coinsSupported},
+        depositFee: {$set: result.depositFee},
         purchaseOptions: {$set: result.purchaseOptions},
         social: {$set: result.social},
         trading: {$set: result.trading},
-        verify: {$set: result.verify}
+        verify: {$set: result.verify},
+        website: {$set: result.website},
+        withdrawalFee: {$set: result.withdrawalFee}
       });
       // replace certain exchange with updated exchange data
       const newExchanges = update(_this.state.exchanges, {$splice: [[row.index, 1, updatedExchange]]})
@@ -194,6 +200,7 @@ class ExchangeTable extends Component {
       columns: [{
         Header: '<>',
         accessor: 'name',
+        Cell: row => (<a target="_blank" href={row.original.website ? row.original.website : '/'}>{row.row.name}</a>)
       }]
     },
     {
@@ -222,11 +229,17 @@ class ExchangeTable extends Component {
       ]
     },
     {
-      Header: 'Fee',
-      columns: [{
-        Header: '<>',
-        accessor: 'fee'
-      }]
+      Header: 'Fees',
+      columns: [
+        {
+          Header: 'Withdrawl',
+          accessor: 'withdrawalFee'
+        },
+        {
+          Header: 'Deposit',
+          accessor: 'depositFee'
+        },
+      ]
     },
     {
       Header: 'Account Needed',
