@@ -1,40 +1,12 @@
 const Promise = require('bluebird');
 const request = require('request-promise');
-const Exchange = require('../models/exchange.model.js').Exchange;
-const Coin = require('../models/exchange.model.js').Coin;
-const Social = require('../models/exchange.model.js').Social;
-const Trade = require('../models/exchange.model.js').Trade;
+const Exchange = require('../models/exchange.model.js');
+
 const Helper = require('../helpers/exchange.helpers.js');
 
 const SOCIAL = 'social';
 const TRADE = 'trade';
 const COIN = 'coin';
-
-const createSchema = {
-  coin: function(data){
-    let newCoin = new Coin({
-      name: data.name,
-      url: data.url,
-      price: data.price,
-    });
-    return newCoin;
-  },
-  social: function(data){
-    let newAcct = new Social({
-      name: data.name,
-      url: data.url
-    });
-    return newAcct;
-  },
-  trade: function(data){
-    let newTrade = new Trade({
-      orderTypes: data.orderTypes,
-      auction: data.auction,
-      margin: data.margin,
-    });
-    return newTrade;
-  }
-}
 
 // create new exchange data
 function create(req, res, next){
@@ -49,7 +21,7 @@ function create(req, res, next){
     service: req.body.service,
     social: [],
     support: req.body.support,
-    trading: req.body.trading ? createSchema[TRADE](req.body.trading): null,
+    trading: req.body.trading ? Helper.createSchema[TRADE](req.body.trading): null,
     ux: req.body.ux,
     verify: req.body.verify,
     website: req.body.website,
@@ -127,7 +99,7 @@ function update(req, res, next){
   if(req.body.trading){
     //if no trading details yet exist for this exchange
     if((exchange.trading && exchange.trading.length <=0) || !exchange.trading){
-      exchange.trading = createSchema[TRADE](req.body.trading);
+      exchange.trading = Helper.createSchema[TRADE](req.body.trading);
     }
     else if(exchange.trading && exchange.trading.length > 0){
       // NOTE: need if conditions for each sub prop (ie exchange.trading.margin)?
@@ -186,7 +158,7 @@ function processPriceChange(exchanges){
       promises.push(getExternalExchangeData(coin.url)
         .then((result) => {
           result = JSON.parse(result);
-          coin.set({'price': result.last})
+          coin.set({'price': result.last})//for Gemini
           coin.save();
           exchange.save();
         })

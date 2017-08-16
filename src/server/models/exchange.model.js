@@ -1,24 +1,9 @@
-const mongoose = require('mongoose');
-mongoose.set('debug', true)
-
 const Promise = require('bluebird');
-
-const CoinSchema = new mongoose.Schema({
-  name: String,
-  url: String,
-  price: String // String rather than Number so can accept decimal places
-});
-
-const TradeSchema = new mongoose.Schema({
-  orderTypes: [String],
-  auction: Boolean,
-  margin: Boolean
-});
-
-const SocialSchema = new mongoose.Schema({
-  name: String,
-  url: String
-});
+const mongoose = require('mongoose');
+const Coin = require('../models/coin.model.js');
+const SocialAccount = require('../models/social.model.js');
+const TradeType = require('../models/trade.model.js');
+mongoose.set('debug', true)
 
 const ExchangeSchema = new mongoose.Schema({
   id: mongoose.Schema.Types.ObjectId,
@@ -28,14 +13,14 @@ const ExchangeSchema = new mongoose.Schema({
     required: true
   },
   account: Boolean,
-  coinData: [CoinSchema], //objects of coin name, api url, and current price
+  coinData: [Coin.schema], //objects of coin name, api url, and current price
   coinsSupported: [String],
   depositFee: String,
   purchaseOptions: [String],// debit/credit, paypal...
   service: Number,// rating
-  social: [SocialSchema],
+  social: [SocialAccount.schema],
   support: Number,// rating
-  trading: TradeSchema,
+  trading: TradeType.schema,
   ux: Number,// rating
   verify: Boolean,// identity verification
   website: String,
@@ -60,9 +45,4 @@ ExchangeSchema.statics = {
   }
 };
 
-module.exports = {
-  Exchange: mongoose.model('Exchanges', ExchangeSchema),
-  Coin: mongoose.model('Coins', CoinSchema),
-  Trade: mongoose.model('TradeInfo', TradeSchema),
-  Social: mongoose.model('SocialInfo', SocialSchema)
-};
+module.exports = mongoose.model('Exchanges', ExchangeSchema);
