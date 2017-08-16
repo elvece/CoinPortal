@@ -36,6 +36,4 @@ WalletSchema.methods.getTransactions = function(coinType){
   return this.transactions;
 }
 
-module.exports = {
-  mongoose.model('Wallets', WalletSchema);
-};
+module.exports = mongoose.model('Wallets', WalletSchema);

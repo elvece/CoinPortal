@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Wallet = require('../models/wallet.model.js');
 const Promise = require('bluebird');
 
 const AccountSchema = new mongoose.Schema({
@@ -11,9 +12,7 @@ const AccountSchema = new mongoose.Schema({
     required: true
   },
   name: String,
-  balances: Schema.Types.Mixed,
-  wallets: Schema.Types.Mixed,
-  transactions: Schema.Types.Mixed
+  wallets: [Wallet.schema],
 });
 
 // statics exist directly on model
@@ -36,12 +35,10 @@ AccountSchema.statics = {
 };
 
 // methods can be called on any instance of a model
-AccountSchema.methods.getBalance = function(coinType){
-  return this.balances[coinType];
-}
-
-AccountSchema.methods.getWallet = function(coinType){
-  return this.wallets[coinType];
+AccountSchema.methods.getWallet = function(coin){
+  return Wallet.findOne({coin: coin})
+    .populate()
+    .exec();
 }
 
 module.exports = {
