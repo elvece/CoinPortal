@@ -65,16 +65,15 @@ class ExchangeForm extends Component {
 class ExchangeTable extends Component {
   constructor(props){
     super(props);
-    this.state = {
-      exchanges: [{coinData: []}]
-    };
+    this.state = ({ loading: true });
     this.handleUpdateExchange = this.handleUpdateExchange.bind(this);
   }
   componentDidMount(){
     const _this = this;
     this.serverRequest = Client.getStuff(`api/exchanges/`, function(result){
         _this.setState({
-          exchanges: result
+          exchanges: result,
+          loading: false
         });
       })
   }
@@ -150,7 +149,7 @@ class ExchangeTable extends Component {
   }
 
   render(){
-    const { exchanges } = this.state;
+    const { exchanges, loading } = this.state;
 
     console.log(exchanges)
 
@@ -200,153 +199,156 @@ class ExchangeTable extends Component {
       return output;
     }
 
-    const columns = [
-    {
-      Header: 'Name',
-      columns: [{
-        Header: '<>',
-        accessor: 'name',
-        Cell: row => (<a target="_blank" href={row.original.website ? row.original.website : '/'}>{row.row.name}</a>)
-      }]
-    },
-    {
-      Header: 'Coin Prices',
-      columns: [
-        {
-          Header: 'BTC',
-          id: 'btc',
-          accessor: data => getCoinPrice(data, 'BTC')
-        },
-        {
-          Header: 'ETH',
-          id: 'eth',
-          accessor: data => getCoinPrice(data, 'ETH')
-        },
-        {
-          Header: 'LTC',
-          id: 'ltc',
-          accessor: data => getCoinPrice(data, 'LTC')
-        },
-        {
-          Header: 'DASH',
-          id: 'dash',
-          accessor: data => getCoinPrice(data, 'DASH')
-        }
-      ]
-    },
-    {
-      Header: 'Fees',
-      columns: [
-        {
-          Header: 'Withdrawl',
-          accessor: 'withdrawalFee'
-        },
-        {
-          Header: 'Deposit',
-          accessor: 'depositFee'
-        },
-      ]
-    },
-    {
-      Header: 'Account Needed',
-      columns: [{
-        Header: '<>',
-        id: 'accountNeeded',
-        accessor: data => setFriendlyBoolean(data.accountNeeded)
-      }]
-    },
-    {
-      Header: 'Purchase Options',
-      columns: [{
-        Header: '<>',
-        id: 'purchaseOptions',
-        accessor: data => data.purchaseOptions ? displayArrayAsList(data.purchaseOptions) : ''
-      }]
-    },
-    {
-      Header: 'Identity Verification', // make popover for coinbase that says depends on amount wanting to purchase
-      columns: [{
-        Header: '<>',
-        id: 'verify',
-        accessor: data => setFriendlyBoolean(data.verify)
-      }]
-    },
-    {
-      Header: 'Coins Supported',
-      columns: [{
-        Header: '<>',
-        id: 'coinsSupported',
-          accessor: data => data.coinsSupported ? displayArrayAsList(data.coinsSupported) : ''
-      }]
-    },
-    {
-      Header: 'Trading',
-      columns: [
-        {
-          Header: 'Order Types',
-          id: 'orderTypes',
-          accessor: data => data.trading ? displayArrayAsList(data.trading.orderTypes) : ''
-        },
-        {
-          Header: 'Margin',
-          id: 'margin',
-          accessor: data => data.trading ? data.trading.margin.toString() : ''
-        },
-        {
-          Header: 'Auction',
-          id: 'auction',
-          accessor: data => data.trading ? data.trading.auction.toString() : ''
-        }
-      ]
-    },
-    {
-      Header: 'Social',
-      columns: [
-        {
-          Header: 'Twitter',
-          id: 'twitter',
-          accessor: data => getSocialInfo(data, 'Twitter'),
-          Cell: row => (<a href={row.row.twitter ? row.row.twitter.url : '/'}>Tweet</a>)
-        },
-        {
-          Header: 'Reddit',
-          id: 'reddit',
-          accessor: data => getSocialInfo(data, 'Reddit'),
-          Cell: row => (<a href={row.row.reddit ? row.row.reddit.url : '/'}>Arrr</a>)
-        }
-      ]
-    },
-    {
-      Header: 'Ratings',
-      columns: [
-        {
-          Header: 'Interface',
-          accessor: 'ux',
-        },
-        {
-          Header: 'Customer Service',
-          accessor: 'service',
-        },
-        {
-          Header: 'Support',
-          accessor: 'support',
-        }
-      ],
-    },
-    {
-      Header: 'Options',
-      columns: [{
-        Header: 'Edit',
-        accessor: '_id',
-        Cell: row => (<button onClick={() => this.handleUpdateExchange(row)}>Update</button>)
-      }]
-    }];
+    const columns =
+    [
+      {
+        Header: 'Name',
+        columns: [{
+          Header: '<>',
+          accessor: 'name',
+          Cell: row => (<a target="_blank" href={row.original.website ? row.original.website : '/'}>{row.row.name}</a>)
+        }]
+      },
+      {
+        Header: 'Coin Prices',
+        columns: [
+          {
+            Header: 'BTC',
+            id: 'btc',
+            accessor: data => getCoinPrice(data, 'BTC')
+          },
+          {
+            Header: 'ETH',
+            id: 'eth',
+            accessor: data => getCoinPrice(data, 'ETH')
+          },
+          {
+            Header: 'LTC',
+            id: 'ltc',
+            accessor: data => getCoinPrice(data, 'LTC')
+          },
+          {
+            Header: 'DASH',
+            id: 'dash',
+            accessor: data => getCoinPrice(data, 'DASH')
+          }
+        ]
+      },
+      {
+        Header: 'Fees',
+        columns: [
+          {
+            Header: 'Withdrawl',
+            accessor: 'withdrawalFee'
+          },
+          {
+            Header: 'Deposit',
+            accessor: 'depositFee'
+          },
+        ]
+      },
+      {
+        Header: 'Account Needed',
+        columns: [{
+          Header: '<>',
+          id: 'accountNeeded',
+          accessor: data => setFriendlyBoolean(data.accountNeeded)
+        }]
+      },
+      {
+        Header: 'Purchase Options',
+        columns: [{
+          Header: '<>',
+          id: 'purchaseOptions',
+          accessor: data => data.purchaseOptions ? displayArrayAsList(data.purchaseOptions) : ''
+        }]
+      },
+      {
+        Header: 'Identity Verification', // make popover for coinbase that says depends on amount wanting to purchase
+        columns: [{
+          Header: '<>',
+          id: 'verify',
+          accessor: data => setFriendlyBoolean(data.verify)
+        }]
+      },
+      {
+        Header: 'Coins Supported',
+        columns: [{
+          Header: '<>',
+          id: 'coinsSupported',
+            accessor: data => data.coinsSupported ? displayArrayAsList(data.coinsSupported) : ''
+        }]
+      },
+      {
+        Header: 'Trading',
+        columns: [
+          {
+            Header: 'Order Types',
+            id: 'orderTypes',
+            accessor: data => data.trading ? displayArrayAsList(data.trading.orderTypes) : ''
+          },
+          {
+            Header: 'Margin',
+            id: 'margin',
+            accessor: data => data.trading ? data.trading.margin.toString() : ''
+          },
+          {
+            Header: 'Auction',
+            id: 'auction',
+            accessor: data => data.trading ? data.trading.auction.toString() : ''
+          }
+        ]
+      },
+      {
+        Header: 'Social',
+        columns: [
+          {
+            Header: 'Twitter',
+            id: 'twitter',
+            accessor: data => getSocialInfo(data, 'Twitter'),
+            Cell: row => (<a href={row.row.twitter ? row.row.twitter.url : '/'}>Tweet</a>)
+          },
+          {
+            Header: 'Reddit',
+            id: 'reddit',
+            accessor: data => getSocialInfo(data, 'Reddit'),
+            Cell: row => (<a href={row.row.reddit ? row.row.reddit.url : '/'}>Arrr</a>)
+          }
+        ]
+      },
+      {
+        Header: 'Ratings',
+        columns: [
+          {
+            Header: 'Interface',
+            accessor: 'ux',
+          },
+          {
+            Header: 'Customer Service',
+            accessor: 'service',
+          },
+          {
+            Header: 'Support',
+            accessor: 'support',
+          }
+        ],
+      },
+      {
+        Header: 'Options',
+        columns: [{
+          Header: 'Edit',
+          accessor: '_id',
+          Cell: row => (<button onClick={() => this.handleUpdateExchange(row)}>Update</button>)
+        }]
+      }
+    ];
 
     return (
       <ReactTable
         data={exchanges}
         columns={columns}
         defaultPageSize={5}
+        loading={loading}
       />
     );
   }
