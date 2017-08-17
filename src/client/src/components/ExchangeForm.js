@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Client from '../Client';
 import '../App.css';
-import ExchangeTable from './ExchangeTable.js';
 
 class ExchangeForm extends Component {
   constructor(props){
@@ -32,7 +31,6 @@ class ExchangeForm extends Component {
           </label>
           <input type="submit" value="Submit"/>
         </form>
-        <ExchangeTable/>
       </div>
     );
   }

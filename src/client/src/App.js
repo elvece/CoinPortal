@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Client from "./Client";
 import './App.css';
 import ExchangeForm from './components/ExchangeForm.js';
+import ExchangeTable from './components/ExchangeTable.js';
+import AccountChart from './components/AccountChart.js';
 
 class App extends Component {
 
@@ -19,7 +21,9 @@ class App extends Component {
           Exchange Table
         </p>
         <button onClick={() => this.getData()}>Click me</button>
-        <ExchangeForm></ExchangeForm>
+        <ExchangeForm/>
+        <ExchangeTable/>
+        <AccountChart/>
       </div>
     );
   }
