@@ -150,6 +150,7 @@ function getExternalExchangeData(url){
     })
 }
 
+//TODO need to update to handle gemini errors
 function processPriceChange(exchanges){
   let promises = [];
   exchanges.forEach(function(exchange){
