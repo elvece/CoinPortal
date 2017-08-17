@@ -56,8 +56,8 @@ function list(req, res, next){
             })
           })
           .catch((e) => {
-            console.log(e);
-            next(e);
+            console.log('***ERROR LINE 59:', e);
+            next(e);//need to handle error
           });
 }
 
@@ -163,7 +163,7 @@ function processPriceChange(exchanges){
           exchange.save();
         })
         .catch((e) => {
-          console.log(e);
+          console.log('***ERROR LINE 166:',e);
           next(e);
         })
     )});
@@ -176,7 +176,7 @@ function processPriceChange(exchanges){
         return resolve(exchanges);
       });
     }).catch((e) => {
-        console.log(e)
+        console.log('***ERROR LINE 179:',e)
     });
 }
 
