@@ -52,12 +52,12 @@ class ExchangeTable extends Component {
         name: 'Twitter',
         url: 'https://twitter.com/GeminiDotCom'
       }],
-      trading: {
+      trading: [{
         _id:'5993a24a615a9ddef5724f02',
-        orderTypes: ['Market','Limit', 'IOC', 'MOC', 'Sell'],
+        orderTypes: ['Market','Limit', 'IOC', 'MOC'],
         auction: true,
         margin: false
-      },
+      }],
       coinsSupported: ['BTC', 'ETH'],
       purchaseOptions: ['Wire', 'ACH Debit'],
       accountNeeded: true,
@@ -231,17 +231,17 @@ class ExchangeTable extends Component {
           {
             Header: 'Order Types',
             id: 'orderTypes',
-            accessor: data => data.trading ? displayArrayAsList(data.trading[0].orderTypes) : ''
+            accessor: data => data.trading && data.trading.length > 0 ? displayArrayAsList(data.trading[0].orderTypes) : ''
           },
           {
             Header: 'Margin',
             id: 'margin',
-            accessor: data => data.trading ? data.trading[0].margin.toString() : ''
+            accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].margin.toString() : ''
           },
           {
             Header: 'Auction',
             id: 'auction',
-            accessor: data => data.trading ? data.trading[0].auction.toString() : ''
+            accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].auction.toString() : ''
           }
         ]
       },

@@ -20,7 +20,7 @@ function create(req, res, next){
     service: req.body.service,
     social: [],
     support: req.body.support,
-    trading: req.body.trading ? Helper.createSchema[TRADE](req.body.trading): null,
+    trading: req.body.trading ? Helper.createSchema[TRADE](req.body.trading) : Helper.createSchema[TRADE]({}),
     ux: req.body.ux,
     verify: req.body.verify,
     website: req.body.website,
@@ -49,7 +49,6 @@ function get(req, res){
 // get all exchanges
 function list(req, res, next){
   Exchange.list()
-          // .then(exchanges => res.json(exchanges))
           .then((exchanges) => {
             processPriceChange(exchanges).then((exchanges) => {
               res.json(exchanges);
@@ -99,11 +98,11 @@ function update(req, res, next){
 
   if(req.body.trading){
     //if no trading details yet exist for this exchange
-    if(exchange.trading && !exchange.trading._id){
-      exchange.trading = Helper.createSchema[TRADE](req.body.trading);
+    if((exchange.trading && exchange.trading.length <= 0)){
+      exchange.trading.set(exchange.trading, Helper.createSchema[TRADE](req.body.trading));
     }
-    else if(exchange.trading && exchange.trading._id){
-      Helper.setUpdateSchema(req.body.trading, exchange.trading);
+    else if(exchange.trading && exchange.trading.length > 0){
+      Helper.setUpdateSchema(exchange.trading, req.body.trading);
     }
   }
 
