@@ -54,7 +54,7 @@ class ExchangeTable extends Component {
       }],
       trading: {
         _id:'5993a24a615a9ddef5724f02',
-        orderTypes: ['Market','Limit', 'IOC', 'MOC'],
+        orderTypes: ['Market','Limit', 'IOC', 'MOC', 'Sell'],
         auction: true,
         margin: false
       },
@@ -231,17 +231,17 @@ class ExchangeTable extends Component {
           {
             Header: 'Order Types',
             id: 'orderTypes',
-            accessor: data => data.trading ? displayArrayAsList(data.trading.orderTypes) : ''
+            accessor: data => data.trading ? displayArrayAsList(data.trading[0].orderTypes) : ''
           },
           {
             Header: 'Margin',
             id: 'margin',
-            accessor: data => data.trading ? data.trading.margin.toString() : ''
+            accessor: data => data.trading ? data.trading[0].margin.toString() : ''
           },
           {
             Header: 'Auction',
             id: 'auction',
-            accessor: data => data.trading ? data.trading.auction.toString() : ''
+            accessor: data => data.trading ? data.trading[0].auction.toString() : ''
           }
         ]
       },

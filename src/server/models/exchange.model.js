@@ -20,7 +20,7 @@ const ExchangeSchema = new mongoose.Schema({
   service: Number,// rating
   social: [SocialAccount.schema],
   support: Number,// rating
-  trading: TradeType.schema,
+  trading: [TradeType.schema],
   ux: Number,// rating
   verify: Boolean,// identity verification
   website: String,
