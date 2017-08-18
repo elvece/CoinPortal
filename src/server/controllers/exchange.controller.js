@@ -6,6 +6,8 @@ const Helper = require('../helpers/schema.helpers.js');
 const SOCIAL = 'social';
 const TRADE = 'trade';
 const COIN = 'coin';
+const GEMINI = 'Gemini';
+const COINBASE = 'Coinbase';
 
 // create new exchange data
 function create(req, res, next){
@@ -156,7 +158,11 @@ function processPriceChange(exchanges){
         .then((result) => {
           console.log(' ****** processPriceChange RESULT: ', result)
           result = JSON.parse(result);
-          coin.set({'price': result.last})//for Gemini
+          if(exchange.name === GEMINI){
+            coin.set({'price': result.last})//for Gemini
+          } else if(exchange.name === COINBASE){
+            coin.set({'price': result.data.amount})
+          }
           coin.save();
           exchange.save();
         })
