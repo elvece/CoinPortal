@@ -18,7 +18,7 @@ class AccountManager extends Component {
     this.serverRequest = () => {
       const _this = this;
       Client.getStuff(`api/accounts/`, function(result){
-        console.log('ACCOUNT RESULT: ', result)
+        // console.log('ACCOUNT RESULT: ', result)
         _this.setState({
           accounts: result,
           loading: false
@@ -42,7 +42,6 @@ class AccountManager extends Component {
       name: this.state.name,
       username: this.state.username
     };
-    const _this = this;
     Client.postStuff(`api/accounts/`, newAccount);
     this.serverRequest();
     this.setState({
@@ -55,27 +54,27 @@ class AccountManager extends Component {
     this.serverRequest();
   }
 
-  handleUpdateAccount(){
+  handleUpdateAccount(index){
     const _this = this;
     // temp data for simulating form update
-    const data = [{
-      _id: '5995ecc2629a8f0c2028fae8',
-      name: 'test',
-      username: 'testUserName',
+    const data = {
+      _id: '59965a6a359f6e1a3314a645',
+      name: 'Duey',
+      username: 'dueydash',
       wallets: [{
+        _id: '59965bdc1d544a1aa403d1c9',
         coin: 'BTC',
-        address: '1234'}]
-    }];
-    Client.putStuff(`api/accounts/`+data[0]._id, data, function(result){
+        address: '1234567'}]
+    };
+    Client.putStuff(`api/accounts/`+data._id, data, function(result){
       // use update to persist state immutability - update certain account with result
-      console.log('result: ', result)
       const updatedAccount = update(data, {
         name: {$set: result.name},
         username: {$set: result.username},
         wallets: {$set: result.wallets},
       });
       // replace certain account with updated account data
-      const newAccounts = update(_this.state.accounts, {$splice: [[1, 1, updatedAccount]]})
+      const newAccounts = update(_this.state.accounts, {$splice: [[index, 1, updatedAccount]]})
       // set state with updated accounts, leaving original state record (for history)
       _this.setState({
         accounts: newAccounts
@@ -90,7 +89,8 @@ class AccountManager extends Component {
       return (
         <AccountChart
           account={account}
-          key={i}/>
+          key={i}
+          onClick={(i) => this.handleUpdateAccount(i)}/>
     )})
 
     return (
