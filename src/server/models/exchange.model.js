@@ -41,7 +41,13 @@ ExchangeSchema.statics = {
   list(){// returns list of all exchanges
     return this.find()
       .sort({name: 1})
-      .exec();
+      .exec()
+      .then((exchanges) => {
+        if(exchanges){
+          return exchanges;
+        }
+        return Promise.reject('Something went wrong loading exchanges.')
+      })
   }
 };
 

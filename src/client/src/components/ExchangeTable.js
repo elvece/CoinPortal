@@ -14,15 +14,19 @@ class ExchangeTable extends Component {
   }
   componentDidMount(){
     const _this = this;
-    this.serverRequest = Client.getStuff(`api/exchanges/`, function(result){
+    //TODO: refactor this into own method
+    this.serverRequest = Client.getStuff(`api/exchanges/`, function(result, reject){
+      if(result){
         _this.setState({
           exchanges: result,
           loading: false
         });
+      }
+      if(reject) console.log('SERVER REJECTION: ', reject)
       })
   }
   handleUpdateExchange = (row) => {
-    console.log('UPDATE ROW: ', row)
+    // console.log('UPDATE ROW: ', row)
     const ogRow = row.original;
     // persist this for use in callback function
     const _this = this;
@@ -67,7 +71,7 @@ class ExchangeTable extends Component {
     };
     Client.putStuff(`api/exchanges/`+ogRow._id, data, function(result){
       // use update to persist state immutability - update certain exchange coinData with result
-      console.log('result: ', result)
+      // console.log('result: ', result)
       const updatedExchange = update(ogRow, {
         accountNeeded: {$set: result.accountNeeded},
         coinData: {$set: result.coinData},
@@ -94,8 +98,6 @@ class ExchangeTable extends Component {
 
   render(){
     const { exchanges, loading } = this.state;
-
-    console.log(exchanges)
 
     function displayArrayAsList(data){
       let output = '';

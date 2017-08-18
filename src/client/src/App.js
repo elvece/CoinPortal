@@ -6,6 +6,11 @@ import ExchangeTable from './components/ExchangeTable.js';
 import AccountManager from './components/AccountManager.js';
 
 class App extends Component {
+  /* TODO:
+      (1) make ExchangeManager to handle getting/setting exchange data
+      (2) pass data into ExchangeForm and ExchangeTable
+      (3) refactor ExchangeForm and Exchange Table to handle data as props
+  */
 
   getData = () => {
     Client.getStuff(`api/exchanges/`).then(console.log('hi'));

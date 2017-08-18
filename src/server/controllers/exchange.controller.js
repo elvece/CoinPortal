@@ -9,7 +9,7 @@ const COIN = 'coin';
 
 // create new exchange data
 function create(req, res, next){
-  console.log('**********CREATE REQ BODY:',req.body)
+  console.log(' ****** CREATE REQ BODY:',req.body)
   const exchange = new Exchange({
     accountNeeded: req.body.accountNeeded,
     depositFee: req.body.depositFee,
@@ -27,7 +27,7 @@ function create(req, res, next){
     withdrawalFee: req.body.withdrawalFee
   });
 
-  console.log('********* NEW EXCHANGE:',exchange)
+  console.log(' ****** NEW EXCHANGE:',exchange)
 
   if(req.body.social){
     Helper.setSubSchemaData(req.body.social, exchange.social, SOCIAL);
@@ -54,9 +54,10 @@ function list(req, res, next){
             processPriceChange(exchanges).then((exchanges) => {
               res.json(exchanges);
             })
+              // res.json(exchanges);
           })
           .catch((e) => {
-            console.log('***ERROR LINE 59:', e);
+            console.log(' ****** LIST EXCHANGE ERROR:', e);
             next(e);//need to handle error
           });
 }
@@ -145,7 +146,7 @@ function getExternalExchangeData(url){
       return data;
     })
     .catch((err) => {
-      console.log(err);
+      console.log(' ****** getExternalExchangeData ERROR: ', err);
       return err;
     })
 }
@@ -157,13 +158,14 @@ function processPriceChange(exchanges){
     exchange.coinData.forEach(function(coin){
       promises.push(getExternalExchangeData(coin.url)
         .then((result) => {
+          console.log(' ****** processPriceChange RESULT: ', result)
           result = JSON.parse(result);
           coin.set({'price': result.last})//for Gemini
           coin.save();
           exchange.save();
         })
         .catch((e) => {
-          console.log('***ERROR LINE 166:',e);
+          console.log(' ****** processPriceChange ERROR:', e);
           next(e);
         })
     )});
@@ -172,11 +174,16 @@ function processPriceChange(exchanges){
   return Promise.all(promises)
     .then(() => {
       // need to return a promise for proper handling in route method
-      return new Promise((resolve) => {
-        return resolve(exchanges);
+      return new Promise((resolve, reject) => {
+        if(resolve){
+          return resolve(exchanges);
+        } else {
+          return resolve(reject);
+        }
       });
     }).catch((e) => {
-        console.log('***ERROR LINE 179:',e)
+        next(e);
+        console.log('****** PROMISE ALL ERROR:',e)
     });
 }
 
