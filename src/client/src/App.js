@@ -3,7 +3,7 @@ import Client from "./Client";
 import './App.css';
 import ExchangeForm from './components/ExchangeForm.js';
 import ExchangeTable from './components/ExchangeTable.js';
-import AccountChart from './components/AccountChart.js';
+import AccountManager from './components/AccountManager.js';
 
 class App extends Component {
 
@@ -23,7 +23,7 @@ class App extends Component {
         <button onClick={() => this.getData()}>Click me</button>
         <ExchangeForm/>
         <ExchangeTable/>
-        <AccountChart/>
+        <AccountManager/>
       </div>
     );
   }

@@ -34,9 +34,7 @@ function list(req, res, next){
   Account.list()
           // .then(accounts => res.json(accounts))
           .then((accounts) => {
-            processPriceChange(accounts).then((accounts) => {
-              res.json(accounts);
-            })
+            res.json(accounts);
           })
           .catch((e) => {
             console.log(e);
