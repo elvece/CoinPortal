@@ -8,6 +8,7 @@ const TRADE = 'trade';
 const COIN = 'coin';
 const GEMINI = 'Gemini';
 const COINBASE = 'Coinbase';
+const SHAPESHIFT = 'ShapeShift';
 
 // create new exchange data
 function create(req, res, next){
@@ -162,6 +163,9 @@ function processPriceChange(exchanges){
             coin.set({'price': result.last})//for Gemini
           } else if(exchange.name === COINBASE){
             coin.set({'price': result.data.amount})
+          } else if(exchange.name === SHAPESHIFT){
+            coin.set({'price': result.rate})
+            coin.set({'minerFee': result.minerFee})
           }
           coin.save();
           exchange.save();
