@@ -31,44 +31,7 @@ class ExchangeTable extends Component {
     // persist this for use in callback function
     const _this = this;
     // temp data for simulating form update
-    const data = {
-      name: 'Gemini',
-      coinData: [
-        {
-          _id: '5993a24a615a9ddef5724f05',
-          name: 'BTC',
-          url: 'https://api.gemini.com/v1/pubticker/btcusd',
-          price: 4200
-        },
-        {
-          _id: '5993a24a615a9ddef5724f04',
-          name: 'ETH',
-          url: 'https://api.gemini.com/v1/pubticker/ethusd',
-          price: 420
-        }
-      ],
-      social: [{
-        _id: '5993a24a615a9ddef5724f06',
-        name: 'Twitter',
-        url: 'https://twitter.com/GeminiDotCom'
-      }],
-      trading: [{
-        _id:'5993a24a615a9ddef5724f02',
-        orderTypes: ['Market','Limit', 'IOC', 'MOC'],
-        auction: true,
-        margin: false
-      }],
-      coinsSupported: ['BTC', 'ETH'],
-      purchaseOptions: ['Wire', 'ACH Debit'],
-      accountNeeded: true,
-      verify: true,
-      depositFee: 'none',
-      withdrawalFee: '0.25%',
-      website: 'https://gemini.com/',
-      service: 4,
-      support: 4,
-      ux: 4
-    };
+    const data = {};
     Client.putStuff(`api/exchanges/`+ogRow._id, data, function(result){
       // use update to persist state immutability - update certain exchange coinData with result
       // console.log('result: ', result)
@@ -236,12 +199,12 @@ class ExchangeTable extends Component {
           {
             Header: 'Margin',
             id: 'margin',
-            accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].margin.toString() : ''
+            accessor: data => data.trading && data.trading.length > 0 && data.trading[0].margin ? data.trading[0].margin.toString() : ''
           },
           {
             Header: 'Auction',
             id: 'auction',
-            accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].auction.toString() : ''
+            accessor: data => data.trading && data.trading.length && data.trading[0].auction> 0 ? data.trading[0].auction.toString() : ''
           }
         ]
       },
