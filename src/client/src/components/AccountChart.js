@@ -17,7 +17,7 @@ class AccountChart extends Component {
         <p>{account.name}</p>
         <p>{account.username}</p>
         {wallets}
-        <button onClick={this.props.onClick}>Update</button>
+        <button className="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onClick={this.props.onClick}>Update</button>
       </div>
     );
   }

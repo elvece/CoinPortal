@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import Client from '../Client';
 import '../App.css';
+import '../styles/react-table.css';
 import update from 'immutability-helper';
 import ReactTable from 'react-table';
-import 'react-table/react-table.css';
-
 
 class ExchangeTable extends Component {
   constructor(props){
@@ -112,10 +111,12 @@ class ExchangeTable extends Component {
     [
       {
         Header: 'Name',
+        headerClassName: 'mdl-data-table__cell',
         columns: [{
           Header: '<>',
           accessor: 'name',
-          Cell: row => (<a target="_blank" href={row.original.website ? row.original.website : '/'}>{row.row.name}</a>)
+          Cell: row => (<a target="_blank" href={row.original.website ? row.original.website : '/'}>{row.row.name}</a>),
+          // style: {background: 'yellow'}
         }]
       },
       {
@@ -156,14 +157,15 @@ class ExchangeTable extends Component {
           },
         ]
       },
-      {
-        Header: 'Account Needed',
-        columns: [{
-          Header: '<>',
-          id: 'accountNeeded',
-          accessor: data => setFriendlyBoolean(data.accountNeeded)
-        }]
-      },
+      // {
+      //   Header: 'Account Needed',
+      //   columns: [{
+      //     Header: '<>',
+      //     id: 'accountNeeded',
+      //     accessor: data => setFriendlyBoolean(data.accountNeeded),
+      //     minWidth: 200
+      //   }],
+      // },
       {
         Header: 'Purchase Options',
         columns: [{
@@ -173,11 +175,12 @@ class ExchangeTable extends Component {
         }]
       },
       {
-        Header: 'Identity Verification', // make popover for coinbase that says depends on amount wanting to purchase
+        Header: 'Account/Verification', // make popover for coinbase that says depends on amount wanting to purchase
         columns: [{
           Header: '<>',
           id: 'verify',
-          accessor: data => setFriendlyBoolean(data.verify)
+          accessor: data => setFriendlyBoolean(data.verify),
+          minWidth: 220
         }]
       },
       {
@@ -199,12 +202,12 @@ class ExchangeTable extends Component {
           {
             Header: 'Margin',
             id: 'margin',
-            accessor: data => data.trading && data.trading.length > 0 && data.trading[0].margin ? data.trading[0].margin.toString() : ''
+            accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].margin.toString() : ''
           },
           {
             Header: 'Auction',
             id: 'auction',
-            accessor: data => data.trading && data.trading.length && data.trading[0].auction> 0 ? data.trading[0].auction.toString() : ''
+            accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].auction.toString() : ''
           }
         ]
       },
@@ -248,8 +251,8 @@ class ExchangeTable extends Component {
           Header: 'Edit',
           accessor: '_id',
           Cell: row => (<button onClick={() => this.handleUpdateExchange(row)}>Update</button>)
-        }]
-      }
+        }],
+      },
     ];
 
     return (
@@ -266,17 +269,100 @@ class ExchangeTable extends Component {
         ]}
         showPagination={false}
         showPageJump={false}
-        sortabl={true}
+        sortable={true}
         PadRowComponent ={() => <span>&nbsp;</span>}
-        className={{}}
+        className="-striped"
         style={{}}
-        // column={[
-        //   {
-        //     resizeable: true,
-        //     minWidth: 150,
-        //     getHeaderProps: () => ({})
-        //   },
-        // ]}
+        getTheadGroupProps={() => {
+          //this is top header (name, coin prices)
+          return {
+            // style: {background: 'orange'}
+          }
+        }}
+        getTheadGroupTrProps={() => {
+          //this is also top header (name, coin prices)
+          return ({
+            style: {
+                  // background: 'white',
+                  // borderBottom: 'none'
+            },
+            // className: 'mdl-layout__header-row'
+          })
+        }}
+        getTheadGroupThProps={() => {
+          //this is also top header (name, coin prices)
+          return {
+            // style: {padding: '10px'}
+          }
+        }}
+        getTbodyProps={() => {
+          //this is the whole internal table body
+          return {
+            // style: {padding: '10px'}
+          }
+        }}
+        getTableProps={() => {
+          //this is the whole outer table body
+          return {
+            // className: 'mdl-shadow--2dp'
+          }
+        }}
+        getTrProps={(state, rowInfo, column) => {
+          return {
+            style: {
+              // background: 'blue',
+              // padding: '10px'
+            }
+          }
+        }}
+        getTdProps={(state, rowInfo, column, instance) => {
+          return {
+            onClick: (e, handleOriginal) => {
+              console.log('A Td Element was clicked!')
+              console.log('it produced this event:', e)
+              console.log('It was in this column:', column)
+              console.log('It was in this row:', rowInfo)
+              console.log('It was in this table instance:', instance)
+
+              // IMPORTANT! React-Table uses onClick internally to trigger
+              // events like expanding SubComponents and pivots.
+              // By default a custom 'onClick' handler will override this functionality.
+              // If you want to fire the original onClick handler, call the
+              // 'handleOriginal' function.
+              if (handleOriginal) {
+                handleOriginal()
+              }
+            }
+          }
+        }}
+        column={{
+          Cell: undefined,
+          Header: undefined,
+          Footer: undefined,
+          Aggregated: undefined,
+          Pivot: undefined,
+          PivotValue: undefined,
+          Expander: undefined,
+          Filter: undefined,
+          sortable: undefined,
+          resizable: undefined,
+          filterable: undefined,
+          show: true,
+          minWidth: 100,
+          className: '',
+          // style: {background: 'red'},
+          getProps: () => ({}),
+          headerClassName: '',
+          headerStyle: {},
+          getHeaderProps: () => ({}),
+          footerClassName: '',
+          footerStyle: {},
+          getFooterProps: () => ({}),
+          filterAll: false,
+          filterMethod: undefined,
+          sortMethod: undefined,
+          defaultSortDesc: undefined
+        }}
       />
     );
   }

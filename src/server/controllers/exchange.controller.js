@@ -54,10 +54,10 @@ function get(req, res){
 function list(req, res, next){
   Exchange.list()
           .then((exchanges) => {
-            processPriceChange(exchanges).then((exchanges) => {
+            // processPriceChange(exchanges).then((exchanges) => {
+            //   res.json(exchanges);
+            // })
               res.json(exchanges);
-            })
-              // res.json(exchanges);
           })
           .catch((e) => {
             console.log(' ****** LIST EXCHANGE ERROR:', e);
