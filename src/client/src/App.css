@@ -5,15 +5,14 @@ body * {
 .App-header-icon {
   width: 40px;
   height: 40px;
+  padding: 11px;
 }
 
 .mdl-layout__header {
   background-color: #222;
   height: 90px;
   padding: 10px;
-  color: white;
-  letter-spacing: 10px;
-  text-align: left;
+  color: #F4F4F2;
 }
 
 .mdl-layout__drawer-button {
@@ -31,10 +30,40 @@ ul {
 li {
   display: inline-block;
   padding-left: 20px;
-  letter-spacing: 6px;
+  letter-spacing: 4px;
 }
 
 li a {
   text-decoration: none;
   color: #E2B761;
+}
+
+/* B'DAZZLED BLUE */
+.color-primary {
+  color: #2F547F;
+}
+
+/* DEEP GREEN-CYAN TURQUOISE */
+.color-primary-2 {
+  color: #1C6D65;
+}
+
+/* EARTH YELLOW */
+.color-accent-1 {
+  color: #E2B761;
+}
+
+/* SMOKY TOPAZ */
+.color-accent-2 {
+  color: #8E3B3B;
+}
+
+/* QUICK SILVER */
+.color-accent-grey-1 {
+  color: #A3A19C;
+}
+
+/* WHITE SMOKE */
+.color-accent-white-1 {
+  color: #F4F4F2;
 }

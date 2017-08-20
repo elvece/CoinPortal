@@ -9,10 +9,9 @@ class Header extends Component {
 
   render() {
     return (
-      <div>
         <header className="mdl-layout__header">
           <div className="mdl-layout__header-row">
-            <MdAllOut className="App-header-icon"/>
+            <MdAllOut className="App-header-icon color-accent-1"/>
             <span className="mdl-layout-title">CoinPortal</span>
             <div className="mdl-layout-spacer"></div>
             <nav className="mdl-navigation mdl-layout--large-screen-only">
@@ -23,16 +22,16 @@ class Header extends Component {
             </nav>
           </div>
         </header>
-        <div className="mdl-layout__drawer">
-          <span className="mdl-layout-title">Account</span>
-          <nav className="mdl-navigation">
-            <a className="mdl-navigation__link" href="">Settings</a>
-            <a className="mdl-navigation__link" href="">Charts</a>
-          </nav>
-        </div>
-      </div>
     );
   }
 }
 
 export default Header;
+
+        // <div className="mdl-layout__drawer">
+        //   <span className="mdl-layout-title">Account</span>
+        //   <nav className="mdl-navigation">
+        //     <a className="mdl-navigation__link" href="">Settings</a>
+        //     <a className="mdl-navigation__link" href="">Charts</a>
+        //   </nav>
+        // </div>
