@@ -8,7 +8,6 @@
     -ms-flex-direction: column;
     flex-direction: column;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    max-width: 90%;
 }
 .ReactTable * {
     box-sizing: border-box

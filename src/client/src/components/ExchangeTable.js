@@ -4,6 +4,7 @@ import '../App.css';
 import '../styles/react-table.css';
 import update from 'immutability-helper';
 import ReactTable from 'react-table';
+import { MdSort } from 'react-icons/lib/md';
 
 class ExchangeTable extends Component {
   constructor(props){
@@ -113,10 +114,10 @@ class ExchangeTable extends Component {
         Header: 'Name',
         headerClassName: 'mdl-data-table__cell',
         columns: [{
-          Header: '<>',
+          Header: <MdSort/>,
           accessor: 'name',
-          Cell: row => (<a target="_blank" href={row.original.website ? row.original.website : '/'}>{row.row.name}</a>),
-          // style: {background: 'yellow'}
+          Cell: row => (<a target="_blank" href={row.original.website ? row.original.website : '/'}>{row.row.name}</a>)
+          // style: {transform: rotateX(180deg)};
         }]
       },
       {
@@ -150,101 +151,102 @@ class ExchangeTable extends Component {
           {
             Header: 'Withdrawl',
             accessor: 'withdrawalFee'
-          },
-          {
-            Header: 'Deposit',
-            accessor: 'depositFee'
-          },
+          }
+          // {
+          //   Header: 'Deposit',
+          //   accessor: 'depositFee'
+          // },
         ]
       },
       // {
       //   Header: 'Account Needed',
       //   columns: [{
-      //     Header: '<>',
+      //     Header: <MdSort/>,
       //     id: 'accountNeeded',
       //     accessor: data => setFriendlyBoolean(data.accountNeeded),
       //     minWidth: 200
-      //   }],
+      //   }]
       // },
       {
         Header: 'Purchase Options',
         columns: [{
-          Header: '<>',
+          Header: <MdSort/>,
           id: 'purchaseOptions',
-          accessor: data => data.purchaseOptions ? displayArrayAsList(data.purchaseOptions) : ''
+          accessor: data => data.purchaseOptions ? displayArrayAsList(data.purchaseOptions) : '',
+          minWidth: 220
         }]
       },
       {
         Header: 'Account/Verification', // make popover for coinbase that says depends on amount wanting to purchase
         columns: [{
-          Header: '<>',
+          Header: <MdSort/>,
           id: 'verify',
           accessor: data => setFriendlyBoolean(data.verify),
           minWidth: 220
         }]
       },
-      {
-        Header: 'Coins Supported',
-        columns: [{
-          Header: '<>',
-          id: 'coinsSupported',
-            accessor: data => data.coinsSupported ? displayArrayAsList(data.coinsSupported) : ''
-        }]
-      },
-      {
-        Header: 'Trading',
-        columns: [
-          {
-            Header: 'Order Types',
-            id: 'orderTypes',
-            accessor: data => data.trading && data.trading.length > 0 ? displayArrayAsList(data.trading[0].orderTypes) : ''
-          },
-          {
-            Header: 'Margin',
-            id: 'margin',
-            accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].margin.toString() : ''
-          },
-          {
-            Header: 'Auction',
-            id: 'auction',
-            accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].auction.toString() : ''
-          }
-        ]
-      },
-      {
-        Header: 'Social',
-        columns: [
-          {
-            Header: 'Twitter',
-            id: 'twitter',
-            accessor: data => getSocialInfo(data, 'Twitter'),
-            Cell: row => (<a href={row.row.twitter ? row.row.twitter.url : '/'}>Tweet</a>)
-          },
-          {
-            Header: 'Reddit',
-            id: 'reddit',
-            accessor: data => getSocialInfo(data, 'Reddit'),
-            Cell: row => (<a href={row.row.reddit ? row.row.reddit.url : '/'}>Arrr</a>)
-          }
-        ]
-      },
-      {
-        Header: 'Ratings',
-        columns: [
-          {
-            Header: 'Interface',
-            accessor: 'ux',
-          },
-          {
-            Header: 'Customer Service',
-            accessor: 'service',
-          },
-          {
-            Header: 'Support',
-            accessor: 'support',
-          }
-        ],
-      },
+      // {
+      //   Header: 'Coins Supported',
+      //   columns: [{
+      //     Header: '<>',
+      //     id: 'coinsSupported',
+      //       accessor: data => data.coinsSupported ? displayArrayAsList(data.coinsSupported) : ''
+      //   }]
+      // },
+      // {
+      //   Header: 'Trading',
+      //   columns: [
+      //     {
+      //       Header: 'Order Types',
+      //       id: 'orderTypes',
+      //       accessor: data => data.trading && data.trading.length > 0 ? displayArrayAsList(data.trading[0].orderTypes) : ''
+      //     },
+      //     {
+      //       Header: 'Margin',
+      //       id: 'margin',
+      //       accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].margin.toString() : ''
+      //     },
+      //     {
+      //       Header: 'Auction',
+      //       id: 'auction',
+      //       accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].auction.toString() : ''
+      //     }
+      //   ]
+      // },
+      // {
+      //   Header: 'Social',
+      //   columns: [
+      //     {
+      //       Header: 'Twitter',
+      //       id: 'twitter',
+      //       accessor: data => getSocialInfo(data, 'Twitter'),
+      //       Cell: row => (<a href={row.row.twitter ? row.row.twitter.url : '/'}>Tweet</a>)
+      //     },
+      //     {
+      //       Header: 'Reddit',
+      //       id: 'reddit',
+      //       accessor: data => getSocialInfo(data, 'Reddit'),
+      //       Cell: row => (<a href={row.row.reddit ? row.row.reddit.url : '/'}>Arrr</a>)
+      //     }
+      //   ]
+      // },
+      // {
+      //   Header: 'Ratings',
+      //   columns: [
+      //     {
+      //       Header: 'Interface',
+      //       accessor: 'ux',
+      //     },
+      //     {
+      //       Header: 'Customer Service',
+      //       accessor: 'service',
+      //     },
+      //     {
+      //       Header: 'Support',
+      //       accessor: 'support',
+      //     }
+      //   ],
+      // },
       {
         Header: 'Options',
         columns: [{
@@ -263,8 +265,8 @@ class ExchangeTable extends Component {
         loading={loading}
         defaultSorted={[
           {
-            id: 'name',
-            desc: true
+            id: 'btc',
+            desc: false
           }
         ]}
         showPagination={false}
