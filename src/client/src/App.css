@@ -1,19 +1,38 @@
-.App {
-  text-align: center;
-  font-family: Roboto, sans-serif
+body * {
+  font-family: Quicksand, sans-serif;
 }
 
 .App-header {
   background-color: #222;
-  height: 150px;
-  padding: 20px;
+  height: 100px;
+  padding: 10px;
   color: white;
+  letter-spacing: 10px;
+  text-align: left;
 }
 
-.App-intro {
-  font-size: large;
+.App-header-icon {
+  width: 40px;
+  height: 40px;
 }
 
-.App-Table {
-  background: red
+.mdl-layout__header {
+  background-color: #222;
+  height: 90px;
+  padding: 10px;
+  color: white;
+  letter-spacing: 10px;
+  text-align: left;
+}
+
+.mdl-layout__drawer-button {
+  margin: 18px 12px;
+}
+
+.mdl-layout-title {
+  font-family: Quicksand, sans-serif !important;
+}
+
+.center {
+  text-align: center;
 }
