@@ -38,6 +38,7 @@ class Abacus extends Component {
   }
 
   processTableData(data){
+    //check for undefined or --
     console.log('processTableData: ', data)
     // calculatePurchase();
   }

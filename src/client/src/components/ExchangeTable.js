@@ -127,7 +127,15 @@ class ExchangeTable extends Component {
           {
             Header: 'BTC',
             id: 'btc',
-            accessor: data => getCoinPrice(data, 'BTC')
+            accessor: data => getCoinPrice(data, 'BTC'),
+            Cell: row => (
+              <div style={{
+                backgroundColor: row.row.selected && row.row.selected['btc'] === true ? '#8E3B3B' : 'blue',
+                color: row.selected ? '#F4F4F2' : 'none'
+              }}>
+              {row.row.btc}
+              </div>
+            )
           },
           {
             Header: 'ETH',
@@ -321,18 +329,13 @@ class ExchangeTable extends Component {
         getTdProps={(state, rowInfo, column, instance) => {
           return ({
             onClick: (e, handleOriginal) => {
-              console.log('A Td Element was clicked!')
-              console.log('it produced this event:', e)
               console.log('It was in this column:', column)
               console.log('It was in this row:', rowInfo)
-              console.log('It was in this table instance:', instance)
               this.props.calculate(rowInfo.row[column.Header.toLowerCase()]);
 
-              // IMPORTANT! React-Table uses onClick internally to trigger
-              // events like expanding SubComponents and pivots.
-              // By default a custom 'onClick' handler will override this functionality.
-              // If you want to fire the original onClick handler, call the
-              // 'handleOriginal' function.
+              rowInfo.row.selected = {};
+              rowInfo.row.selected[column.Header.toLowerCase()] = true;
+
               if (handleOriginal) {
                 handleOriginal()
               }
