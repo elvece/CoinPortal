@@ -5,7 +5,6 @@ import '../styles/react-table.css';
 import update from 'immutability-helper';
 import ReactTable from 'react-table';
 import { MdSort } from 'react-icons/lib/md';
-import ExchangeForm from './ExchangeForm.js';
 
 
 class ExchangeTable extends Component {
@@ -260,121 +259,114 @@ class ExchangeTable extends Component {
     ];
 
     return (
-      <div>
-        <div className="mdl-grid">
-          <div className="mdl-cell mdl-cell--8-col mdl-cell--2-offset">
-            <ReactTable
-              data={exchanges}
-              columns={columns}
-              defaultPageSize={5}
-              loading={loading}
-              defaultSorted={[
-                {
-                  id: 'btc',
-                  desc: false
-                }
-              ]}
-              showPagination={false}
-              showPageJump={false}
-              sortable={true}
-              PadRowComponent ={() => <span>&nbsp;</span>}
-              className="-striped"
-              style={{}}
-              getTheadGroupProps={() => {
-                //this is top header (name, coin prices)
-                return {
-                  // style: {background: 'orange'}
-                }
-              }}
-              getTheadGroupTrProps={() => {
-                //this is also top header (name, coin prices)
-                return ({
-                  style: {
-                        // background: 'white',
-                        // borderBottom: 'none'
-                  },
-                  // className: 'mdl-layout__header-row'
-                })
-              }}
-              getTheadGroupThProps={() => {
-                //this is also top header (name, coin prices)
-                return {
-                  // style: {padding: '10px'}
-                }
-              }}
-              getTbodyProps={() => {
-                //this is the whole internal table body
-                return {
-                  // style: {padding: '10px'}
-                }
-              }}
-              getTableProps={() => {
-                //this is the whole outer table body
-                return {
-                  // className: 'mdl-shadow--2dp'
-                }
-              }}
-              getTrProps={(state, rowInfo, column) => {
-                return {
-                  style: {
-                    // background: 'blue',
-                    // padding: '10px'
-                  }
-                }
-              }}
-              getTdProps={(state, rowInfo, column, instance) => {
-                return {
-                  onClick: (e, handleOriginal) => {
-                    console.log('A Td Element was clicked!')
-                    console.log('it produced this event:', e)
-                    console.log('It was in this column:', column)
-                    console.log('It was in this row:', rowInfo)
-                    console.log('It was in this table instance:', instance)
+      <ReactTable
+        data={exchanges}
+        columns={columns}
+        defaultPageSize={5}
+        loading={loading}
+        defaultSorted={[
+          {
+            id: 'btc',
+            desc: false
+          }
+        ]}
+        showPagination={false}
+        showPageJump={false}
+        sortable={true}
+        PadRowComponent ={() => <span>&nbsp;</span>}
+        className="-striped"
+        style={{}}
+        getTheadGroupProps={() => {
+          //this is top header (name, coin prices)
+          return {
+            // style: {background: 'orange'}
+          }
+        }}
+        getTheadGroupTrProps={() => {
+          //this is also top header (name, coin prices)
+          return ({
+            style: {
+                  // background: 'white',
+                  // borderBottom: 'none'
+            },
+            // className: 'mdl-layout__header-row'
+          })
+        }}
+        getTheadGroupThProps={() => {
+          //this is also top header (name, coin prices)
+          return {
+            // style: {padding: '10px'}
+          }
+        }}
+        getTbodyProps={() => {
+          //this is the whole internal table body
+          return {
+            // style: {padding: '10px'}
+          }
+        }}
+        getTableProps={() => {
+          //this is the whole outer table body
+          return {
+            // className: 'mdl-shadow--2dp'
+          }
+        }}
+        getTrProps={(state, rowInfo, column) => {
+          return {
+            style: {
+              // background: 'blue',
+              // padding: '10px'
+            }
+          }
+        }}
+        getTdProps={(state, rowInfo, column, instance) => {
+          return {
+            onClick: (e, handleOriginal) => {
+              console.log('A Td Element was clicked!')
+              console.log('it produced this event:', e)
+              console.log('It was in this column:', column)
+              console.log('It was in this row:', rowInfo)
+              console.log('It was in this table instance:', instance)
 
-                    // IMPORTANT! React-Table uses onClick internally to trigger
-                    // events like expanding SubComponents and pivots.
-                    // By default a custom 'onClick' handler will override this functionality.
-                    // If you want to fire the original onClick handler, call the
-                    // 'handleOriginal' function.
-                    if (handleOriginal) {
-                      handleOriginal()
-                    }
-                  }
-                }
-              }}
-              column={{
-                Cell: undefined,
-                Header: undefined,
-                Footer: undefined,
-                Aggregated: undefined,
-                Pivot: undefined,
-                PivotValue: undefined,
-                Expander: undefined,
-                Filter: undefined,
-                sortable: undefined,
-                resizable: undefined,
-                filterable: undefined,
-                show: true,
-                minWidth: 100,
-                className: '',
-                // style: {background: 'red'},
-                getProps: () => ({}),
-                headerClassName: '',
-                headerStyle: {},
-                getHeaderProps: () => ({}),
-                footerClassName: '',
-                footerStyle: {},
-                getFooterProps: () => ({}),
-                filterAll: false,
-                filterMethod: undefined,
-                sortMethod: undefined,
-                defaultSortDesc: undefined
-              }}
-            />
-          </div>
-        </div>
-        <ExchangeForm/>
-      </div>
+              // IMPORTANT! React-Table uses onClick internally to trigger
+              // events like expanding SubComponents and pivots.
+              // By default a custom 'onClick' handler will override this functionality.
+              // If you want to fire the original onClick handler, call the
+              // 'handleOriginal' function.
+              if (handleOriginal) {
+                handleOriginal()
+              }
+            }
+          }
+        }}
+        column={{
+          Cell: undefined,
+          Header: undefined,
+          Footer: undefined,
+          Aggregated: undefined,
+          Pivot: undefined,
+          PivotValue: undefined,
+          Expander: undefined,
+          Filter: undefined,
+          sortable: undefined,
+          resizable: undefined,
+          filterable: undefined,
+          show: true,
+          minWidth: 100,
+          className: '',
+          // style: {background: 'red'},
+          getProps: () => ({}),
+          headerClassName: '',
+          headerStyle: {},
+          getHeaderProps: () => ({}),
+          footerClassName: '',
+          footerStyle: {},
+          getFooterProps: () => ({}),
+          filterAll: false,
+          filterMethod: undefined,
+          sortMethod: undefined,
+          defaultSortDesc: undefined
+        }}
+      />
     );
   }
 }

@@ -8,8 +8,8 @@ class App extends Component {
   render() {
     return (
     <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-      <Header />
-      <Main />
+      <Header/>
+      <Main/>
     </div>
     );
   }

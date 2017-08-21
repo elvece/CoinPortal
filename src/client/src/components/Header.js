@@ -17,7 +17,7 @@ class Header extends Component {
             <nav className="mdl-navigation mdl-layout--large-screen-only">
             <ul>
               <li><Link to='/dashboard'>Dashboard</Link></li>
-              <li><Link to='/table'>Table</Link></li>
+              <li><Link to='/abacus'>Abacus</Link></li>
             </ul>
             </nav>
           </div>
