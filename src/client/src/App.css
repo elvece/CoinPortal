@@ -1,27 +1,5 @@
 body * {
-  /*font-family: Quicksand, sans-serif;*/
-}
-
-.App-header-icon {
-  width: 40px;
-  height: 40px;
-  padding: 11px;
-}
-
-.mdl-layout__header {
-  background-color: #222;
-  height: 90px;
-  padding: 10px;
-  color: #F4F4F2;
-}
-
-.mdl-layout__drawer-button {
-  margin: 18px 12px;
-}
-
-.mdl-layout-title {
-  font-family: Quicksand, sans-serif !important;
-  letter-spacing: 4px;
+  /*font-family: Roboto Condensed, sans-serif;*/
 }
 
 ul {
@@ -34,9 +12,79 @@ li {
   letter-spacing: 4px;
 }
 
-li a {
+li, a {
   text-decoration: none;
   color: #E2B761;
+}
+
+.App-header-icon {
+  width: 40px;
+  height: 40px;
+  padding: 11px;
+}
+
+.Abacus-Result {
+  font-size: 28px;
+  text-align: center;
+  padding: 20px 0px 20px 0px;
+}
+
+.Abacus-grid {
+  justify-content: center;
+}
+
+/* FIXES FOR MATERIAL DESIGN LITE */
+.mdl-layout__header {
+  background-color: #222;
+  height: 90px;
+  padding: 10px;
+  color: #F4F4F2;
+}
+
+.mdl-layout__drawer-button {
+  margin: 18px 12px;
+}
+
+.mdl-layout-title {
+  font-family: Roboto Condensed, sans-serif !important;
+  letter-spacing: 4px;
+}
+
+.mdl-button {
+  font-family: Roboto Condensed, sans-serif !important;
+  letter-spacing: 1px;
+}
+
+.mdl-button--accent {
+  background-color: #8E3B3B !important;
+}
+
+.mdl-card {
+  width: 380px;
+}
+
+.mdl-card__supporting-text, p {
+  font-size: 16px;
+}
+
+.mdl-card__title {
+  background: #E2B761;
+  height: 90px;
+}
+
+.mdl-card__title-text {
+  color: #222;
+  font-family: Roboto Condensed, sans-serif !important;
+  letter-spacing: 1px;
+}
+
+.mdl-card__actions {
+  text-align: right;
+}
+
+.mdl-data-table {
+  font-size: 16px;
+  width: 100%;
 }
 
 /* B'DAZZLED BLUE */
