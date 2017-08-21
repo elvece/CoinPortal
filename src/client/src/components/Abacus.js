@@ -1,9 +1,22 @@
 import React, { Component } from 'react';
 import '../App.css';
 import ExchangeTable from './ExchangeTable.js';
+import { MdCompareArrows } from 'react-icons/lib/md';
 
-function calculatePurchase(){
+function calculatePurchase(data){
+  let result = {};
+  let totalMinerCost;
+  let totalExchangeCost;
+  let howManyCoins;
 
+  totalMinerCost = data.amount * (data.minerFee * 0.01);
+  totalExchangeCost = data.amount * (data.exchangeFee * 0.01);
+
+  result.totalFee = totalExchangeCost + totalMinerCost;
+
+  howManyCoins = data.coinPrice / data.amount;
+  result.coinAmount = data.coinPrice / data.amount;
+  console.log(result.coinAmount);
 }
 
 class Abacus extends Component {
@@ -13,18 +26,25 @@ class Abacus extends Component {
       exchangeRate: 0,
       exchange: '',
       amount: 0,
-      minerFee: 0,
-      exchangeFee: 0,
+      minerFee: 0.25,
+      exchangeFee: 0.50,
       total: 0,
       payment: '',
       coinAmount: 0,
       coin: '',
-      totalFee: 0
+      totalFee: 0,
+      coinPrice: 1000
     })
+  }
+
+  processTableData(data){
+    console.log('processTableData: ', data)
+    // calculatePurchase();
   }
 
   handleChange(){
     return function(e){
+      calculatePurchase(this.state);
       this.setState({[e.target.name]: e.target.value});
     }.bind(this);
   }
@@ -38,12 +58,11 @@ class Abacus extends Component {
 
 
   render(){
-    const abacus_data = this.state;
     const { amount, coinAmount, minerFee, exchangeFee, totalFee, total } = this.state;
 
     return (
       <div>
-        <ExchangeTable abacus={abacus_data} onClick={() => this.handleSubmit()}/>
+        <ExchangeTable calculate={this.processTableData}/>
         <div className="mdl-grid Abacus-grid">
           <div className="mdl-cell mdl-cell--4-col mdl-cell--2-offset">
             <div className="mdl-card mdl-shadow--3dp">
@@ -73,7 +92,7 @@ class Abacus extends Component {
                 <h2 className="mdl-card__title-text">Abacus Result:</h2>
               </div>
               <div className="Abacus-Result">
-                {amount} USD > {coinAmount} BTC
+                {amount} USD <MdCompareArrows/> {coinAmount} BTC
               </div>
                 <table className="mdl-card__supporting-text mdl-data-table mdl-js-data-table mdl-shadow--2dp">
                   <thead>

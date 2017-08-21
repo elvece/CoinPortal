@@ -319,13 +319,14 @@ class ExchangeTable extends Component {
           }
         }}
         getTdProps={(state, rowInfo, column, instance) => {
-          return {
+          return ({
             onClick: (e, handleOriginal) => {
               console.log('A Td Element was clicked!')
               console.log('it produced this event:', e)
               console.log('It was in this column:', column)
               console.log('It was in this row:', rowInfo)
               console.log('It was in this table instance:', instance)
+              this.props.calculate(rowInfo.row[column.Header.toLowerCase()]);
 
               // IMPORTANT! React-Table uses onClick internally to trigger
               // events like expanding SubComponents and pivots.
@@ -336,7 +337,7 @@ class ExchangeTable extends Component {
                 handleOriginal()
               }
             }
-          }
+          })
         }}
         column={{
           Cell: undefined,
