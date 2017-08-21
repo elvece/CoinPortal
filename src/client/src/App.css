@@ -68,3 +68,11 @@ li a {
 .color-accent-white-1 {
   color: #F4F4F2;
 }
+
+.Stepper-bar {
+  display: block;
+  border-color: rgb(189, 189, 189);
+  margin-left: -6px;
+  border-top-style: solid;
+  border-top-width: 1px;
+}
