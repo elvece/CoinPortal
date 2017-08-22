@@ -59,25 +59,23 @@ class ExchangeTable extends Component {
       })
     });
   }
-  toggle = (row, position, column) => {
-    console.log('toggle: ', row.row[position])
+  setActiveCell = (row, position, column) => {
     this.props.calculate(row.row[position]);
     if(this.state.active === row.row[position]) {
       this.setState({active : null})
     } else {
       this.setState({active : row.row[position]})
     }
-    console.log(this.state.active)
   }
 
-  backgroundColor = (position) => {
+  setActiveCellBackgroundColor = (position, color) => {
     if (this.state.active === position) {
       return '#892323'
     }
     return '';
   }
 
-  textColor = (position) => {
+  setActiveCellTextColor = (position) => {
     if (this.state.active === position) {
       return '#F4F4F2'
     }
@@ -153,10 +151,10 @@ class ExchangeTable extends Component {
             id: 'btc',
             accessor: data => getCoinPrice(data, 'BTC'),
             Cell: (row) => (
-              <span name="price" style={{
-                backgroundColor: this.backgroundColor(row.row.btc), color: this.textColor(row.row.btc), padding: '14px 11px 14px 11px'
+              <span name='price' style={{
+                backgroundColor: this.setActiveCellBackgroundColor(row.row.btc), color: this.setActiveCellTextColor(row.row.btc), padding: '14px 11px 14px 11px'
               }}
-              onClick={() => this.toggle(row, 'btc')}>
+              onClick={() => this.setActiveCell(row, 'btc')}>
               {row.row.btc}
               </span>
             )
@@ -164,17 +162,41 @@ class ExchangeTable extends Component {
           {
             Header: 'ETH',
             id: 'eth',
-            accessor: data => getCoinPrice(data, 'ETH')
+            accessor: data => getCoinPrice(data, 'ETH'),
+            Cell: (row) => (
+              <span name='price' style={{
+                backgroundColor: this.setActiveCellBackgroundColor(row.row.eth), color: this.setActiveCellTextColor(row.row.eth), padding: '14px 11px 14px 11px'
+              }}
+              onClick={() => this.setActiveCell(row, 'eth')}>
+              {row.row.eth}
+              </span>
+            )
           },
           {
             Header: 'LTC',
             id: 'ltc',
-            accessor: data => getCoinPrice(data, 'LTC')
+            accessor: data => getCoinPrice(data, 'LTC'),
+            Cell: (row) => (
+              <span name='price' style={{
+                backgroundColor: this.setActiveCellBackgroundColor(row.row.ltc), color: this.setActiveCellTextColor(row.row.ltc), padding: '14px 11px 14px 11px'
+              }}
+              onClick={() => this.setActiveCell(row, 'ltc')}>
+              {row.row.ltc}
+              </span>
+            )
           },
           {
             Header: 'DASH',
             id: 'dash',
-            accessor: data => getCoinPrice(data, 'DASH')
+            accessor: data => getCoinPrice(data, 'DASH'),
+            Cell: (row) => (
+              <span name='price' style={{
+                backgroundColor: this.setActiveCellBackgroundColor(row.row.dash), color: this.setActiveCellTextColor(row.row.dash), padding: '14px 11px 14px 11px'
+              }}
+              onClick={() => this.setActiveCell(row, 'dash')}>
+              {row.row.dash}
+              </span>
+            )
           }
         ]
       },
@@ -307,98 +329,6 @@ class ExchangeTable extends Component {
         sortable={true}
         PadRowComponent ={() => <span>&nbsp;</span>}
         className="-striped"
-        style={{}}
-        getTheadGroupProps={() => {
-          //this is top header (name, coin prices)
-          return {
-            // style: {background: 'orange'}
-          }
-        }}
-        getTheadGroupTrProps={() => {
-          //this is also top header (name, coin prices)
-          return ({
-            style: {
-                  // background: 'white',
-                  // borderBottom: 'none'
-            },
-            // className: 'mdl-layout__header-row'
-          })
-        }}
-        getTheadGroupThProps={() => {
-          //this is also top header (name, coin prices)
-          return {
-            // style: {padding: '10px'}
-          }
-        }}
-        getTbodyProps={() => {
-          //this is the whole internal table body
-          return {
-            // style: {padding: '10px'}
-          }
-        }}
-        getTableProps={() => {
-          //this is the whole outer table body
-          return {
-            // className: 'mdl-shadow--2dp'
-          }
-        }}
-        getTrProps={(state, rowInfo, column) => {
-          return {
-            style: {
-              // background: 'blue',
-              // padding: '10px'
-            }
-          }
-        }}
-        getTdProps={(state, rowInfo, column, instance) => {
-          // return ({
-          //   onClick: (e, handleOriginal) => {
-          //     // console.log('It was in this column:', column)
-          //     // console.log('It was in this row:', rowInfo)
-          //     // this.props.calculate(rowInfo.row[column.Header.toLowerCase()]);
-
-          //     // rowInfo.row.selected = {};
-          //     // rowInfo.row.selected[column.Header.toLowerCase()] = true;
-
-          //     if (handleOriginal) {
-          //       handleOriginal()
-          //     }
-          //   }
-          // })
-          return {
-            style: {
-              // padding: '10px'
-            }
-          }
-        }}
-        column={{
-          Cell: undefined,
-          Header: undefined,
-          Footer: undefined,
-          Aggregated: undefined,
-          Pivot: undefined,
-          PivotValue: undefined,
-          Expander: undefined,
-          Filter: undefined,
-          sortable: undefined,
-          resizable: undefined,
-          filterable: undefined,
-          show: true,
-          minWidth: 100,
-          className: '',
-          // style: {background: 'red'},
-          getProps: () => ({}),
-          headerClassName: '',
-          headerStyle: {},
-          getHeaderProps: () => ({}),
-          footerClassName: '',
-          footerStyle: {},
-          getFooterProps: () => ({}),
-          filterAll: false,
-          filterMethod: undefined,
-          sortMethod: undefined,
-          defaultSortDesc: undefined
-        }}
       />
     );
   }
