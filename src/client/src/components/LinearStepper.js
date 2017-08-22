@@ -16,7 +16,7 @@ class HorizontalLinearStepper extends Component {
     const {stepIndex} = this.state;
     this.setState({
       stepIndex: stepIndex + 1,
-      finished: stepIndex >= 2,
+      finished: stepIndex >= 1,
     });
   };
 
@@ -32,24 +32,16 @@ class HorizontalLinearStepper extends Component {
   }
 
   componentWillUpdate(nextProps){
-    // const {amount, price} = this.props;
-    console.log(nextProps, this.props)
+    const {stepIndex} = this.state;
+    console.log(nextProps, this.props, stepIndex)
     //first run of selecting price, this.props.price is undefined
     if(nextProps.price && !this.props.price && !nextProps.amount){
       this.handleNext()
     } else if (nextProps.price && nextProps.amount && !this.props.amount){
       this.handleNext()
-    } else if (nextProps.price && nextProps.amount && this.props.amount && this.props.price){
-      // this.handleNext()
-    } else {
-      // this.handlePrev()
+    } else if (nextProps.price && !nextProps.amount && this.props.price && stepIndex === 2){
+      this.handlePrev()
     }
-
-
-      //if price is empty, dont move
-      //if price is populated but amount is empty, go to step two
-      //if price is populated and amount is populared, go to step three
-
   }
 
   render() {
