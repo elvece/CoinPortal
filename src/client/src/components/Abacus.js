@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
 import ExchangeTable from './ExchangeTable.js';
+import HorizontalLinearStepper from './LinearStepper.js';
 import { MdCompareArrows } from 'react-icons/lib/md';
 
 class Abacus extends Component {
@@ -30,7 +31,7 @@ class Abacus extends Component {
     }
 
     //TODO need to see if exchange rate is calculated against USD or BTC (ie shapeshift & poloniex)
-    console.log('processTableData: ', price, coin, exchange)
+
     //TODO need to account exchange feefor shapeshift
 
     this.setState({
@@ -66,6 +67,7 @@ class Abacus extends Component {
     return (
       <div>
         <ExchangeTable calculate={this.processTableData}/>
+        <HorizontalLinearStepper price={coinPrice} amount={amount}/>
         <div className="mdl-grid Abacus-grid">
           <div className="mdl-cell mdl-cell--4-col mdl-cell--2-offset">
             <div className="mdl-card mdl-shadow--3dp">
