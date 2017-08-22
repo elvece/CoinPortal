@@ -65,7 +65,7 @@ class HorizontalLinearStepper extends Component {
     const {stepIndex} = this.state;
 
     return (
-      <div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
+      <div className="Linear-Stepper">
         <Stepper activeStep={stepIndex}>
           <Step>
             <StepLabel>Select a coin at exchange price in the table</StepLabel>

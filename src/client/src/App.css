@@ -113,10 +113,9 @@ li, a {
   color: #F4F4F2;
 }
 
-.Stepper-bar {
-  display: block;
-  border-color: rgb(189, 189, 189);
-  margin-left: -6px;
-  border-top-style: solid;
-  border-top-width: 1px;
+.Linear-Stepper {
+  width: 85%;
+  margin: auto;
+  padding: 50px 0px 30px 30px;
 }
+
