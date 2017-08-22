@@ -10,7 +10,7 @@ import { MdSort } from 'react-icons/lib/md';
 class ExchangeTable extends Component {
   constructor(props){
     super(props);
-    this.state = ({ loading: true });
+    this.state = ({ loading: true, active: null });
     this.handleUpdateExchange = this.handleUpdateExchange.bind(this);
   }
   componentDidMount(){
@@ -58,6 +58,30 @@ class ExchangeTable extends Component {
         exchanges: newExchanges
       })
     });
+  }
+  toggle = (row, position, column) => {
+    console.log('toggle: ', row.row[position])
+    this.props.calculate(row.row[position]);
+    if(this.state.active === row.row[position]) {
+      this.setState({active : null})
+    } else {
+      this.setState({active : row.row[position]})
+    }
+    console.log(this.state.active)
+  }
+
+  backgroundColor = (position) => {
+    if (this.state.active === position) {
+      return '#892323'
+    }
+    return '';
+  }
+
+  textColor = (position) => {
+    if (this.state.active === position) {
+      return '#F4F4F2'
+    }
+    return '';
   }
 
   render(){
@@ -128,13 +152,13 @@ class ExchangeTable extends Component {
             Header: 'BTC',
             id: 'btc',
             accessor: data => getCoinPrice(data, 'BTC'),
-            Cell: row => (
-              <div style={{
-                backgroundColor: row.row.selected && row.row.selected['btc'] === true ? '#8E3B3B' : 'blue',
-                color: row.selected ? '#F4F4F2' : 'none'
-              }}>
+            Cell: (row) => (
+              <span name="price" style={{
+                backgroundColor: this.backgroundColor(row.row.btc), color: this.textColor(row.row.btc), padding: '14px 11px 14px 11px'
+              }}
+              onClick={() => this.toggle(row, 'btc')}>
               {row.row.btc}
-              </div>
+              </span>
             )
           },
           {
@@ -327,20 +351,25 @@ class ExchangeTable extends Component {
           }
         }}
         getTdProps={(state, rowInfo, column, instance) => {
-          return ({
-            onClick: (e, handleOriginal) => {
-              console.log('It was in this column:', column)
-              console.log('It was in this row:', rowInfo)
-              this.props.calculate(rowInfo.row[column.Header.toLowerCase()]);
+          // return ({
+          //   onClick: (e, handleOriginal) => {
+          //     // console.log('It was in this column:', column)
+          //     // console.log('It was in this row:', rowInfo)
+          //     // this.props.calculate(rowInfo.row[column.Header.toLowerCase()]);
 
-              rowInfo.row.selected = {};
-              rowInfo.row.selected[column.Header.toLowerCase()] = true;
+          //     // rowInfo.row.selected = {};
+          //     // rowInfo.row.selected[column.Header.toLowerCase()] = true;
 
-              if (handleOriginal) {
-                handleOriginal()
-              }
+          //     if (handleOriginal) {
+          //       handleOriginal()
+          //     }
+          //   }
+          // })
+          return {
+            style: {
+              // padding: '10px'
             }
-          })
+          }
         }}
         column={{
           Cell: undefined,

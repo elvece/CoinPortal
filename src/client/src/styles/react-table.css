@@ -54,7 +54,7 @@
     /*border-bottom: 1px solid rgba(0, 0, 0, 0.05)*/
     text-transform: uppercase;
     font-weight: bold;
-    background: #2F547F;
+    background: #224D7F;
     color: #F4F4F2;
     padding: 7px;
 }
@@ -155,7 +155,7 @@
 .ReactTable .rt-tbody .rt-tr-group:last-child {
     border-bottom: 0
 }
-.ReactTable .rt-tbody .rt-td {
+.ReactTable .rt-tbody .rt-td:not([name="price"]) {
     /*border-right: 1px solid rgba(0, 0, 0, 0.02);*/
     padding: 11px;
 }
