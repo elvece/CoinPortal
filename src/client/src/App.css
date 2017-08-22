@@ -78,10 +78,6 @@ li, a {
   letter-spacing: 1px;
 }
 
-.mdl-card__actions {
-  text-align: right;
-}
-
 .mdl-data-table {
   font-size: 16px;
   width: 100%;

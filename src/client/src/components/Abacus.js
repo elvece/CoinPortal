@@ -52,14 +52,6 @@ class Abacus extends Component {
     }.bind(this);
   }
 
-  handleSubmit(event){
-    event.preventDefault();
-    console.log('handling submit in abacus')
-    //calculate total cost
-    //return this total to set to state.total
-  }
-
-
   render(){
     const { amount, coin, coinPrice, minerFee, exchangeFee } = this.state;
     //calculate total fees against purchase amount
@@ -68,7 +60,7 @@ class Abacus extends Component {
     //calculate the total fee sum
     const totalFee = (totalExchangeCost + totalMinerCost).toFixed(3);
     //calculate the amount of coins being purchased with entered amount and selected rate
-    const coinAmount = (amount / coinPrice).toFixed(5);
+    const coinAmount = coinPrice ? (amount / coinPrice).toFixed(5) : 0;
     const total = amount + totalFee;
 
     return (
@@ -98,11 +90,6 @@ class Abacus extends Component {
                   </div>
                 </form>
               </div>
-              <div className="mdl-card__actions">
-                <button className="mdl-button mdl-button--accent mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-                  Calculate!
-                </button>
-              </div>
             </div>
           </div>
           <div className="mdl-cell mdl-cell--4-col">
@@ -111,7 +98,7 @@ class Abacus extends Component {
                 <h2 className="mdl-card__title-text">Abacus Result:</h2>
               </div>
               <div className="Abacus-Result">
-                {amount} USD <MdCompareArrows/> {coinAmount} {coin}
+                {amount ? amount : 0} USD <MdCompareArrows/> {coinAmount } {coin}
               </div>
                 <table className="mdl-card__supporting-text mdl-data-table mdl-js-data-table mdl-shadow--2dp">
                   <thead>
