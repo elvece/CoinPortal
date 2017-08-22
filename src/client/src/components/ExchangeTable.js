@@ -156,7 +156,8 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'BTC'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row.row.btc), color: this.setActiveCellTextColor(row.row.btc), padding: '14px 11px 14px 11px'
+                backgroundColor: this.setActiveCellBackgroundColor(row.row.btc), color: this.setActiveCellTextColor(row.row.btc), padding: '7px 15px 7px 15px',
+                  'border-radius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'btc')}>
               {row.row.btc}
@@ -169,7 +170,8 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'ETH'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row.row.eth), color: this.setActiveCellTextColor(row.row.eth), padding: '14px 11px 14px 11px'
+                backgroundColor: this.setActiveCellBackgroundColor(row.row.eth), color: this.setActiveCellTextColor(row.row.eth), padding: '7px 15px 7px 15px',
+                  'border-radius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'eth')}>
               {row.row.eth}
@@ -182,7 +184,8 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'LTC'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row.row.ltc), color: this.setActiveCellTextColor(row.row.ltc), padding: '14px 11px 14px 11px'
+                backgroundColor: this.setActiveCellBackgroundColor(row.row.ltc), color: this.setActiveCellTextColor(row.row.ltc), padding: '7px 15px 7px 15px',
+                  'border-radius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'ltc')}>
               {row.row.ltc}
@@ -195,7 +198,8 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'DASH'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row.row.dash), color: this.setActiveCellTextColor(row.row.dash), padding: '14px 11px 14px 11px'
+                backgroundColor: this.setActiveCellBackgroundColor(row.row.dash), color: this.setActiveCellTextColor(row.row.dash), padding: '7px 15px 7px 15px',
+                  'border-radius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'dash')}>
               {row.row.dash}
