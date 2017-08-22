@@ -5,7 +5,8 @@
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "gulp default && node ./src/server/server",
     "client": "cd ./src/client && npm start",
-    "test": "./node_modules/mocha/bin/_mocha"
+    "test": "./node_modules/mocha/bin/_mocha",
+    "stop": "killall node"
   },
   "dependencies": {
     "bluebird": "^3.5.0",
