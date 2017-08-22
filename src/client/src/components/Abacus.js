@@ -3,22 +3,6 @@ import '../App.css';
 import ExchangeTable from './ExchangeTable.js';
 import { MdCompareArrows } from 'react-icons/lib/md';
 
-function calculatePurchase(data){
-  let result = {};
-  let totalMinerCost;
-  let totalExchangeCost;
-  let howManyCoins;
-
-  totalMinerCost = data.amount * (data.minerFee * 0.01);
-  totalExchangeCost = data.amount * (data.exchangeFee * 0.01);
-
-  result.totalFee = totalExchangeCost + totalMinerCost;
-
-  howManyCoins = data.coinPrice / data.amount;
-  result.coinAmount = data.coinPrice / data.amount;
-  console.log(result.coinAmount);
-}
-
 class Abacus extends Component {
   constructor(props){
     super();
@@ -26,26 +10,44 @@ class Abacus extends Component {
       exchangeRate: 0,
       exchange: '',
       amount: 0,
-      minerFee: 0.25,
-      exchangeFee: 0.50,
-      total: 0,
+      minerFee: 0,
+      exchangeFee: 0,
       payment: '',
-      coinAmount: 0,
-      coin: '',
-      totalFee: 0,
-      coinPrice: 1000
+      coin: 'BTC',
+      coinPrice: 0
     })
   }
 
-  processTableData(data){
-    //check for undefined or --
-    console.log('processTableData: ', data)
-    // calculatePurchase();
+  processTableData = (price, coin, exchange, payment) => {
+    //TODO need to get payment
+
+    //TODO: make api call to get this data
+    const minerFees = {
+      btc: 0.01,
+      eth: 0.01,
+      ltc: 0.01,
+      dash: 0.01
+    }
+
+    //TODO need to see if exchange rate is calculated against USD or BTC (ie shapeshift & poloniex)
+    console.log('processTableData: ', price, coin, exchange)
+    //TODO need to account exchange feefor shapeshift
+
+    this.setState({
+      exchange: exchange.name,
+      minerFee: exchange.minerFee ? exchange.minerFee : minerFees[coin],
+      // exchangeFee: exchange.withdrawalFee ? exchange.withdrawalFee : 0,
+      exchangeFee: 0.25,
+      coinPrice: price,
+      coin: coin.toUpperCase(),
+      payment: payment
+    });
   }
 
   handleChange(){
+    //TODO disable input until processTableData sets state vars
     return function(e){
-      calculatePurchase(this.state);
+      //TODO regex for amount and ensure number
       this.setState({[e.target.name]: e.target.value});
     }.bind(this);
   }
@@ -59,7 +61,15 @@ class Abacus extends Component {
 
 
   render(){
-    const { amount, coinAmount, minerFee, exchangeFee, totalFee, total } = this.state;
+    const { amount, coin, coinPrice, minerFee, exchangeFee } = this.state;
+    //calculate total fees against purchase amount
+    const totalMinerCost = this.state.amount * (this.state.minerFee * 0.01);
+    const totalExchangeCost = this.state.amount * (this.state.exchangeFee * 0.01);
+    //calculate the total fee sum
+    const totalFee = (totalExchangeCost + totalMinerCost).toFixed(3);
+    //calculate the amount of coins being purchased with entered amount and selected rate
+    const coinAmount = (amount / coinPrice).toFixed(5);
+    const total = this.state.amount + totalFee;
 
     return (
       <div>
@@ -93,7 +103,7 @@ class Abacus extends Component {
                 <h2 className="mdl-card__title-text">Abacus Result:</h2>
               </div>
               <div className="Abacus-Result">
-                {amount} USD <MdCompareArrows/> {coinAmount} BTC
+                {amount} USD <MdCompareArrows/> {coinAmount} {coin}
               </div>
                 <table className="mdl-card__supporting-text mdl-data-table mdl-js-data-table mdl-shadow--2dp">
                   <thead>

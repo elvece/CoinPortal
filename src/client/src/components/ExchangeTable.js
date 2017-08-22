@@ -61,7 +61,7 @@ class ExchangeTable extends Component {
   }
   setActiveCell = (row, position, column) => {
     if(row.row[position] !== '--'){
-      this.props.calculate(row.row[position]);
+      this.props.calculate(row.row[position], position, row.row._original);
       if(this.state.active === row.row[position]) {
         this.setState({active: null})
       } else {
