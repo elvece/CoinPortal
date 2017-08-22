@@ -135,6 +135,7 @@ class ExchangeTable extends Component {
       return output;
     }
 
+    //TODO: show/hide columns
     const columns =
     [
       {
@@ -210,22 +211,24 @@ class ExchangeTable extends Component {
           {
             Header: 'Withdrawl',
             accessor: 'withdrawalFee'
-          }
-          // {
-          //   Header: 'Deposit',
-          //   accessor: 'depositFee'
-          // },
+          },
+          {
+            Header: 'Deposit',
+            accessor: 'depositFee',
+            show: false
+          },
         ]
       },
-      // {
-      //   Header: 'Account Needed',
-      //   columns: [{
-      //     Header: <MdSort/>,
-      //     id: 'accountNeeded',
-      //     accessor: data => setFriendlyBoolean(data.accountNeeded),
-      //     minWidth: 200
-      //   }]
-      // },
+      {
+        Header: 'Account Needed',
+        columns: [{
+          Header: <MdSort/>,
+          id: 'accountNeeded',
+          accessor: data => setFriendlyBoolean(data.accountNeeded),
+          minWidth: 200,
+          show: false
+        }]
+      },
       {
         Header: 'Purchase Options',
         columns: [{
@@ -236,7 +239,7 @@ class ExchangeTable extends Component {
         }]
       },
       {
-        Header: 'Account/Verification', // make popover for coinbase that says depends on amount wanting to purchase
+        Header: 'Verified Account', // make popover for coinbase that says depends on amount wanting to purchase
         columns: [{
           Header: <MdSort/>,
           id: 'verify',
@@ -244,68 +247,77 @@ class ExchangeTable extends Component {
           minWidth: 220
         }]
       },
-      // {
-      //   Header: 'Coins Supported',
-      //   columns: [{
-      //     Header: '<>',
-      //     id: 'coinsSupported',
-      //       accessor: data => data.coinsSupported ? displayArrayAsList(data.coinsSupported) : ''
-      //   }]
-      // },
-      // {
-      //   Header: 'Trading',
-      //   columns: [
-      //     {
-      //       Header: 'Order Types',
-      //       id: 'orderTypes',
-      //       accessor: data => data.trading && data.trading.length > 0 ? displayArrayAsList(data.trading[0].orderTypes) : ''
-      //     },
-      //     {
-      //       Header: 'Margin',
-      //       id: 'margin',
-      //       accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].margin.toString() : ''
-      //     },
-      //     {
-      //       Header: 'Auction',
-      //       id: 'auction',
-      //       accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].auction.toString() : ''
-      //     }
-      //   ]
-      // },
-      // {
-      //   Header: 'Social',
-      //   columns: [
-      //     {
-      //       Header: 'Twitter',
-      //       id: 'twitter',
-      //       accessor: data => getSocialInfo(data, 'Twitter'),
-      //       Cell: row => (<a href={row.row.twitter ? row.row.twitter.url : '/'}>Tweet</a>)
-      //     },
-      //     {
-      //       Header: 'Reddit',
-      //       id: 'reddit',
-      //       accessor: data => getSocialInfo(data, 'Reddit'),
-      //       Cell: row => (<a href={row.row.reddit ? row.row.reddit.url : '/'}>Arrr</a>)
-      //     }
-      //   ]
-      // },
-      // {
-      //   Header: 'Ratings',
-      //   columns: [
-      //     {
-      //       Header: 'Interface',
-      //       accessor: 'ux',
-      //     },
-      //     {
-      //       Header: 'Customer Service',
-      //       accessor: 'service',
-      //     },
-      //     {
-      //       Header: 'Support',
-      //       accessor: 'support',
-      //     }
-      //   ],
-      // },
+      {
+        Header: 'Coins Supported',
+        columns: [{
+          Header: '<>',
+          id: 'coinsSupported',
+            accessor: data => data.coinsSupported ? displayArrayAsList(data.coinsSupported) : '',
+          show: false
+        }]
+      },
+      {
+        Header: 'Trading',
+        columns: [
+          {
+            Header: 'Order Types',
+            id: 'orderTypes',
+            accessor: data => data.trading && data.trading.length > 0 ? displayArrayAsList(data.trading[0].orderTypes) : '',
+          show: false
+          },
+          {
+            Header: 'Margin',
+            id: 'margin',
+            accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].margin.toString() : '',
+          show: false
+          },
+          {
+            Header: 'Auction',
+            id: 'auction',
+            accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].auction.toString() : '',
+          show: false
+          }
+        ]
+      },
+      {
+        Header: 'Social',
+        columns: [
+          {
+            Header: 'Twitter',
+            id: 'twitter',
+            accessor: data => getSocialInfo(data, 'Twitter'),
+            Cell: row => (<a href={row.row.twitter ? row.row.twitter.url : '/'}>Tweet</a>),
+          show: false
+          },
+          {
+            Header: 'Reddit',
+            id: 'reddit',
+            accessor: data => getSocialInfo(data, 'Reddit'),
+            Cell: row => (<a href={row.row.reddit ? row.row.reddit.url : '/'}>Arrr</a>),
+          show: false
+          }
+        ]
+      },
+      {
+        Header: 'Ratings',
+        columns: [
+          {
+            Header: 'Interface',
+            accessor: 'ux',
+            show: false
+          },
+          {
+            Header: 'Customer Service',
+            accessor: 'service',
+            show: false
+          },
+          {
+            Header: 'Support',
+            accessor: 'support',
+            show: false
+          }
+        ],
+      },
       {
         Header: 'Options',
         columns: [{
