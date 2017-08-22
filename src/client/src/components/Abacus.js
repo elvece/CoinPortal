@@ -9,12 +9,12 @@ class Abacus extends Component {
     this.state = ({
       exchangeRate: 0,
       exchange: '',
-      amount: 0,
+      amount: '',
       minerFee: 0,
       exchangeFee: 0,
       payment: '',
       coin: 'BTC',
-      coinPrice: 0
+      coinPrice: undefined
     })
   }
 
@@ -69,7 +69,7 @@ class Abacus extends Component {
     const totalFee = (totalExchangeCost + totalMinerCost).toFixed(3);
     //calculate the amount of coins being purchased with entered amount and selected rate
     const coinAmount = (amount / coinPrice).toFixed(5);
-    const total = this.state.amount + totalFee;
+    const total = amount + totalFee;
 
     return (
       <div>
@@ -84,7 +84,15 @@ class Abacus extends Component {
                 Enter the amount in USD that you would like to purchase:
                 <form action="#">
                   <div className="mdl-textfield mdl-js-textfield">
-                    <input className="mdl-textfield__input" name="amount" value={amount} onChange={this.handleChange()} type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="purchaseAmount"/>
+                    <input
+                      className="mdl-textfield__input"
+                      disabled={ coinPrice ? '' : 'disabled'}
+                      name="amount"
+                      value={amount}
+                      onChange={this.handleChange()}
+                      type="number"
+                      pattern="-?[0-9]*(\.[0-9]+)?"
+                      id="purchaseAmount"/>
                     <label className="mdl-textfield__label" htmlFor="purchaseAmount">How much do you want to invest...?</label>
                     <span className="mdl-textfield__error">Input is not a number!</span>
                   </div>
