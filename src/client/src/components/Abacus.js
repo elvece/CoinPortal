@@ -35,12 +35,12 @@ class Abacus extends Component {
     //TODO need to account exchange feefor shapeshift
 
     this.setState({
-      exchange: exchange.name,
-      minerFee: exchange.minerFee ? exchange.minerFee : minerFees[coin],
+      exchange: exchange && exchange.name ? exchange.name : '',
+      minerFee: exchange && exchange.minerFee ? exchange.minerFee : minerFees[coin],
       // exchangeFee: exchange.withdrawalFee ? exchange.withdrawalFee : 0,
       exchangeFee: 0.25,
-      coinPrice: price,
-      coin: coin.toUpperCase(),
+      coinPrice: price ? price : '',
+      coin: coin ? coin.toUpperCase() : '',
       payment: payment
     });
   }
@@ -51,6 +51,12 @@ class Abacus extends Component {
       //TODO regex for amount and ensure number
       this.setState({[e.target.name]: e.target.value});
     }.bind(this);
+  }
+
+  handleClearAmount = () => {
+    this.setState({
+      amount: ''
+    });
   }
 
   render(){
@@ -67,7 +73,7 @@ class Abacus extends Component {
     return (
       <div>
         <ExchangeTable calculate={this.processTableData}/>
-        <HorizontalLinearStepper price={coinPrice} amount={amount}/>
+        <HorizontalLinearStepper price={coinPrice} amount={amount} clear={this.handleClearAmount}/>
         <div className="mdl-grid Abacus-grid">
           <div className="mdl-cell mdl-cell--4-col mdl-cell--2-offset">
             <div className="mdl-card mdl-shadow--3dp">

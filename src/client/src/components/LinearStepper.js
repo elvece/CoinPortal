@@ -28,24 +28,41 @@ class HorizontalLinearStepper extends Component {
   };
 
   componentDidMount(){
+    //start on step 1 to select price
     this.handleNext()
   }
 
   componentWillUpdate(nextProps){
     const {stepIndex} = this.state;
-    console.log(nextProps, this.props, stepIndex)
-    //first run of selecting price, this.props.price is undefined
+
     if(nextProps.price && !this.props.price && !nextProps.amount){
+      //move to step 2 to select amount
       this.handleNext()
     } else if (nextProps.price && nextProps.amount && !this.props.amount){
+      //price and amount are selected, move to final step 3
       this.handleNext()
     } else if (nextProps.price && !nextProps.amount && this.props.price && stepIndex === 2){
+      //price selected, amount cleared, move back to step 2 to select amount
       this.handlePrev()
+    } else if (!nextProps.price && !nextProps.amount && this.props.price && stepIndex === 1){
+      //on step 2, but no amount entered, and price is deselected, move back to step 1
+      this.handlePrev()
+    } else if (!nextProps.price && nextProps.amount && this.props.amount){
+      //no price selected, clear out amount and move back to step 2
+      this.props.clear();
+      this.handlePrev();
+    } else if(!nextProps.price && !nextProps.amount && this.props.amount){
+      //handle moving back to step 2 again, since no price but props.amount still set
+      this.handlePrev();
+    } else if(!nextProps.price && !nextProps.amount && !this.props.amount && !this.props.price){
+      //*starts here on page load
+      //handle moving back to step 1 when price and amount cleared
+      this.handlePrev();
     }
   }
 
   render() {
-    const {finished, stepIndex} = this.state;
+    const {stepIndex} = this.state;
 
     return (
       <div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>

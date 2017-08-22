@@ -64,11 +64,10 @@ class ExchangeTable extends Component {
       this.props.calculate(row.row[position], position, row.row._original);
       if(this.state.active === row.row[position]) {
         this.setState({active: null})
+        this.props.calculate(undefined, undefined, undefined);
       } else {
         this.setState({active: row.row[position]})
       }
-    } else {
-      this.setState({active: null})
     }
   }
 
