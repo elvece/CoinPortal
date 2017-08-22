@@ -9,7 +9,7 @@ class HorizontalLinearStepper extends Component {
 
   state = {
     finished: false,
-    stepIndex: 0,
+    stepIndex: -1
   };
 
   handleNext = () => {
@@ -27,31 +27,22 @@ class HorizontalLinearStepper extends Component {
     }
   };
 
-  handleSteps = () => {
-    console.log(this.props)
-    if(this.props.price){
-      this.handleNext()
-    } else {
-      this.handlePrev()
-    }
-  }
-
   componentDidMount(){
-    this.handleSteps();
+    this.handleNext()
   }
 
-  componentDidUpdate(prevProps){
-    const {amount, price} = this.props;
-    console.log(prevProps, this.props)
-    if(prevProps !== price && prevProps !== amount){
+  componentWillUpdate(nextProps){
+    // const {amount, price} = this.props;
+    console.log(nextProps, this.props)
+    //first run of selecting price, this.props.price is undefined
+    if(nextProps.price && !this.props.price && !nextProps.amount){
       this.handleNext()
-    } else if (prevProps === price && prevProps !== amount){
+    } else if (nextProps.price && nextProps.amount && !this.props.amount){
       this.handleNext()
-    } else if (prevProps === price && prevProps === amount){
-      this.handlePrev()
-    } else if(prevProps !== price && prevProps !== amount){
+    } else if (nextProps.price && nextProps.amount && this.props.amount && this.props.price){
+      // this.handleNext()
+    } else {
       // this.handlePrev()
-      console.log('here')
     }
 
 
@@ -63,7 +54,6 @@ class HorizontalLinearStepper extends Component {
 
   render() {
     const {finished, stepIndex} = this.state;
-    // const {price, amount} = this.props;
 
     return (
       <div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
