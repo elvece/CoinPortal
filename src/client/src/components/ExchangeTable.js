@@ -60,11 +60,15 @@ class ExchangeTable extends Component {
     });
   }
   setActiveCell = (row, position, column) => {
-    this.props.calculate(row.row[position]);
-    if(this.state.active === row.row[position]) {
-      this.setState({active : null})
+    if(row.row[position] !== '--'){
+      this.props.calculate(row.row[position]);
+      if(this.state.active === row.row[position]) {
+        this.setState({active: null})
+      } else {
+        this.setState({active: row.row[position]})
+      }
     } else {
-      this.setState({active : row.row[position]})
+      this.setState({active: null})
     }
   }
 
