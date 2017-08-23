@@ -6,32 +6,31 @@ import { Link } from 'react-router-dom';
 
 class Header extends Component {
 
-
   render() {
     return (
-        <header className="mdl-layout__header">
-          <div className="mdl-layout__header-row">
-            <MdAllOut className="App-header-icon color-accent-1"/>
-            <span className="mdl-layout-title">CoinPortal</span>
-            <div className="mdl-layout-spacer"></div>
-            <nav className="mdl-navigation mdl-layout--large-screen-only">
-            <ul>
-              <li><Link to='/dashboard'>Dashboard</Link></li>
-              <li><Link to='/abacus'>Abacus</Link></li>
-            </ul>
-            </nav>
-          </div>
-        </header>
+      <header className="mdl-layout__header">
+        <div className="mdl-layout__header-row">
+          <MdAllOut className="App-header-icon color-accent-1"/>
+          <span className="mdl-layout-title">CoinPortal</span>
+          <div className="mdl-layout-spacer"></div>
+          <nav className="mdl-navigation mdl-layout--large-screen-only">
+          <ul>
+            <li className="HeaderLinks sliding-middle-out"><Link to='/dashboard'>Dashboard</Link></li>
+            <li className="HeaderLinks sliding-middle-out"><Link to='/abacus'>Abacus</Link></li>
+          </ul>
+          </nav>
+        </div>
+      </header>
     );
   }
 }
 
 export default Header;
 
-        // <div className="mdl-layout__drawer">
-        //   <span className="mdl-layout-title">Account</span>
-        //   <nav className="mdl-navigation">
-        //     <a className="mdl-navigation__link" href="">Settings</a>
-        //     <a className="mdl-navigation__link" href="">Charts</a>
-        //   </nav>
-        // </div>
+// <div className="mdl-layout__drawer">
+//   <span className="mdl-layout-title">Account</span>
+//   <nav className="mdl-navigation">
+//     <a className="mdl-navigation__link" href="">Settings</a>
+//     <a className="mdl-navigation__link" href="">Charts</a>
+//   </nav>
+// </div>
