@@ -30,6 +30,10 @@ class AccountManager extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount(){
+    this.serverRequest();
+  }
+
   handleChange(){
     return function(e){
       this.setState({[e.target.name]: e.target.value});
@@ -50,22 +54,11 @@ class AccountManager extends Component {
     });
   }
 
-  componentDidMount(){
-    this.serverRequest();
-  }
 
   handleUpdateAccount(index){
     const _this = this;
     // temp data for simulating form update
-    const data = {
-      _id: '59965a6a359f6e1a3314a645',
-      name: 'Duey',
-      username: 'dueydash',
-      wallets: [{
-        _id: '59965bdc1d544a1aa403d1c9',
-        coin: 'BTC',
-        address: '1234567'}]
-    };
+    const data = {};
     Client.putStuff(`api/accounts/`+data._id, data, function(result){
       // use update to persist state immutability - update certain account with result
       const updatedAccount = update(data, {
@@ -84,33 +77,45 @@ class AccountManager extends Component {
   }
 
   render(){
-    const { accounts, name, username } = this.state;
-    const allAccountCharts = accounts.map((account, i) => {
-      return (
-        <AccountChart
-          account={account}
-          key={i}
-          onClick={(i) => this.handleUpdateAccount(i)}/>
-    )})
+    const { accounts, loading } = this.state;
+    const { prices } = this.props;
+    let allAccountCharts;
+
+    if(!loading && prices && prices.length >= 4){
+      allAccountCharts = accounts.map((account, i) => {
+        return (
+          <AccountChart
+            account={account}
+            prices={prices}
+            key={i}//I know this is bad practice, but all other attempts fail?
+            onClick={(i) => this.handleUpdateAccount(i)}/>
+      )})
+    }
 
     return (
       <div>
-        <h2>Accounts:</h2>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Name:
-            <input type="text" value={name} name="name" onChange={this.handleChange()}/>
-          </label>
-          <label>
-            Username:
-            <input type="text" value={username} name="username" onChange={this.handleChange()}/>
-          </label>
-          <input type="submit" value="Submit"/>
-        </form>
-        <ol>{allAccountCharts}</ol>
+        <div className="mdl-grid Center-grid-content">
+          {allAccountCharts}
+        </div>
       </div>
     );
   }
 }
 
 export default AccountManager;
+
+
+//<h2 className="AccountHeader mdl-layout__header-row">Accounts:</h2>
+
+
+// <form onSubmit={this.handleSubmit}>
+//   <label>
+//     Name:
+//     <input type="text" value={name} name="name" onChange={this.handleChange()}/>
+//   </label>
+//   <label>
+//     Username:
+//     <input type="text" value={username} name="username" onChange={this.handleChange()}/>
+//   </label>
+//   <input type="submit" value="Submit"/>
+// </form>
