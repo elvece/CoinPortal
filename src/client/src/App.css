@@ -117,5 +117,14 @@ li, a {
   width: 85%;
   margin: auto;
   padding: 50px 0px 30px 30px;
+  font-size: 20px;
+}
+
+.StepperFontSmall {
+  font-size: 20px !important;
+}
+
+.StepperFontBig {
+  font-size: 30px !important;
 }
 

@@ -68,13 +68,13 @@ class HorizontalLinearStepper extends Component {
       <div className="Linear-Stepper">
         <Stepper activeStep={stepIndex}>
           <Step>
-            <StepLabel>Select a coin at exchange price in the table</StepLabel>
+            <StepLabel className={(stepIndex === 0 ? 'StepperFontBig' : 'StepperFontSmall')}>Click the price you want in the table</StepLabel>
           </Step>
           <Step>
-            <StepLabel>Enter the amount you want to purchase in USD</StepLabel>
+            <StepLabel className={(stepIndex === 1 ? 'StepperFontBig' : 'StepperFontSmall')}>Enter the amount you want to purchase</StepLabel>
           </Step>
           <Step>
-            <StepLabel>Check out your Abacus calculation!</StepLabel>
+            <StepLabel className={(stepIndex === 2 ? 'StepperFontBig' : 'StepperFontSmall')}>Check out your Abacus calculation!</StepLabel>
           </Step>
         </Stepper>
       </div>
