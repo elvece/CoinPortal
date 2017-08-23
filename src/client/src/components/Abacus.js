@@ -68,7 +68,7 @@ class Abacus extends Component {
     const totalFee = (totalExchangeCost + totalMinerCost).toFixed(3);
     //calculate the amount of coins being purchased with entered amount and selected rate
     const coinAmount = coinPrice ? (amount / coinPrice).toFixed(5) : 0;
-    const total = amount + totalFee;
+    const total = amount - totalFee;
 
     return (
       <div>

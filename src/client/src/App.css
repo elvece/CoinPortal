@@ -118,6 +118,7 @@ li, a {
   margin: auto;
   padding: 50px 0px 30px 30px;
   font-size: 20px;
+  font-family: Roboto Condensed, sans-serif !important;
 }
 
 .StepperFontSmall {
@@ -126,5 +127,9 @@ li, a {
 
 .StepperFontBig {
   font-size: 30px !important;
+}
+
+.mdl-data-table__cell--non-numeric.mdl-data-table__cell--non-numeric {
+  text-align: right;
 }
 

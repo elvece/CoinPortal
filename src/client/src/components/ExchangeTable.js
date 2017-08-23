@@ -5,6 +5,7 @@ import '../styles/react-table.css';
 import update from 'immutability-helper';
 import ReactTable from 'react-table';
 import { MdSort } from 'react-icons/lib/md';
+import Chip from 'material-ui/Chip';
 
 
 class ExchangeTable extends Component {
@@ -12,6 +13,15 @@ class ExchangeTable extends Component {
     super(props);
     this.state = ({ loading: true, active: null });
     this.handleUpdateExchange = this.handleUpdateExchange.bind(this);
+    this.styles = {
+      chip: {
+        margin: 4,
+      },
+      wrapper: {
+        display: 'flex',
+        flexWrap: 'wrap',
+      },
+    };
   }
   componentDidMount(){
     const _this = this;
@@ -85,8 +95,13 @@ class ExchangeTable extends Component {
     return '';
   }
 
+
   render(){
     const { exchanges, loading } = this.state;
+
+    function savePurchaseOption(data) {
+      console.log(data)
+    }
 
     function displayArrayAsList(data){
       let output = '';
@@ -134,6 +149,14 @@ class ExchangeTable extends Component {
       return output;
     }
 
+    //disable chip onClick if the price selected is not in the same row as the chip
+    function displayChips(data){
+      return data.map((item) => {
+        return (
+          <Chip key={item} style={{display: 'inline-block', margin: '2px'}} onClick={() => savePurchaseOption(item)}>{item}</Chip>
+      )})
+    }
+
     //TODO: show/hide columns
     const columns =
     [
@@ -157,7 +180,7 @@ class ExchangeTable extends Component {
             Cell: (row) => (
               <span name='price' style={{
                 backgroundColor: this.setActiveCellBackgroundColor(row.row.btc), color: this.setActiveCellTextColor(row.row.btc), padding: '7px 15px 7px 15px',
-                  'border-radius': '30px'
+                  'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'btc')}>
               {row.row.btc}
@@ -171,7 +194,7 @@ class ExchangeTable extends Component {
             Cell: (row) => (
               <span name='price' style={{
                 backgroundColor: this.setActiveCellBackgroundColor(row.row.eth), color: this.setActiveCellTextColor(row.row.eth), padding: '7px 15px 7px 15px',
-                  'border-radius': '30px'
+                  'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'eth')}>
               {row.row.eth}
@@ -185,7 +208,7 @@ class ExchangeTable extends Component {
             Cell: (row) => (
               <span name='price' style={{
                 backgroundColor: this.setActiveCellBackgroundColor(row.row.ltc), color: this.setActiveCellTextColor(row.row.ltc), padding: '7px 15px 7px 15px',
-                  'border-radius': '30px'
+                  'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'ltc')}>
               {row.row.ltc}
@@ -199,7 +222,7 @@ class ExchangeTable extends Component {
             Cell: (row) => (
               <span name='price' style={{
                 backgroundColor: this.setActiveCellBackgroundColor(row.row.dash), color: this.setActiveCellTextColor(row.row.dash), padding: '7px 15px 7px 15px',
-                  'border-radius': '30px'
+                  'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'dash')}>
               {row.row.dash}
@@ -237,7 +260,15 @@ class ExchangeTable extends Component {
         columns: [{
           Header: <MdSort/>,
           id: 'purchaseOptions',
-          accessor: data => data.purchaseOptions ? displayArrayAsList(data.purchaseOptions) : '',
+          // accessor: data => data.purchaseOptions ? displayArrayAsList(data.purchaseOptions) : '',
+          accessor: data => data.purchaseOptions ? data.purchaseOptions : [],
+          Cell: row => ( displayChips(row.row.purchaseOptions)
+            ),
+
+            // row.row.purchaseOptions.map((item, i) => {
+            //   <Chip key={i}>{item}></Chip>
+            // })),
+          // Cell: row => (<Chip key={0}>{row.row.purchaseOptions[1]}></Chip>),
           minWidth: 220
         }]
       },
