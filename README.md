@@ -21,6 +21,3 @@ Finally, this tool also provides a visual representation of an individual's asse
 - Better transitions between route states and handle page refresh on sub-routes
 - Redo CSS with SASS
 - Make mobile responsive design
-
-
-
