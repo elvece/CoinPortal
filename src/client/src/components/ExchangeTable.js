@@ -11,7 +11,7 @@ import Chip from 'material-ui/Chip';
 class ExchangeTable extends Component {
   constructor(props){
     super(props);
-    this.state = ({ loading: true, active: null });
+    this.state = ({ loading: true, active: null, coins: [] });
     this.handleUpdateExchange = this.handleUpdateExchange.bind(this);
     this.styles = {
       chip: {
@@ -23,6 +23,7 @@ class ExchangeTable extends Component {
       },
     };
   }
+
   componentDidMount(){
     const _this = this;
     //TODO: refactor this into own method
@@ -36,6 +37,7 @@ class ExchangeTable extends Component {
       if(reject) console.log('SERVER REJECTION: ', reject)
       })
   }
+
   handleUpdateExchange = (row) => {
     // console.log('UPDATE ROW: ', row)
     const ogRow = row.original;
@@ -70,8 +72,14 @@ class ExchangeTable extends Component {
     });
   }
   setActiveCell = (row, position, column) => {
+    const SHAPESHIFT = 'ShapeShift';
+    const POLONIEX = 'Poloniex';
+    let properPrice = row.row[position];
     if(row.row[position] !== '--'){
-      this.props.calculate(row.row[position], position, row.row._original);
+      if(row.row.name === SHAPESHIFT || row.row.name === POLONIEX){
+        properPrice = this.convertPrices(row.row[position])
+      }
+      this.props.calculate(properPrice, position, row.row._original);
       if(this.state.active === row.row[position]) {
         this.setState({active: null})
         this.props.calculate(undefined, undefined, undefined);
@@ -95,12 +103,25 @@ class ExchangeTable extends Component {
     return '';
   }
 
+  convertPrices = (price) => {
+    if(this.props.btcData && this.props.btcData[0]){
+      return (parseFloat(this.props.btcData[0].price_usd) * parseFloat(price)).round(2);
+    } return '';
+  }
+
 
   render(){
     const { exchanges, loading } = this.state;
+    const SHAPESHIFT = 'ShapeShift';
+    const POLONIEX = 'Poloniex';
+
+    Number.prototype.round = function(p) {
+      p = p || 10;
+      return parseFloat( this.toFixed(p) );
+    };
 
     function savePurchaseOption(data) {
-      console.log(data)
+      // console.log(data)
     }
 
     function displayArrayAsList(data){
@@ -138,7 +159,7 @@ class ExchangeTable extends Component {
       }
       return output;
     }
-
+    //TODO change to x or check, or disabled checkbox
     function setFriendlyBoolean(data){
       let output = '';
       if(data === true){
@@ -197,7 +218,7 @@ class ExchangeTable extends Component {
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'eth')}>
-              {row.row.eth}
+              {row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.convertPrices(row.row.eth) : row.row.eth}
               </span>
             )
           },
@@ -211,7 +232,7 @@ class ExchangeTable extends Component {
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'ltc')}>
-              {row.row.ltc}
+              {row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.convertPrices(row.row.ltc) : row.row.ltc}
               </span>
             )
           },
@@ -225,7 +246,7 @@ class ExchangeTable extends Component {
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'dash')}>
-              {row.row.dash}
+               {row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.convertPrices(row.row.dash) : row.row.dash}
               </span>
             )
           }
@@ -260,15 +281,9 @@ class ExchangeTable extends Component {
         columns: [{
           Header: <MdSort/>,
           id: 'purchaseOptions',
-          // accessor: data => data.purchaseOptions ? displayArrayAsList(data.purchaseOptions) : '',
           accessor: data => data.purchaseOptions ? data.purchaseOptions : [],
-          Cell: row => ( displayChips(row.row.purchaseOptions)
+          Cell: row => (displayChips(row.row.purchaseOptions)
             ),
-
-            // row.row.purchaseOptions.map((item, i) => {
-            //   <Chip key={i}>{item}></Chip>
-            // })),
-          // Cell: row => (<Chip key={0}>{row.row.purchaseOptions[1]}></Chip>),
           minWidth: 220
         }]
       },
@@ -357,8 +372,13 @@ class ExchangeTable extends Component {
         columns: [{
           Header: 'Edit',
           accessor: '_id',
-          Cell: row => (<button onClick={() => this.handleUpdateExchange(row)}>Update</button>)
-        }],
+          Cell: row => (<button className="mdl-button mdl-button mdl-js-button mdl-button--raised mdl-button--colored"onClick={() => this.handleUpdateExchange(row)}>Update</button>),
+          show: false
+        },{
+          Header: 'Purchase',
+          accessor: '_id',
+          Cell: row => (<button className="mdl-button mdl-button--accent mdl-button mdl-js-button mdl-button--raised mdl-button--colored"onClick={() => alert('Coming Soon!')}>BUY</button>)
+        }]
       },
     ];
 
@@ -377,7 +397,7 @@ class ExchangeTable extends Component {
         showPagination={false}
         showPageJump={false}
         sortable={true}
-        PadRowComponent ={() => <span>&nbsp;</span>}
+        PadRowComponent={() => <span>&nbsp;</span>}
         className="-striped"
       />
     );

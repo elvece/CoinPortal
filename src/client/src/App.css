@@ -133,10 +133,12 @@ ul {
 
 .StepperFontSmall {
   font-size: 20px !important;
+  font-family: Roboto Condensed, sans-serif !important;
 }
 
 .StepperFontBig {
   font-size: 30px !important;
+  font-family: Roboto Condensed, sans-serif !important;
 }
 
 .mdl-data-table__cell--non-numeric.mdl-data-table__cell--non-numeric {
@@ -147,7 +149,7 @@ ul {
   background-color: #224D7F;
   color: #F4F4F2;
   font-family: Roboto Condensed, sans-serif !important;
-  margin-bottom: 40px;
+  height: 280px;
 }
 
 .sliding-middle-out {
@@ -190,4 +192,9 @@ ul {
 
 .coin-card-title {
   text-align: center
+}
+
+.Abacus-Total {
+  font-weight: bold;
+  font-size: 20px;
 }

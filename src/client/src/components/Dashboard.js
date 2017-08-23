@@ -3,6 +3,7 @@ import '../App.css';
 import Client from '../Client';
 import AccountManager from './AccountManager.js';
 import CoinCard from './CoinCard.js';
+import { MdSupervisorAccount, MdDataUsage, MdDashboard } from 'react-icons/lib/md';
 
 
 class Dashboard extends Component {
@@ -74,7 +75,10 @@ class Dashboard extends Component {
 
     return (
       <div>
-        <div className="mdl-grid Center-grid-content">{coinData}</div>
+        <div className="AccountHeader">
+          <div className="mdl-grid Center-grid-content">{coinData}</div>
+        </div>
+        <h2 style={{textAlign: 'center', color: '#222'}}><MdSupervisorAccount/> <MdDashboard/> <MdDataUsage/></h2>
         <AccountManager prices={coins}/>
       </div>
     )

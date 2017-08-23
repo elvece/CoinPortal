@@ -3,6 +3,7 @@ import Client from '../Client';
 import update from 'immutability-helper';
 import AccountChart from './AccountChart.js';
 import '../App.css';
+import CircularProgress from 'material-ui/CircularProgress';
 
 
 class AccountManager extends Component {
@@ -90,6 +91,8 @@ class AccountManager extends Component {
             key={i}//I know this is bad practice, but all other attempts fail?
             onClick={(i) => this.handleUpdateAccount(i)}/>
       )})
+    } else {
+      allAccountCharts = <CircularProgress size={80} thickness={5}/>
     }
 
     return (
@@ -103,9 +106,6 @@ class AccountManager extends Component {
 }
 
 export default AccountManager;
-
-
-//<h2 className="AccountHeader mdl-layout__header-row">Accounts:</h2>
 
 
 // <form onSubmit={this.handleSubmit}>
