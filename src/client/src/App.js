@@ -4,6 +4,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Header from './components/Header.js';
 import Main from './components/Main.js';
+import Footer from './components/Footer.js';
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -27,6 +28,7 @@ class App extends Component {
         <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
           <Header/>
           <Main/>
+          <Footer/>
         </div>
       </MuiThemeProvider>
     );
