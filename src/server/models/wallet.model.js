@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
+const Transaction = require('../models/transaction.model.js');
 
 const WalletSchema = new mongoose.Schema({
   id: mongoose.Schema.Types.ObjectId,
   address: String,
   balance: Number,
   coin: String,
-  transactions: []// future feature, will contain TransactionSchema with transaction details/history
+  ogRate: Number, // original rate purchased at
+  transactions: [Transaction.schema]// future feature, will contain TransactionSchema with transaction details/history
 });
 
 // statics exist directly on model
