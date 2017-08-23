@@ -14,7 +14,8 @@ const muiTheme = getMuiTheme({
     accent1Color: '#E2B761',//earth yellow
     accent2Color: '#892323',//vivid auburn
     accent3Color: '#A3A19C',//quick silver
-    alternateTextColor: '#F4F4F2'
+    alternateTextColor: '#F4F4F2',
+    fontFamily: 'Roboto Condensed, sans-serif'
   }
 });
 
