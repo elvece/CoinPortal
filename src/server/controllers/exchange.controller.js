@@ -10,10 +10,11 @@ const GEMINI = 'Gemini';
 const COINBASE = 'Coinbase';
 const SHAPESHIFT = 'ShapeShift';
 const POLONIEX = 'Poloniex';
+const BTC = 'BTC';
 
 // create new exchange data
 function create(req, res, next){
-  console.log(' ****** CREATE REQ BODY:',req.body)
+  // console.log(' ****** CREATE REQ BODY:',req.body)
   const exchange = new Exchange({
     accountNeeded: req.body.accountNeeded,
     depositFee: req.body.depositFee,
@@ -31,7 +32,7 @@ function create(req, res, next){
     withdrawalFee: req.body.withdrawalFee
   });
 
-  console.log(' ****** NEW EXCHANGE:',exchange)
+  // console.log(' ****** NEW EXCHANGE:',exchange)
 
   if(req.body.social){
     Helper.setSubSchemaData(req.body.social, exchange.social, SOCIAL);
@@ -54,10 +55,10 @@ function get(req, res){
 function list(req, res, next){
   Exchange.list()
           .then((exchanges) => {
-            // processPriceChange(exchanges).then((exchanges) => {
-            //   res.json(exchanges);
-            // })
+            processPriceChange(exchanges).then((exchanges) => {
               res.json(exchanges);
+            })
+              // res.json(exchanges);
           })
           .catch((e) => {
             console.log(' ****** LIST EXCHANGE ERROR:', e);
@@ -86,7 +87,7 @@ function remove(req, res, next){
 
 // update one exchange
 function update(req, res, next){
-  console.log('************UPDATE REQ.BODY:',req.body)
+  // console.log('************UPDATE REQ.BODY:',req.body)
   const exchange = req.exchange;
   exchange.accountNeeded = req.body.accountNeeded;
   exchange.depositFee = req.body.depositFee;
@@ -151,34 +152,51 @@ function getExternalExchangeData(url){
     })
 }
 
-//TODO need to update to handle gemini errors
+//TODO need to update to handle gemini maintenance errors
 function processPriceChange(exchanges){
   let promises = [];
-  exchanges.forEach(function(exchange){
-    exchange.coinData.forEach(function(coin){
-      promises.push(getExternalExchangeData(coin.url)
-        .then((result) => {
-          console.log(' ****** processPriceChange RESULT: ', result)
-          result = JSON.parse(result);
-          if(exchange.name === GEMINI){
-            coin.set({'price': result.last})//for Gemini
-          } else if(exchange.name === COINBASE){
-            coin.set({'price': result.data.amount})
-          } else if(exchange.name === SHAPESHIFT){
-            coin.set({'price': result.rate})
-            coin.set({'minerFee': result.minerFee})
-          } else if(exchange.name === POLONIEX){
+  let poloCurrencies;//txFee data for Poloniex
 
-          }
-          coin.save();
-          exchange.save();
-        })
-        .catch((e) => {
-          console.log(' ****** processPriceChange ERROR:', e);
-          next(e);
-        })
-    )});
-  });
+  //TODO do this better
+  getExternalExchangeData('https://poloniex.com/public?command=returnCurrencies')
+    .then((resolve) => {
+      poloCurrencies = JSON.parse(resolve);
+
+      exchanges.forEach(function(exchange){
+        exchange.coinData.forEach(function(coin){
+          promises.push(getExternalExchangeData(coin.url)
+            .then((result) => {
+              // console.log(' ****** processPriceChange RESULT: ', result)
+              result = JSON.parse(result);
+              if(exchange.name === GEMINI){
+                coin.set({'price': result.last})
+              } else if(exchange.name === COINBASE){
+                coin.set({'price': result.data.amount})
+              } else if(exchange.name === SHAPESHIFT){
+                coin.set({'price': result.rate})
+                coin.set({'minerFee': result.minerFee})
+              } else if(exchange.name === POLONIEX){
+                  if(result[BTC+'_'+coin.name]){
+                    coin.set({'price': result[BTC+'_'+coin.name].last})
+                    if(poloCurrencies){
+                      coin.set({'minerFee': poloCurrencies[coin.name].txFee})
+                    }
+                  }
+              }
+              coin.save();
+              exchange.save();
+            })
+            .catch((e) => {
+              console.log(' ****** processPriceChange ERROR:', e);
+              next(e);
+            })
+        )});
+      });
+    })
+    .catch((err) => {
+      console.log(' ****** getExternalExchangeData Polo returnCurrencies ERROR: ', err);
+    });
+
   // ensure all exchanges have processed updates before resolving
   return Promise.all(promises)
     .then(() => {
