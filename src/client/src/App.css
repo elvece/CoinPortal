@@ -53,7 +53,8 @@ ul {
 
 .mdl-layout-title {
   font-family: Roboto Condensed, sans-serif !important;
-  letter-spacing: 4px;
+  letter-spacing: 6px;
+  font-size: 32px;
 }
 
 .mdl-button {
@@ -197,4 +198,8 @@ ul {
 .Abacus-Total {
   font-weight: bold;
   font-size: 20px;
+}
+
+.App-Footer {
+  text-align: center;
 }
