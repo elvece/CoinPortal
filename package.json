@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "gulp default && node ./src/server/server",
+    "server": "node ./src/server/server",
     "client": "cd ./src/client && npm start",
     "test": "./node_modules/mocha/bin/_mocha",
     "stop": "killall node",
@@ -19,7 +19,6 @@
     "dotenv": "^2.0.0",
     "express": "~4.13.4",
     "express-session": "^1.14.0",
-    "gulp": "^3.9.1",
     "mongoose": "^4.11.6",
     "morgan": "~1.7.0",
     "nunjucks": "^2.4.2",
