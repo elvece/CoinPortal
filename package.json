@@ -6,7 +6,8 @@
     "server": "gulp default && node ./src/server/server",
     "client": "cd ./src/client && npm start",
     "test": "./node_modules/mocha/bin/_mocha",
-    "stop": "killall node"
+    "stop": "killall node",
+    "heroku-postbuild": "npm install -g serve"
   },
   "dependencies": {
     "bluebird": "^3.5.0",
