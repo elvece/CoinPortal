@@ -69,6 +69,7 @@ function update(req, res, next){
   account.name = req.body.name;
 
 
+  //NOTE to update sub schemas, need to get id of wallet, then update tx and rates?
   if(req.body.wallets){
     //if no wallets yet exist in account.wallets
     if(account.wallets && account.wallets.length <= 0){
