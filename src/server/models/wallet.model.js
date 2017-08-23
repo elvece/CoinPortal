@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
 const Transaction = require('../models/transaction.model.js');
+const Rate = require('../models/rate.model.js');
 
 const WalletSchema = new mongoose.Schema({
   id: mongoose.Schema.Types.ObjectId,
   address: String,
   balance: Number,
   coin: String,
-  ogRate: Number, // original rate purchased at
+  rates: [Rate.schema], // original rate purchased at with tx id
   transactions: [Transaction.schema]// future feature, will contain TransactionSchema with transaction details/history
 });
 
