@@ -4,17 +4,23 @@ body * {
 
 ul {
   list-style: none;
+  font-size: 18px;
+  text-align: right;
 }
 
-li {
+.HeaderLinks {
   display: inline-block;
   padding-left: 20px;
   letter-spacing: 4px;
 }
 
-li, a {
+.HeaderLinks, a {
   text-decoration: none;
   color: #E2B761;
+}
+
+.AccountValues {
+  padding-left: 180px
 }
 
 .App-header-icon {
@@ -29,7 +35,7 @@ li, a {
   padding: 20px 0px 20px 0px;
 }
 
-.Abacus-grid {
+.Center-grid-content {
   justify-content: center;
 }
 
@@ -60,11 +66,11 @@ li, a {
 }
 
 .mdl-card {
-  width: 380px;
+  min-width: 400px;
 }
-
 .mdl-card__supporting-text, p {
   font-size: 16px;
+  padding: 20px;
 }
 
 .mdl-card__title {
@@ -76,6 +82,10 @@ li, a {
   color: #222;
   font-family: Roboto Condensed, sans-serif !important;
   letter-spacing: 1px;
+}
+
+.mdl-card--border {
+  padding: 13;
 }
 
 .mdl-data-table {
@@ -133,3 +143,51 @@ li, a {
   text-align: right;
 }
 
+.AccountHeader {
+  background-color: #224D7F;
+  color: #F4F4F2;
+  font-family: Roboto Condensed, sans-serif !important;
+  margin-bottom: 40px;
+}
+
+.sliding-middle-out {
+  display: inline-block;
+  position: relative;
+  padding-bottom: 3px;
+}
+
+.sliding-middle-out:after {
+  content: '';
+  display: block;
+  margin: auto;
+  height: 3px;
+  width: 0px;
+  background: transparent;
+  transition: width .5s ease, background-color .5s ease;
+}
+
+.sliding-middle-out:hover:after {
+  width: 100%;
+  background: #F4F4F2;
+}
+
+.coin-card-image.mdl-card {
+  width: 128px;
+  height: 128px;
+}
+
+.coin-card-image > .mdl-card__actions {
+  height: 52px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.coin-card-name {
+  color: black;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.coin-card-title {
+  text-align: center
+}
