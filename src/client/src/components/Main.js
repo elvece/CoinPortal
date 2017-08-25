@@ -10,9 +10,11 @@ class Main extends Component {
     return (
       <main className="mdl-layout__content">
         <div className="page-content">
-          <Route exact path="/" component={Dashboard}/>
-          <Route path="/abacus" component={Abacus}/>
-          <Route path="/dashboard" component={Dashboard}/>
+          <Switch>
+            <Route exact path="/" component={Dashboard}/>
+            <Route path="/abacus" component={Abacus}/>
+            <Route path="/dashboard" component={Dashboard}/>
+          </Switch>
         </div>
       </main>
     );
