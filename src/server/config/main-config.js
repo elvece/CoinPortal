@@ -47,14 +47,14 @@
       app.use(express.static(path.join(__dirname, '..', '..', 'client')));
     } else {
       // Serve static files from the React app
-      app.use(express.static(path.join(__dirname, '..', '..','client/build/static')));
+      app.use(express.static(path.join(__dirname, '..', '..','client/build/')));
       //catch-all to fall back on react build root
-      // app.get('*', (req, res) => {
-      //   res.sendFile(path.join(__dirname, '..', '..','/client/build/index.html'));
-      // })
-      app.all('/*', function(req, res){
-        res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
-      });
+      app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../../client/build/index.html'));
+      })
+      // app.all('/*', function(req, res){
+      //   res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
+      // });
     }
 
 
