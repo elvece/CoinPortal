@@ -17,7 +17,7 @@
   // ];
 
   // *** load environment variables *** //
-  require('dotenv').config();
+  // require('dotenv').config();
 
   appConfig.init = function(app, express) {
 
@@ -47,10 +47,10 @@
       app.use(express.static(path.join(__dirname, '..', '..', 'client')));
     } else {
       // Serve static files from the React app
-      app.use(express.static(path.join(__dirname, '..', '..','client/build/')));
+      app.use(express.static(path.resolve(__dirname, '..', '..','client/build/')));
       //catch-all to fall back on react build root
       app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../../client/build/', 'index.html'));
+        res.sendFile(path.resolve(__dirname,'..', '..', 'client/build/', 'index.html'));
       })
       // app.all('/*', function(req, res){
       //   res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));

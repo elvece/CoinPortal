@@ -22,3 +22,5 @@ class Main extends Component {
 }
 
 export default Main;
+
+// <Route path="*" component={NotFound} />
