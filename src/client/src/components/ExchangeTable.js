@@ -284,7 +284,7 @@ class ExchangeTable extends Component {
           accessor: data => data.purchaseOptions ? data.purchaseOptions : [],
           Cell: row => (displayChips(row.row.purchaseOptions)
             ),
-          minWidth: 220
+          minWidth: 300
         }]
       },
       {
@@ -293,7 +293,7 @@ class ExchangeTable extends Component {
           Header: <MdSort/>,
           id: 'verify',
           accessor: data => setFriendlyBoolean(data.verify),
-          minWidth: 220
+          minWidth: 150
         }]
       },
       {

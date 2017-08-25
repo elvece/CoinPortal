@@ -42,17 +42,19 @@ class CoinCard extends Component {
     }
 
     return (
-      <div key={coin.name} className="mdl-cell mdl-cell--3-col">
-        <div className="coin-card-image mdl-card mdl-shadow--2dp">
-          <div className="coin-card-title mdl-card__title mdl-card--expand">
-            <span data-tip data-for="price_usd" style={style_7}>{icon_7} {coin.price_usd}</span>
-            <ReactTooltip id="price_usd">Current price (24 hr change)</ReactTooltip>
-            <img style={{padding: '5px'}} src={image} alt={coin.name}/>
-            <span data-tip data-for="percent_change_7d" style={style_24}>{icon_24} {coin.percent_change_7d}</span>
-            <ReactTooltip id="percent_change_7d">Percent Change (7 day)</ReactTooltip>
-          </div>
-          <div className="mdl-card__actions">
-            <span className="coin-card-name">{coin.name}</span>
+      <div style={{textAlign: 'center'}}>
+        <div key={coin.name} className="Coin-card-wrapper">
+          <div className="coin-card-image mdl-card Coin-card-title mdl-shadow--2dp">
+            <div className="mdl-card__title mdl-card--expand">
+              <span data-tip data-for="price_usd" style={style_7}>{icon_7} {coin.price_usd}</span>
+              <ReactTooltip id="price_usd">Current price (24 hr change)</ReactTooltip>
+              <img style={{padding: '5px'}} src={image} alt={coin.name}/>
+              <span data-tip data-for="percent_change_7d" style={style_24}>{icon_24} {coin.percent_change_7d}</span>
+              <ReactTooltip id="percent_change_7d">Percent Change (7 day)</ReactTooltip>
+            </div>
+            <div className="mdl-card__actions">
+              <span className="coin-card-name">{coin.name}</span>
+            </div>
           </div>
         </div>
       </div>

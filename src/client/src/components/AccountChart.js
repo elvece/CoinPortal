@@ -116,7 +116,7 @@ class AccountChart extends Component {
     const chartData = calculcateDataset() ? calculcateDataset() : {};
 
     return (
-      <div className="mdl-cell mdl-cell--3-col">
+      <div className="mdl-cell Account-Chart-card mdl-cell--3-col mdl-cell--12-col-phone">
         <div className="mdl-card mdl-shadow--3dp">
           <div className="mdl-card__title mdl-card--border">
             <h2 className="mdl-card__title-text">{account.name}</h2>
