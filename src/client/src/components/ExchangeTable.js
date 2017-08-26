@@ -71,33 +71,56 @@ class ExchangeTable extends Component {
       })
     });
   }
-  setActiveCell = (row, position, column) => {
+  setActiveCell = (row, coin) => {
+    console.log(coin, row.row[coin])
     const SHAPESHIFT = 'ShapeShift';
     const POLONIEX = 'Poloniex';
-    let properPrice = row.row[position];
-    if(row.row[position] !== '--'){
+    let properPrice = row.row[coin];
+    if(row.row[coin] !== '--'){
       if(row.row.name === SHAPESHIFT || row.row.name === POLONIEX){
-        properPrice = this.convertPrices(row.row[position])
+        if(coin === 'btc'){
+          properPrice = this.convertPrices(row.row[coin], 'btc');
+        } else {
+          properPrice = this.convertPrices(row.row[coin])
+        }
       }
-      this.props.calculate(properPrice, position, row.row._original);
-      if(this.state.active === row.row[position]) {
+        console.log(coin, properPrice, row.row[coin], this.state.active)
+      this.props.calculate(properPrice, coin, row.row._original);
+      if(this.state.active === properPrice) {
         this.setState({active: null})
+        //clear out calculation
         this.props.calculate(undefined, undefined, undefined);
       } else {
-        this.setState({active: row.row[position]})
+        this.setState({active: properPrice})
       }
     }
   }
 
-  setActiveCellBackgroundColor = (position, color) => {
-    if (this.state.active === position) {
-      return '#892323'
+  setActiveCellBackgroundColor = (row, coin) => {
+    const SHAPESHIFT = 'ShapeShift';
+    const POLONIEX = 'Poloniex';
+    let properPrice;
+
+    let result;
+    if(row && row.row && row.row[coin]){
+      properPrice = row.row[coin];
+      if(row.row.name === SHAPESHIFT || row.row.name === POLONIEX){
+        if(coin === 'btc'){
+            properPrice = this.convertPrices(row.row[coin], 'btc');
+          } else {
+            properPrice = this.convertPrices(row.row[coin])
+          }
+      }
+      if (this.state.active === properPrice) {
+        result = '#892323'
+      } else {
+        result = '';
+      }
     }
-    return '';
   }
 
-  setActiveCellTextColor = (position) => {
-    if (this.state.active === position) {
+  setActiveCellTextColor = (coin) => {
+    if (this.state.active === coin) {
       return '#F4F4F2'
     }
     return '';
@@ -118,7 +141,7 @@ class ExchangeTable extends Component {
             let ethPrice = parseFloat(coin.price_usd);
             result = ((1 / btcToEthPrice) * ethPrice ).round(2)
           }
-        } else if(coin.symbol === 'BTC'){
+        } else if(symbol !== 'btc' && coin.symbol === 'BTC'){
           //otherwise, calculate against price
           result = (parseFloat(coin.price_usd) * parseFloat(price)).round(2);
         }
@@ -218,7 +241,7 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'BTC'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row.row.btc), color: this.setActiveCellTextColor(row.row.btc), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellBackgroundColor(row, 'btc'), color: this.setActiveCellTextColor(row.row.btc), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'btc')}>
@@ -232,7 +255,7 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'ETH'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row.row.eth), color: this.setActiveCellTextColor(row.row.eth), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellBackgroundColor(row, 'eth'), color: this.setActiveCellTextColor(row.row.eth), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'eth')}>
@@ -246,7 +269,7 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'LTC'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row.row.ltc), color: this.setActiveCellTextColor(row.row.ltc), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellBackgroundColor(row, 'ltc'), color: this.setActiveCellTextColor(row.row.ltc), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'ltc')}>
@@ -260,7 +283,7 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'DASH'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row.row.dash), color: this.setActiveCellTextColor(row.row.dash), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellBackgroundColor(row, 'dash'), color: this.setActiveCellTextColor(row.row.dash), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'dash')}>
