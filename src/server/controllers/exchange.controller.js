@@ -176,8 +176,14 @@ function processPriceChange(exchanges){
                 coin.set({'price': result.rate})
                 coin.set({'minerFee': result.minerFee})
               } else if(exchange.name === POLONIEX){
-                  if(result[BTC+'_'+coin.name]){
+                  if(result[BTC+'_'+coin.name] && coin.name !== BTC){
                     coin.set({'price': result[BTC+'_'+coin.name].last})
+                    if(poloCurrencies){
+                      coin.set({'minerFee': poloCurrencies[coin.name].txFee})
+                    }
+                  } else {
+                    //coin is BTC, set as converstion to ETH
+                    coin.set({'price': result[BTC+'_ETH'].last})
                     if(poloCurrencies){
                       coin.set({'minerFee': poloCurrencies[coin.name].txFee})
                     }

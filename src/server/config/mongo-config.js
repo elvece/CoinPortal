@@ -5,7 +5,8 @@
     const mongoose = require('mongoose');
     const mongoDBS = {
       test: 'mongodb://localhost/coin-portal-test',
-      development: 'mongodb://localhost/coin-portal',
+      // development: 'mongodb://localhost/coin-portal',
+      development: 'mongodb://localhost/coin-portal2',
       production: process.env.MONGOLAB_URI
     };
     const config = {

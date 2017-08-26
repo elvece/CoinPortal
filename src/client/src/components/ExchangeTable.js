@@ -103,10 +103,28 @@ class ExchangeTable extends Component {
     return '';
   }
 
-  convertPrices = (price) => {
-    if(this.props.btcData && this.props.btcData[0]){
-      return (parseFloat(this.props.btcData[0].price_usd) * parseFloat(price)).round(2);
-    } return '';
+  //for exchanges that only trade alt coins, use the coin data price from coincap.io api to calculate against the current price rates of btc
+  convertPrices = (price, symbol) => {
+    let result = '';
+    let coinData;
+
+    if(this.props.coinData.length > 1 && price !== '--'){
+      coinData = this.props.coinData;
+      coinData.forEach((coin) => {
+        if(symbol === 'btc'){
+          //using btc to eth price exchange, calculate the amount of btc in usd from eth to usd rate
+          if(coin.symbol === 'ETH'){
+            let btcToEthPrice = parseFloat(price);
+            let ethPrice = parseFloat(coin.price_usd);
+            result = ((1 / btcToEthPrice) * ethPrice ).round(2)
+          }
+        } else if(coin.symbol === 'BTC'){
+          //otherwise, calculate against price
+          result = (parseFloat(coin.price_usd) * parseFloat(price)).round(2);
+        }
+      })
+    }
+    return result;
   }
 
 
@@ -204,7 +222,7 @@ class ExchangeTable extends Component {
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'btc')}>
-              {row.row.btc}
+              {row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.convertPrices(row.row.btc, 'btc') : row.row.btc}
               </span>
             )
           },
@@ -317,13 +335,13 @@ class ExchangeTable extends Component {
           {
             Header: 'Margin',
             id: 'margin',
-            accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].margin.toString() : '',
+            accessor: data => data.trading && data.trading.length > 0 && data.trading[0].margin ? data.trading[0].margin.toString() : '',
           show: false
           },
           {
             Header: 'Auction',
             id: 'auction',
-            accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].auction.toString() : '',
+            accessor: data => data.trading && data.trading.length && data.trading[0].auction > 0 ? data.trading[0].auction.toString() : '',
           show: false
           }
         ]
