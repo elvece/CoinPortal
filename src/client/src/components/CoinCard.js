@@ -15,18 +15,18 @@ class CoinCard extends Component {
 
     if(parseInt(coin.percent_change_24h, 10) > 0){
       //price has increased in last 24 hours
-      style_7 = {color: '#1C6D65', fontSize: '32px'};
+      style_7 = {color: '#1C6D65', fontSize: '24px'};
       icon_7 = <MdArrowDropUp/>;
     } else {
-      style_7 = {color: '#892323', fontSize: '32px'};
+      style_7 = {color: '#892323', fontSize: '24px'};
       icon_7 = <MdArrowDropDown/>;
     }
     if(parseInt(coin.percent_change_7d, 10) > 0){
       //price has increased in last 7 days
-      style_24 = {color: '#1C6D65', fontSize: '32px'};
+      style_24 = {color: '#1C6D65', fontSize: '24px'};
       icon_24 = <MdArrowDropUp/>;
     } else {
-      style_24 = {color: '#892323', fontSize: '32px'};
+      style_24 = {color: '#892323', fontSize: '24px'};
       icon_24 = <MdArrowDropDown/>;
     }
 
@@ -48,7 +48,7 @@ class CoinCard extends Component {
             <div className="mdl-card__title mdl-card--expand">
               <span data-tip data-for="price_usd" style={style_7}>{icon_7} {coin.price_usd}</span>
               <ReactTooltip id="price_usd">Current price (24 hr change)</ReactTooltip>
-              <img style={{padding: '5px'}} src={image} alt={coin.name}/>
+              <img style={{padding: '5px', width: '80px'}} src={image} alt={coin.name}/>
               <span data-tip data-for="percent_change_7d" style={style_24}>{icon_24} {coin.percent_change_7d}</span>
               <ReactTooltip id="percent_change_7d">Percent Change (7 day)</ReactTooltip>
             </div>
