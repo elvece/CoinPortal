@@ -86,11 +86,11 @@ class ExchangeTable extends Component {
           if(coin.symbol === 'ETH'){
             let btcToEthPrice = parseFloat(price);
             let ethPrice = parseFloat(coin.price_usd);
-            result = ((1 / btcToEthPrice) * ethPrice ).round(2)
+            result = ((1 / btcToEthPrice) * ethPrice ).round(3)
           }
         } else if(symbol !== btc && coin.symbol === 'BTC'){
           //otherwise, calculate against price
-          result = (parseFloat(coin.price_usd) * parseFloat(price)).round(2);
+          result = (parseFloat(coin.price_usd) * parseFloat(price)).round(3);
         }
       })
     }
@@ -123,7 +123,7 @@ class ExchangeTable extends Component {
     }
   }
 
-  setActiveCellBackgroundColor = (row, coin) => {
+  setActiveCellColor = (row, coin, color) => {
     const SHAPESHIFT = 'ShapeShift';
     const POLONIEX = 'Poloniex';
     let properPrice;
@@ -133,25 +133,7 @@ class ExchangeTable extends Component {
       properPrice = row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.setProperPrice(row.row[coin], coin) : row.row[coin];
 
       if(this.state.active === properPrice) {
-        result = '#892323'
-      } else {
-        result = '';
-      }
-    }
-    return result;
-  }
-
-  setActiveCellTextColor = (row, coin) => {
-    const SHAPESHIFT = 'ShapeShift';
-    const POLONIEX = 'Poloniex';
-    let properPrice;
-    let result;
-
-    if(row && row.row && row.row[coin]){
-      properPrice = row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.setProperPrice(row.row[coin], coin) : row.row[coin];
-
-      if(this.state.active === properPrice) {
-        result = '#F4F4F2'
+        result = color;
       } else {
         result = '';
       }
@@ -262,7 +244,7 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'BTC'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row, 'btc'), color: this.setActiveCellTextColor(row, 'btc'), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellColor(row, 'btc', '#892323'), color: this.setActiveCellColor(row, 'btc', '#F4F4F2'), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'btc')}>
@@ -276,7 +258,7 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'ETH'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row, 'eth'), color: this.setActiveCellTextColor(row, 'eth'), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellColor(row, 'eth', '#892323'), color: this.setActiveCellColor(row, 'eth', '#F4F4F2'), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'eth')}>
@@ -290,7 +272,7 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'LTC'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row, 'ltc'), color: this.setActiveCellTextColor(row, 'ltc'), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellColor(row, 'ltc', '#892323'), color: this.setActiveCellColor(row, 'ltc', '#F4F4F2'), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'ltc')}>
@@ -304,7 +286,7 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'DASH'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row, 'dash'), color: this.setActiveCellTextColor(row, 'dash'), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellColor(row, 'dash', '#892323'), color: this.setActiveCellColor(row, 'dash', '#F4F4F2'), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'dash')}>
