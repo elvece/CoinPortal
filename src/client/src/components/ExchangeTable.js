@@ -71,21 +71,48 @@ class ExchangeTable extends Component {
       })
     });
   }
+
+  //for exchanges that only trade alt coins, use the coin data price from coincap.io api to calculate against the current price rates of btc
+  convertPrices = (price, symbol) => {
+    const btc = 'btc';
+    let result = '';
+    let coinData;
+
+    if(this.props.coinData.length > 1 && price !== '--'){
+      coinData = this.props.coinData;
+      coinData.forEach((coin) => {
+        if(symbol === btc){
+          //using btc to eth price exchange, calculate the amount of btc in usd from eth to usd rate
+          if(coin.symbol === 'ETH'){
+            let btcToEthPrice = parseFloat(price);
+            let ethPrice = parseFloat(coin.price_usd);
+            result = ((1 / btcToEthPrice) * ethPrice ).round(2)
+          }
+        } else if(symbol !== btc && coin.symbol === 'BTC'){
+          //otherwise, calculate against price
+          result = (parseFloat(coin.price_usd) * parseFloat(price)).round(2);
+        }
+      })
+    }
+    return result;
+  }
+
   setActiveCell = (row, coin) => {
-    console.log(coin, row.row[coin])
     const SHAPESHIFT = 'ShapeShift';
     const POLONIEX = 'Poloniex';
     let properPrice = row.row[coin];
-    if(row.row[coin] !== '--'){
+
+    if(properPrice !== '--'){
       if(row.row.name === SHAPESHIFT || row.row.name === POLONIEX){
         if(coin === 'btc'){
-          properPrice = this.convertPrices(row.row[coin], 'btc');
+          properPrice = this.convertPrices(properPrice, 'btc');
         } else {
-          properPrice = this.convertPrices(row.row[coin])
+          properPrice = this.convertPrices(properPrice)
         }
       }
-        console.log(coin, properPrice, row.row[coin], this.state.active)
+      //calculate miner and exchange fee, display in abacus result card
       this.props.calculate(properPrice, coin, row.row._original);
+      //set selected price@exchange to active state
       if(this.state.active === properPrice) {
         this.setState({active: null})
         //clear out calculation
@@ -100,56 +127,50 @@ class ExchangeTable extends Component {
     const SHAPESHIFT = 'ShapeShift';
     const POLONIEX = 'Poloniex';
     let properPrice;
-
     let result;
+
     if(row && row.row && row.row[coin]){
-      properPrice = row.row[coin];
-      if(row.row.name === SHAPESHIFT || row.row.name === POLONIEX){
-        if(coin === 'btc'){
-            properPrice = this.convertPrices(row.row[coin], 'btc');
-          } else {
-            properPrice = this.convertPrices(row.row[coin])
-          }
-      }
-      if (this.state.active === properPrice) {
+      properPrice = row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.setProperPrice(row.row[coin], coin) : row.row[coin];
+
+      if(this.state.active === properPrice) {
         result = '#892323'
       } else {
         result = '';
       }
     }
+    return result;
   }
 
-  setActiveCellTextColor = (coin) => {
-    if (this.state.active === coin) {
-      return '#F4F4F2'
-    }
-    return '';
-  }
+  setActiveCellTextColor = (row, coin) => {
+    const SHAPESHIFT = 'ShapeShift';
+    const POLONIEX = 'Poloniex';
+    let properPrice;
+    let result;
 
-  //for exchanges that only trade alt coins, use the coin data price from coincap.io api to calculate against the current price rates of btc
-  convertPrices = (price, symbol) => {
-    let result = '';
-    let coinData;
+    if(row && row.row && row.row[coin]){
+      properPrice = row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.setProperPrice(row.row[coin], coin) : row.row[coin];
 
-    if(this.props.coinData.length > 1 && price !== '--'){
-      coinData = this.props.coinData;
-      coinData.forEach((coin) => {
-        if(symbol === 'btc'){
-          //using btc to eth price exchange, calculate the amount of btc in usd from eth to usd rate
-          if(coin.symbol === 'ETH'){
-            let btcToEthPrice = parseFloat(price);
-            let ethPrice = parseFloat(coin.price_usd);
-            result = ((1 / btcToEthPrice) * ethPrice ).round(2)
-          }
-        } else if(symbol !== 'btc' && coin.symbol === 'BTC'){
-          //otherwise, calculate against price
-          result = (parseFloat(coin.price_usd) * parseFloat(price)).round(2);
-        }
-      })
+      if(this.state.active === properPrice) {
+        result = '#F4F4F2'
+      } else {
+        result = '';
+      }
     }
     return result;
   }
 
+  setProperPrice = (price, coin) => {
+    const btc = 'btc';
+    let properPrice;
+
+    if(coin === btc){
+      properPrice = this.convertPrices(price, btc);
+    } else {
+      properPrice = this.convertPrices(price)
+    }
+
+    return properPrice;
+  }
 
   render(){
     const { exchanges, loading } = this.state;
@@ -241,7 +262,7 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'BTC'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row, 'btc'), color: this.setActiveCellTextColor(row.row.btc), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellBackgroundColor(row, 'btc'), color: this.setActiveCellTextColor(row, 'btc'), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'btc')}>
@@ -255,7 +276,7 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'ETH'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row, 'eth'), color: this.setActiveCellTextColor(row.row.eth), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellBackgroundColor(row, 'eth'), color: this.setActiveCellTextColor(row, 'eth'), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'eth')}>
@@ -269,7 +290,7 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'LTC'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row, 'ltc'), color: this.setActiveCellTextColor(row.row.ltc), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellBackgroundColor(row, 'ltc'), color: this.setActiveCellTextColor(row, 'ltc'), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'ltc')}>
@@ -283,7 +304,7 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'DASH'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row, 'dash'), color: this.setActiveCellTextColor(row.row.dash), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellBackgroundColor(row, 'dash'), color: this.setActiveCellTextColor(row, 'dash'), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'dash')}>
