@@ -83,7 +83,7 @@ ul {
 
 .Coin-card-wrapper {
   display: inline-block;
-  padding: 30px 0px 0px 50px;
+  padding: 30px 0px 0px 40px;
 
 }
 
@@ -146,7 +146,7 @@ ul {
 .mdl-layout-title {
   font-family: Roboto Condensed, sans-serif !important;
   letter-spacing: 6px;
-  font-size: 32px;
+  font-size: 28px;
 }
 
 .mdl-button {
@@ -170,6 +170,7 @@ ul {
 .mdl-card__title {
   background: #E2B761;
   height: 90px;
+  justify-content: center;
 }
 
 .mdl-card__title-text {
@@ -229,13 +230,14 @@ ul {
   and (max-device-width: 1600px)
   and (-webkit-min-device-pixel-ratio: 1) {
   .Account-Chart-card {
-    margin: 25px;
+    margin: 45px;
   }
   .mdl-cell--3-col .Account-Chart-card {
     width: calc(33.3333333333% - 16px);
   }
   .Coin-card-title {
-    min-width: 330px;
+    min-width: 260px;
+    max-width: 315px;
   }
 }
 
@@ -247,12 +249,13 @@ ul {
   and (min-resolution: 192dpi) {
 
   .Account-Chart-card {
-    margin: 25px;
+    margin: 45px;
   }
   .mdl-cell--3-col .Account-Chart-card {
     width: calc(33.3333333333% - 16px);
   }
   .Coin-card-title {
-    min-width: 330px;
+    min-width: 260px;
+    max-width: 315px;
   }
 }
