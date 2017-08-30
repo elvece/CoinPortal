@@ -94,6 +94,7 @@ class ExchangeTable extends Component {
         }
       })
     }
+    console.log(symbol, price, result)
     return result;
   }
 
@@ -145,7 +146,7 @@ class ExchangeTable extends Component {
     if(coin === btc){
       properPrice = this.convertPrices(price, btc);
     } else {
-      properPrice = this.convertPrices(price)
+      properPrice = this.convertPrices(price, coin)
     }
 
     return properPrice;
@@ -177,7 +178,11 @@ class ExchangeTable extends Component {
       let output = '--';
       data.coinData.forEach((coin) => {
         if(coin.name === name){
-          output = parseFloat(coin.price).toFixed(2);
+          if(data.name === SHAPESHIFT){
+            output = parseFloat(coin.price);
+          } else {
+            output = parseFloat(coin.price).toFixed(2);
+          }
         }
       })
       return output;

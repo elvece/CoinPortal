@@ -105,7 +105,7 @@ class Abacus extends Component {
 
   render(){
     const { amount, coinData, coin, coinPrice, minerFee, exchangeFee, loading } = this.state;
-    const totalExchangeCost = amount ? (parseFloat(amount) * exchangeFee) : 0;
+    const totalExchangeCost = amount ? (amount * exchangeFee) : 0;
     //calculate the total fee sum
     const totalFee = amount ? (totalExchangeCost + parseFloat(minerFee)).toFixed(2) : 0;
     //calculate the amount of coins being purchased with entered amount and selected rate
@@ -136,7 +136,7 @@ class Abacus extends Component {
                       className="mdl-textfield__input"
                       disabled={ coinPrice ? '' : 'disabled'}
                       name="amount"
-                      value={amount}
+                      value={parseFloat(amount)}
                       onChange={this.handleChange()}
                       type="number"
                       pattern="-?[0-9]*(\.[0-9]+)?"
@@ -180,7 +180,7 @@ class Abacus extends Component {
                     <tr className="Abacus-Total">
                       <td className="mdl-data-table__cell--non-numeric">Total</td>
                       <td>${totalFee}</td>
-                      <td>${total}</td>
+                      <td>${total.toFixed(2)}</td>
                     </tr>
                   </tbody>
                 </table>
