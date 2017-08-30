@@ -6,33 +6,39 @@ import { MdCompareArrows, MdArrowForward, MdMonetizationOn } from 'react-icons/l
 import Client from '../Client';
 import CircularProgress from 'material-ui/CircularProgress';
 
+const SHAPESHIFT = 'ShapeShift';
+// TODO: make api call to get this data
+// USD averages from https://bitinfocharts.com/comparison/transactionfees-btc-eth-ltc-dash.html as of 08-29-2017
+const minerFees = {
+  btc: 7.351,
+  eth: 0.473,
+  ltc: 0.170,
+  dash: 0.285
+}
 
-  //TODO: make api call to get this data
-  // got these averages from https://bitinfocharts.com/comparison/transactionfees-btc-eth-ltc-dash.html
-  const minerFees = {
-    btc: 6.713,
-    eth: 0.279,
-    ltc: 0.167,
-    dash: 0.187
-  }
-
-  function setMinerFee(data, coin){
-    let result;
-    data.forEach((item) => {
-      if(item.name.toLowerCase() === coin){
-        result = item.minerFee ? item.minerFee : minerFees[coin];
+function setMinerFee(exchange, price, coin){
+  let result;
+  exchange.coinData.forEach((item) => {
+    if(item.name.toLowerCase() === coin){
+      if(exchange.name ===  SHAPESHIFT){
+        //maintain USD converted price
+        result = item.minerFee ? (item.minerFee * parseFloat(price)): minerFees[coin];
+      } else {
+        result = item.minerFee ? (item.minerFee * parseFloat(item.price)): minerFees[coin];
       }
-    })
-    return result;
-  }
-
-  function setExchangeFee(data){
-    let result = 0;
-    if(data.withdrawalFee && data.withdrawalFee !== 'Miner Fee'){
-      result = parseFloat(data.withdrawalFee) / 100;
     }
-    return result;
+  })
+  return result.toFixed(5);
+}
+
+function setExchangeFee(exchange){
+  let result = 0;
+  //account for what I defaulted for ShapeShift ie 'Miner Fee'
+  if(exchange.withdrawalFee && exchange.withdrawalFee !== 'Miner Fee'){
+    result = parseFloat(exchange.withdrawalFee) / 100;
   }
+  return result.toFixed(3);
+}
 
 
 class Abacus extends Component {
@@ -73,11 +79,10 @@ class Abacus extends Component {
 
   processTableData = (price, coin, exchange, payment) => {
     //TODO need to get payment to incorporate into this calculation
-
     this.setState({
       exchange: exchange && exchange.name ? exchange.name : '',
-      minerFee: exchange ? setMinerFee(exchange.coinData, coin) : '',
-      exchangeFee: exchange ? setExchangeFee(exchange) : '',
+      minerFee: exchange ? setMinerFee(exchange, price, coin) : 0,
+      exchangeFee: exchange ? setExchangeFee(exchange) : 0,
       coinPrice: price ? price : '',
       coin: coin ? coin.toUpperCase() : '',
       payment: payment
@@ -100,11 +105,9 @@ class Abacus extends Component {
 
   render(){
     const { amount, coinData, coin, coinPrice, minerFee, exchangeFee, loading } = this.state;
-    //calculate total fees against purchase amount
-    const totalMinerCost = this.state.amount * (this.state.minerFee * 0.01);
-    const totalExchangeCost = this.state.amount * (this.state.exchangeFee * 0.01);
+    const totalExchangeCost = amount ? (parseFloat(amount) * exchangeFee) : 0;
     //calculate the total fee sum
-    const totalFee = (totalExchangeCost + totalMinerCost).toFixed(3);
+    const totalFee = amount ? (totalExchangeCost + parseFloat(minerFee)).toFixed(2) : 0;
     //calculate the amount of coins being purchased with entered amount and selected rate
     const coinAmount = coinPrice ? (amount / coinPrice).toFixed(5) : 0;
     const total = amount - totalFee;
@@ -171,7 +174,7 @@ class Abacus extends Component {
                     </tr>
                     <tr>
                       <td className="mdl-data-table__cell--non-numeric">Exchange</td>
-                      <td>${exchangeFee}</td>
+                      <td>${totalExchangeCost}</td>
                       <td></td>
                     </tr>
                     <tr className="Abacus-Total">

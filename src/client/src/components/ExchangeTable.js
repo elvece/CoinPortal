@@ -26,7 +26,7 @@ class ExchangeTable extends Component {
 
   componentDidMount(){
     const _this = this;
-    //TODO: refactor this into own method
+    // TODO: refactor this into own method, make exchanges.coinData a map rather than array
     this.serverRequest = Client.getStuff(`api/exchanges/`, function(result, reject){
       if(result){
         _this.setState({

@@ -178,6 +178,7 @@ function processPriceChange(exchanges){
                 } else if(exchange.name === POLONIEX){
                     coin.set({'price': result['USDT_'+coin.name].last})
                     if(poloCurrencies){
+                      // TODO this is actually wrong, this is polo tx fee, not miner fee
                       coin.set({'minerFee': poloCurrencies[coin.name].txFee})
                     }
                 }
