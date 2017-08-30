@@ -34,7 +34,7 @@ function setMinerFee(exchange, price, coin){
 function setExchangeFee(exchange){
   let result = 0;
   //account for what I defaulted for ShapeShift ie 'Miner Fee'
-  if(exchange.withdrawalFee && exchange.withdrawalFee !== 'Miner Fee'){
+  if(exchange.withdrawalFee && exchange.withdrawalFee !== 'Miner Fee Only'){
     result = parseFloat(exchange.withdrawalFee) / 100;
   }
   return result.toFixed(3);

@@ -297,7 +297,8 @@ class ExchangeTable extends Component {
         columns: [
           {
             Header: 'Withdrawl',
-            accessor: 'withdrawalFee'
+            accessor: 'withdrawalFee',
+            minWidth: 100
           },
           {
             Header: 'Deposit',
