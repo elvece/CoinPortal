@@ -155,53 +155,46 @@ function getExternalExchangeData(url){
 //TODO need to update to handle gemini maintenance errors
 function processPriceChange(exchanges){
   let promises = [];
-  let poloCurrencies;//txFee data for Poloniex
+  //let poloCurrencies;//txFee data for Poloniex
 
-  //TODO do this better
-  getExternalExchangeData('https://poloniex.com/public?command=returnCurrencies')
+  promises.push(getExternalExchangeData('https://poloniex.com/public?command=returnCurrencies')
     .then((resolve) => {
-      poloCurrencies = JSON.parse(resolve);
-
-      exchanges.forEach(function(exchange){
-        exchange.coinData.forEach(function(coin){
-          promises.push(getExternalExchangeData(coin.url)
-            .then((result) => {
-              // console.log(' ****** processPriceChange RESULT: ', result)
-              result = JSON.parse(result);
-              if(exchange.name === GEMINI){
-                coin.set({'price': result.last})
-              } else if(exchange.name === COINBASE){
-                coin.set({'price': result.data.amount})
-              } else if(exchange.name === SHAPESHIFT){
-                coin.set({'price': result.rate})
-                coin.set({'minerFee': result.minerFee})
-              } else if(exchange.name === POLONIEX){
-                  if(result[BTC+'_'+coin.name] && coin.name !== BTC){
-                    coin.set({'price': result[BTC+'_'+coin.name].last})
+      //txFee data for Poloniex
+      return JSON.parse(resolve);
+    }).then((poloCurrencies) => {
+        exchanges.forEach(function(exchange){
+          exchange.coinData.forEach(function(coin){
+            promises.push(getExternalExchangeData(coin.url)
+              .then((result) => {
+                // console.log(' ****** processPriceChange RESULT: ', result)
+                result = JSON.parse(result);
+                if(exchange.name === GEMINI){
+                  coin.set({'price': result.last})
+                } else if(exchange.name === COINBASE){
+                  coin.set({'price': result.data.amount})
+                } else if(exchange.name === SHAPESHIFT){
+                  coin.set({'price': result.rate})
+                  coin.set({'minerFee': result.minerFee})
+                } else if(exchange.name === POLONIEX){
+                    coin.set({'price': result['USDT_'+coin.name].last})
                     if(poloCurrencies){
                       coin.set({'minerFee': poloCurrencies[coin.name].txFee})
                     }
-                  } else {
-                    //coin is BTC, set as converstion to ETH
-                    coin.set({'price': result[BTC+'_ETH'].last})
-                    if(poloCurrencies){
-                      coin.set({'minerFee': poloCurrencies[coin.name].txFee})
-                    }
-                  }
-              }
-              coin.save();
-              exchange.save();
-            })
-            .catch((e) => {
-              console.log(' ****** processPriceChange ERROR:', e);
-              next(e);
-            })
-        )});
-      });
+                }
+                coin.save();
+                exchange.save();
+              })
+              .catch((e) => {
+                console.log(' ****** processPriceChange ERROR:', e);
+                next(e);
+              })
+          )});
+        });
+      return exchanges;
     })
     .catch((err) => {
       console.log(' ****** getExternalExchangeData Polo returnCurrencies ERROR: ', err);
-    });
+    }));
 
   // ensure all exchanges have processed updates before resolving
   return Promise.all(promises)

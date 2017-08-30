@@ -86,11 +86,11 @@ class ExchangeTable extends Component {
           if(coin.symbol === 'ETH'){
             let btcToEthPrice = parseFloat(price);
             let ethPrice = parseFloat(coin.price_usd);
-            result = ((1 / btcToEthPrice) * ethPrice ).round(3)
+            result = ((1 / btcToEthPrice) * ethPrice ).toFixed(2)
           }
         } else if(symbol !== btc && coin.symbol === 'BTC'){
           //otherwise, calculate against price
-          result = (parseFloat(coin.price_usd) * parseFloat(price)).round(3);
+          result = (parseFloat(coin.price_usd) * parseFloat(price)).toFixed(2);
         }
       })
     }
@@ -99,11 +99,10 @@ class ExchangeTable extends Component {
 
   setActiveCell = (row, coin) => {
     const SHAPESHIFT = 'ShapeShift';
-    const POLONIEX = 'Poloniex';
     let properPrice = row.row[coin];
 
     if(properPrice !== '--'){
-      if(row.row.name === SHAPESHIFT || row.row.name === POLONIEX){
+      if(row.row.name === SHAPESHIFT){
         if(coin === 'btc'){
           properPrice = this.convertPrices(properPrice, 'btc');
         } else {
@@ -125,13 +124,11 @@ class ExchangeTable extends Component {
 
   setActiveCellColor = (row, coin, color) => {
     const SHAPESHIFT = 'ShapeShift';
-    const POLONIEX = 'Poloniex';
     let properPrice;
     let result;
 
     if(row && row.row && row.row[coin]){
-      properPrice = row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.setProperPrice(row.row[coin], coin) : row.row[coin];
-
+      properPrice = row.row.name === SHAPESHIFT ? this.setProperPrice(row.row[coin], coin) : row.row[coin];
       if(this.state.active === properPrice) {
         result = color;
       } else {
@@ -157,12 +154,6 @@ class ExchangeTable extends Component {
   render(){
     const { exchanges, loading } = this.state;
     const SHAPESHIFT = 'ShapeShift';
-    const POLONIEX = 'Poloniex';
-
-    Number.prototype.round = function(p) {
-      p = p || 10;
-      return parseFloat( this.toFixed(p) );
-    };
 
     function savePurchaseOption(data) {
       // console.log(data)
@@ -186,7 +177,7 @@ class ExchangeTable extends Component {
       let output = '--';
       data.coinData.forEach((coin) => {
         if(coin.name === name){
-          output = coin.price;
+          output = parseFloat(coin.price).toFixed(2);
         }
       })
       return output;
@@ -248,7 +239,7 @@ class ExchangeTable extends Component {
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'btc')}>
-              {row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.convertPrices(row.row.btc, 'btc') : row.row.btc}
+              {row.row.name === SHAPESHIFT ? this.convertPrices(row.row.btc, 'btc') : row.row.btc}
               </span>
             )
           },
@@ -262,7 +253,7 @@ class ExchangeTable extends Component {
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'eth')}>
-              {row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.convertPrices(row.row.eth) : row.row.eth}
+              {row.row.name === SHAPESHIFT ? this.convertPrices(row.row.eth) : row.row.eth}
               </span>
             )
           },
@@ -276,7 +267,7 @@ class ExchangeTable extends Component {
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'ltc')}>
-              {row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.convertPrices(row.row.ltc) : row.row.ltc}
+              {row.row.name === SHAPESHIFT ? this.convertPrices(row.row.ltc) : row.row.ltc}
               </span>
             )
           },
@@ -290,7 +281,7 @@ class ExchangeTable extends Component {
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'dash')}>
-               {row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.convertPrices(row.row.dash) : row.row.dash}
+               {row.row.name === SHAPESHIFT ? this.convertPrices(row.row.dash) : row.row.dash}
               </span>
             )
           }
