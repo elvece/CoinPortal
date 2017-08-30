@@ -37,7 +37,7 @@ function setExchangeFee(exchange){
   if(exchange.withdrawalFee && exchange.withdrawalFee !== 'Miner Fee Only'){
     result = parseFloat(exchange.withdrawalFee) / 100;
   }
-  return result.toFixed(3);
+  return parseFloat(result.toFixed(4));
 }
 
 
@@ -136,7 +136,7 @@ class Abacus extends Component {
                       className="mdl-textfield__input"
                       disabled={ coinPrice ? '' : 'disabled'}
                       name="amount"
-                      value={parseFloat(amount)}
+                      value={amount}
                       onChange={this.handleChange()}
                       type="number"
                       pattern="-?[0-9]*(\.[0-9]+)?"

@@ -72,43 +72,10 @@ class ExchangeTable extends Component {
     });
   }
 
-  //for exchanges that only trade alt coins, use the coin data price from coincap.io api to calculate against the current price rates of btc
-  convertPrices = (price, symbol) => {
-    const btc = 'btc';
-    let result = '';
-    let coinData;
-
-    if(this.props.coinData.length > 1 && price !== '--'){
-      coinData = this.props.coinData;
-      coinData.forEach((coin) => {
-        if(symbol === btc){
-          //using btc to eth price exchange, calculate the amount of btc in usd from eth to usd rate
-          if(coin.symbol === 'ETH'){
-            let btcToEthPrice = parseFloat(price);
-            let ethPrice = parseFloat(coin.price_usd);
-            result = ((1 / btcToEthPrice) * ethPrice ).toFixed(2)
-          }
-        } else if(symbol !== btc && coin.symbol === 'BTC'){
-          //otherwise, calculate against price
-          result = (parseFloat(coin.price_usd) * parseFloat(price)).toFixed(2);
-        }
-      })
-    }
-    return result;
-  }
-
   setActiveCell = (row, coin) => {
-    const SHAPESHIFT = 'ShapeShift';
     let properPrice = row.row[coin];
 
     if(properPrice !== '--'){
-      if(row.row.name === SHAPESHIFT){
-        if(coin === 'btc'){
-          properPrice = this.convertPrices(properPrice, 'btc');
-        } else {
-          properPrice = this.convertPrices(properPrice)
-        }
-      }
       //calculate miner and exchange fee, display in abacus result card
       this.props.calculate(properPrice, coin, row.row._original);
       //set selected price@exchange to active state
@@ -123,13 +90,10 @@ class ExchangeTable extends Component {
   }
 
   setActiveCellColor = (row, coin, color) => {
-    const SHAPESHIFT = 'ShapeShift';
-    let properPrice;
     let result;
 
     if(row && row.row && row.row[coin]){
-      properPrice = row.row.name === SHAPESHIFT ? this.setProperPrice(row.row[coin], coin) : row.row[coin];
-      if(this.state.active === properPrice) {
+      if(this.state.active === row.row[coin]) {
         result = color;
       } else {
         result = '';
@@ -138,21 +102,9 @@ class ExchangeTable extends Component {
     return result;
   }
 
-  setProperPrice = (price, coin) => {
-    const btc = 'btc';
-    let properPrice;
-
-    if(coin === btc){
-      properPrice = this.convertPrices(price, btc);
-    } else {
-      properPrice = this.convertPrices(price, coin)
-    }
-
-    return properPrice;
-  }
-
   render(){
     const { exchanges, loading } = this.state;
+    const { coinData } = this.props;
     const SHAPESHIFT = 'ShapeShift';
 
     function savePurchaseOption(data) {
@@ -173,13 +125,38 @@ class ExchangeTable extends Component {
       return output;
     }
 
-    //TODO need to convert shapeshift prices here so can sort properly
+    //for exchanges that only trade alt coins, use the coin data price from coincap.io api to calculate against the current price rates of btc
+    function convertPrices(price, symbol){
+      const BTC = 'BTC';
+      const ETH = 'ETH';
+      let btcToEthPrice;
+      let ethPrice;
+      let result = '';
+
+      if(coinData && coinData.length > 1 && price !== '--'){
+        coinData.forEach((coin) => {
+          if(symbol === BTC){
+            //using btc to eth price exchange, calculate the amount of btc in usd from eth to usd rate
+            if(coin.symbol === ETH){
+              btcToEthPrice = parseFloat(price);
+              ethPrice = parseFloat(coin.price_usd);
+              result = ((1 / btcToEthPrice) * ethPrice ).toFixed(2)
+            }
+          } else if(symbol !== BTC && coin.symbol === BTC){
+            //otherwise, calculate against price
+            result = (parseFloat(coin.price_usd) * parseFloat(price)).toFixed(2);
+          }
+        })
+      }
+      return result;
+    }
+
     function getCoinPrice(data, name){
       let output = '--';
       data.coinData.forEach((coin) => {
-        if(coin.name === name){
+        if(coin.name === name && coin.price){
           if(data.name === SHAPESHIFT){
-            output = parseFloat(coin.price);
+            output = convertPrices(coin.price, coin.name);
           } else {
             output = parseFloat(coin.price).toFixed(2);
           }
@@ -244,7 +221,7 @@ class ExchangeTable extends Component {
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'btc')}>
-              {row.row.name === SHAPESHIFT ? this.convertPrices(row.row.btc, 'btc') : row.row.btc}
+              {row.row.btc}
               </span>
             )
           },
@@ -258,7 +235,7 @@ class ExchangeTable extends Component {
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'eth')}>
-              {row.row.name === SHAPESHIFT ? this.convertPrices(row.row.eth) : row.row.eth}
+              {row.row.eth}
               </span>
             )
           },
@@ -272,7 +249,7 @@ class ExchangeTable extends Component {
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'ltc')}>
-              {row.row.name === SHAPESHIFT ? this.convertPrices(row.row.ltc) : row.row.ltc}
+              {row.row.ltc}
               </span>
             )
           },
@@ -286,7 +263,7 @@ class ExchangeTable extends Component {
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'dash')}>
-               {row.row.name === SHAPESHIFT ? this.convertPrices(row.row.dash) : row.row.dash}
+               {row.row.dash}
               </span>
             )
           }

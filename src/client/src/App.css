@@ -170,7 +170,7 @@ ul {
 .mdl-card__title {
   background: #E2B761;
   height: 90px;
-  justify-content: center;
+  /*justify-content: center;*/
 }
 
 .mdl-card__title-text {
