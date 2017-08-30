@@ -5,3 +5,5 @@ npm-debug.log
 src/server/helpers/exchange-seed.js
 src/server/helpers/account-seed.js
 _env.sh
+*.sublime-project
+*.sublime-workspace
