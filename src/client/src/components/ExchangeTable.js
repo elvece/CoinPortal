@@ -71,54 +71,89 @@ class ExchangeTable extends Component {
       })
     });
   }
-  setActiveCell = (row, position, column) => {
+
+  //for exchanges that only trade alt coins, use the coin data price from coincap.io api to calculate against the current price rates of btc
+  convertPrices = (price, symbol) => {
+    const btc = 'btc';
+    let result = '';
+    let coinData;
+
+    if(this.props.coinData.length > 1 && price !== '--'){
+      coinData = this.props.coinData;
+      coinData.forEach((coin) => {
+        if(symbol === btc){
+          //using btc to eth price exchange, calculate the amount of btc in usd from eth to usd rate
+          if(coin.symbol === 'ETH'){
+            let btcToEthPrice = parseFloat(price);
+            let ethPrice = parseFloat(coin.price_usd);
+            result = ((1 / btcToEthPrice) * ethPrice ).toFixed(2)
+          }
+        } else if(symbol !== btc && coin.symbol === 'BTC'){
+          //otherwise, calculate against price
+          result = (parseFloat(coin.price_usd) * parseFloat(price)).toFixed(2);
+        }
+      })
+    }
+    return result;
+  }
+
+  setActiveCell = (row, coin) => {
     const SHAPESHIFT = 'ShapeShift';
-    const POLONIEX = 'Poloniex';
-    let properPrice = row.row[position];
-    if(row.row[position] !== '--'){
-      if(row.row.name === SHAPESHIFT || row.row.name === POLONIEX){
-        properPrice = this.convertPrices(row.row[position])
+    let properPrice = row.row[coin];
+
+    if(properPrice !== '--'){
+      if(row.row.name === SHAPESHIFT){
+        if(coin === 'btc'){
+          properPrice = this.convertPrices(properPrice, 'btc');
+        } else {
+          properPrice = this.convertPrices(properPrice)
+        }
       }
-      this.props.calculate(properPrice, position, row.row._original);
-      if(this.state.active === row.row[position]) {
+      //calculate miner and exchange fee, display in abacus result card
+      this.props.calculate(properPrice, coin, row.row._original);
+      //set selected price@exchange to active state
+      if(this.state.active === properPrice) {
         this.setState({active: null})
+        //clear out calculation
         this.props.calculate(undefined, undefined, undefined);
       } else {
-        this.setState({active: row.row[position]})
+        this.setState({active: properPrice})
       }
     }
   }
 
-  setActiveCellBackgroundColor = (position, color) => {
-    if (this.state.active === position) {
-      return '#892323'
+  setActiveCellColor = (row, coin, color) => {
+    const SHAPESHIFT = 'ShapeShift';
+    let properPrice;
+    let result;
+
+    if(row && row.row && row.row[coin]){
+      properPrice = row.row.name === SHAPESHIFT ? this.setProperPrice(row.row[coin], coin) : row.row[coin];
+      if(this.state.active === properPrice) {
+        result = color;
+      } else {
+        result = '';
+      }
     }
-    return '';
+    return result;
   }
 
-  setActiveCellTextColor = (position) => {
-    if (this.state.active === position) {
-      return '#F4F4F2'
+  setProperPrice = (price, coin) => {
+    const btc = 'btc';
+    let properPrice;
+
+    if(coin === btc){
+      properPrice = this.convertPrices(price, btc);
+    } else {
+      properPrice = this.convertPrices(price)
     }
-    return '';
-  }
 
-  convertPrices = (price) => {
-    if(this.props.btcData && this.props.btcData[0]){
-      return (parseFloat(this.props.btcData[0].price_usd) * parseFloat(price)).round(2);
-    } return '';
+    return properPrice;
   }
-
 
   render(){
     const { exchanges, loading } = this.state;
     const SHAPESHIFT = 'ShapeShift';
-    const POLONIEX = 'Poloniex';
-
-    Number.prototype.round = function(p) {
-      p = p || 10;
-      return parseFloat( this.toFixed(p) );
-    };
 
     function savePurchaseOption(data) {
       // console.log(data)
@@ -142,7 +177,7 @@ class ExchangeTable extends Component {
       let output = '--';
       data.coinData.forEach((coin) => {
         if(coin.name === name){
-          output = coin.price;
+          output = parseFloat(coin.price).toFixed(2);
         }
       })
       return output;
@@ -200,11 +235,11 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'BTC'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row.row.btc), color: this.setActiveCellTextColor(row.row.btc), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellColor(row, 'btc', '#892323'), color: this.setActiveCellColor(row, 'btc', '#F4F4F2'), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'btc')}>
-              {row.row.btc}
+              {row.row.name === SHAPESHIFT ? this.convertPrices(row.row.btc, 'btc') : row.row.btc}
               </span>
             )
           },
@@ -214,11 +249,11 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'ETH'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row.row.eth), color: this.setActiveCellTextColor(row.row.eth), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellColor(row, 'eth', '#892323'), color: this.setActiveCellColor(row, 'eth', '#F4F4F2'), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'eth')}>
-              {row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.convertPrices(row.row.eth) : row.row.eth}
+              {row.row.name === SHAPESHIFT ? this.convertPrices(row.row.eth) : row.row.eth}
               </span>
             )
           },
@@ -228,11 +263,11 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'LTC'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row.row.ltc), color: this.setActiveCellTextColor(row.row.ltc), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellColor(row, 'ltc', '#892323'), color: this.setActiveCellColor(row, 'ltc', '#F4F4F2'), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'ltc')}>
-              {row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.convertPrices(row.row.ltc) : row.row.ltc}
+              {row.row.name === SHAPESHIFT ? this.convertPrices(row.row.ltc) : row.row.ltc}
               </span>
             )
           },
@@ -242,11 +277,11 @@ class ExchangeTable extends Component {
             accessor: data => getCoinPrice(data, 'DASH'),
             Cell: (row) => (
               <span name='price' style={{
-                backgroundColor: this.setActiveCellBackgroundColor(row.row.dash), color: this.setActiveCellTextColor(row.row.dash), padding: '7px 15px 7px 15px',
+                backgroundColor: this.setActiveCellColor(row, 'dash', '#892323'), color: this.setActiveCellColor(row, 'dash', '#F4F4F2'), padding: '7px 15px 7px 15px',
                   'borderRadius': '30px'
               }}
               onClick={() => this.setActiveCell(row, 'dash')}>
-               {row.row.name === SHAPESHIFT || row.row.name === POLONIEX ? this.convertPrices(row.row.dash) : row.row.dash}
+               {row.row.name === SHAPESHIFT ? this.convertPrices(row.row.dash) : row.row.dash}
               </span>
             )
           }
@@ -317,13 +352,13 @@ class ExchangeTable extends Component {
           {
             Header: 'Margin',
             id: 'margin',
-            accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].margin.toString() : '',
+            accessor: data => data.trading && data.trading.length > 0 && data.trading[0].margin ? data.trading[0].margin.toString() : '',
           show: false
           },
           {
             Header: 'Auction',
             id: 'auction',
-            accessor: data => data.trading && data.trading.length > 0 ? data.trading[0].auction.toString() : '',
+            accessor: data => data.trading && data.trading.length && data.trading[0].auction > 0 ? data.trading[0].auction.toString() : '',
           show: false
           }
         ]

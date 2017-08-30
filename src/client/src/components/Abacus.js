@@ -47,14 +47,20 @@ class Abacus extends Component {
       payment: '',
       coin: 'BTC',
       coinPrice: undefined,
-      btcData: [],
+      coinData: [],
       loading: true
     })
     this.getCurrentBtcPrice = () => {
       const _this = this;
       Client.getStuff(`/api/coins/price/bitcoin`, function(result){
         _this.setState({
-          btcData: _this.state.btcData.concat([result[0]]),
+          coinData: _this.state.coinData.concat([result[0]]),
+          loading: false
+        });
+      })
+      Client.getStuff(`/api/coins/price/ethereum`, function(result){
+        _this.setState({
+          coinData: _this.state.coinData.concat([result[0]]),
           loading: false
         });
       })
@@ -66,7 +72,7 @@ class Abacus extends Component {
   }
 
   processTableData = (price, coin, exchange, payment) => {
-    //TODO need to get payment
+    //TODO need to get payment to incorporate into this calculation
 
     this.setState({
       exchange: exchange && exchange.name ? exchange.name : '',
@@ -93,7 +99,7 @@ class Abacus extends Component {
   }
 
   render(){
-    const { amount, btcData, coin, coinPrice, minerFee, exchangeFee, loading } = this.state;
+    const { amount, coinData, coin, coinPrice, minerFee, exchangeFee, loading } = this.state;
     //calculate total fees against purchase amount
     const totalMinerCost = this.state.amount * (this.state.minerFee * 0.01);
     const totalExchangeCost = this.state.amount * (this.state.exchangeFee * 0.01);
@@ -105,7 +111,7 @@ class Abacus extends Component {
     let exchangeTable;
 
     if(!loading){
-      exchangeTable = <ExchangeTable calculate={this.processTableData} btcData={btcData}/>;
+      exchangeTable = <ExchangeTable calculate={this.processTableData} coinData={coinData}/>;
     } else {
       exchangeTable = <CircularProgress size={80} thickness={5}/>
     }
