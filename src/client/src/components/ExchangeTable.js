@@ -94,7 +94,6 @@ class ExchangeTable extends Component {
         }
       })
     }
-    console.log(symbol, price, result)
     return result;
   }
 
@@ -174,6 +173,7 @@ class ExchangeTable extends Component {
       return output;
     }
 
+    //TODO need to convert shapeshift prices here so can sort properly
     function getCoinPrice(data, name){
       let output = '--';
       data.coinData.forEach((coin) => {
@@ -298,7 +298,7 @@ class ExchangeTable extends Component {
           {
             Header: 'Withdrawl',
             accessor: 'withdrawalFee',
-            minWidth: 100
+            minWidth: 110
           },
           {
             Header: 'Deposit',
