@@ -13,7 +13,8 @@
     "react-router-dom": "^4.1.2",
     "react-scripts": "^3.0.1",
     "react-table": "^6.5.3",
-    "react-tooltip": "^3.3.0"
+    "react-tooltip": "^3.3.0",
+    "babel-runtime": "7.0.0-alpha.20"
   },
   "scripts": {
     "start": "react-scripts start",

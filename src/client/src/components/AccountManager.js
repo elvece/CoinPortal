@@ -19,7 +19,6 @@ class AccountManager extends Component {
     this.serverRequest = () => {
       const _this = this;
       Client.getStuff(`api/accounts/`, function(result){
-        // console.log('ACCOUNT RESULT: ', result)
         _this.setState({
           accounts: result,
           loading: false
@@ -27,7 +26,6 @@ class AccountManager extends Component {
       })
     };
 
-    // this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -106,16 +104,3 @@ class AccountManager extends Component {
 }
 
 export default AccountManager;
-
-
-// <form onSubmit={this.handleSubmit}>
-//   <label>
-//     Name:
-//     <input type="text" value={name} name="name" onChange={this.handleChange()}/>
-//   </label>
-//   <label>
-//     Username:
-//     <input type="text" value={username} name="username" onChange={this.handleChange()}/>
-//   </label>
-//   <input type="submit" value="Submit"/>
-// </form>
