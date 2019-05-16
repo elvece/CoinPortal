@@ -7,7 +7,7 @@
     "client": "cd ./src/client && npm start",
     "test": "./node_modules/mocha/bin/_mocha",
     "stop": "killall node",
-    "heroku-postbuild": "npm install && cd ./src/client && npm install --only=dev && npm run build"
+    "heroku-postbuild": "npm install && cd ./src/client && npm install && npm run build"
   },
   "dependencies": {
     "bluebird": "^3.5.4",
