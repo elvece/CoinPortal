@@ -10,7 +10,7 @@ class AccountManager extends Component {
     super(props);
     this.state = {
       loading: true,
-      accounts: [{}],
+      accounts: [],
       name: '',
       username: ''
     };
@@ -53,24 +53,32 @@ class AccountManager extends Component {
   }
 
 
-  handleUpdateAccount(index){
-    const _this = this;
+  async handleUpdateAccount(index){
     // temp data for simulating form update
     const data = {};
-    Client.putStuff(`api/accounts/`+data._id, data, function(result){
-      // use update to persist state immutability - update certain account with result
-      const updatedAccount = update(data, {
-        name: {$set: result.name},
-        username: {$set: result.username},
-        wallets: {$set: result.wallets},
-      });
-      // replace certain account with updated account data
-      const newAccounts = update(_this.state.accounts, {$splice: [[index, 1, updatedAccount]]})
-      // set state with updated accounts, leaving original state record (for history)
-      _this.setState({
-        accounts: newAccounts
-      })
+    const result = await Client.putStuff(`api/accounts/`+data._id, data)
+    // use update to persist state immutability - update certain account with result
+    const updatedAccount = update(data, {
+      name: {
+        $set: result.name
+      },
+      username: {
+        $set: result.username
+      },
+      wallets: {
+        $set: result.wallets
+      },
     });
+    // replace certain account with updated account data
+    const accounts = update(this.state.accounts, {
+      $splice: [
+        [index, 1, updatedAccount]
+      ]
+    })
+    // set state with updated accounts, leaving original state record (for history)
+    this.setState({
+      accounts,
+    })
 
   }
 
@@ -85,7 +93,7 @@ class AccountManager extends Component {
           <AccountChart
             account={account}
             prices={prices}
-            key={i}//I know this is bad practice, but all other attempts fail?
+            key={account.id}
             onClick={(i) => this.handleUpdateAccount(i)}/>
       )})
     } else {

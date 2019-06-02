@@ -13,7 +13,6 @@ router.get('/prices', function(req, res, next) {
       res.send(result);
     })
     .catch(function(e){
-      console.log(' ****** get  /api/coins/price ERROR: ', e)
       next(e);
     });
 });
@@ -28,7 +27,6 @@ router.get('/price/:coin', function(req, res, next) {
       res.send(result);
     })
     .catch(function(e){
-      console.log(' ****** get /api/coins/prices/:coin ERROR: ', e)
       next(e);
     });
 });
@@ -43,7 +41,6 @@ router.get('/icons', function(req, res, next) {
       res.send(result);
     })
     .catch(function(e){
-      console.log(' ****** get /api/coins/icons ERROR: ', e)
       next(e);
     });
 });
