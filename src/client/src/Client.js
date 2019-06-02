@@ -5,7 +5,7 @@ function getStuff(url, cb) {
     accept: 'application/json'
   })
     .then(checkStatus)
-    .then(parseJSON)
+    // .then(parseJSON)
     .then(cb);
 }
 
@@ -17,7 +17,7 @@ function postStuff(url, data, cb){
       'Content-Type': 'application/json'},
     body: JSON.stringify(data)
   }).then(checkStatus)
-    .then(parseJSON)
+    // .then(parseJSON)
     .then(cb);
 }
 
@@ -29,7 +29,7 @@ function putStuff(url, data, cb){
       'Content-Type': 'application/json'},
     body: JSON.stringify(data)
   }).then(checkStatus)
-    .then(parseJSON)
+    // .then(parseJSON)
     .then(cb);
 }
 
