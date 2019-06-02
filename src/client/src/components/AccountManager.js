@@ -17,6 +17,7 @@ class AccountManager extends Component {
     };
 
     this.serverRequest = () => {
+      super()
       Client.getStuff(`api/accounts/`, function(result){
         this.setState({
           accounts: result,
