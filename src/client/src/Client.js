@@ -45,7 +45,12 @@ function checkStatus(response) {
 }
 
 function parseJSON(response) {
-  return response.json();
+  try {
+    return JSON.parse(response)
+  } catch (e) {
+    console.error(e)
+  }
+  return response
 }
 
 const Client = { getStuff, postStuff, putStuff};
