@@ -30,7 +30,7 @@
       app.use(express.static(path.resolve(__dirname, '..', '..','client/build/')));
       //catch-all to fall back on react build root
       app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname,'..', '..', 'client/build/'));
+        res.sendFile(path.resolve(__dirname,'..', '..', 'client/build/index.html'));
       })
     }
   };

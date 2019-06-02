@@ -11,7 +11,7 @@ import Chip from 'material-ui/Chip';
 class ExchangeTable extends Component {
   constructor(props){
     super(props);
-    this.state = ({ loading: true, active: null, coins: [] });
+    this.state = ({ loading: true, active: null, coins: [], exchanges: [] });
     this.handleUpdateExchange = this.handleUpdateExchange.bind(this);
     this.styles = {
       chip: {
@@ -24,52 +24,43 @@ class ExchangeTable extends Component {
     };
   }
 
-  componentDidMount(){
-    const _this = this;
+  async componentDidMount () {
     // TODO: refactor this into own method, make exchanges.coinData a map rather than array
-    this.serverRequest = Client.getStuff(`api/exchanges/`, function(result, reject){
-      if(result){
-        _this.setState({
-          exchanges: result,
-          loading: false
-        });
-      }
-      if(reject) console.log('SERVER REJECTION: ', reject)
-      })
+    const res = await Client.getStuff(`api/exchanges/`)
+    this.setState({
+      exchanges: res,
+      loading: false
+    });
+
   }
 
-  handleUpdateExchange = (row) => {
-    // console.log('UPDATE ROW: ', row)
+  handleUpdateExchange = async (row) => {
     const ogRow = row.original;
-    // persist this for use in callback function
-    const _this = this;
     // temp data for simulating form update
     const data = {};
-    Client.putStuff(`api/exchanges/`+ogRow._id, data, function(result){
-      // use update to persist state immutability - update certain exchange coinData with result
-      // console.log('result: ', result)
-      const updatedExchange = update(ogRow, {
-        accountNeeded: {$set: result.accountNeeded},
-        coinData: {$set: result.coinData},
-        coinsSupported: {$set: result.coinsSupported},
-        depositFee: {$set: result.depositFee},
-        purchaseOptions: {$set: result.purchaseOptions},
-        service: {$set: result.service},
-        social: {$set: result.social},
-        support: {$set: result.support},
-        trading: {$set: result.trading},
-        verify: {$set: result.verify},
-        website: {$set: result.website},
-        withdrawalFee: {$set: result.withdrawalFee},
-        ux: {$set: result.ux}
-      });
-      // replace certain exchange with updated exchange data
-      const newExchanges = update(_this.state.exchanges, {$splice: [[row.index, 1, updatedExchange]]})
-      // set state with updated exchanges, leaving original state record
-      _this.setState({
-        exchanges: newExchanges
-      })
+    const result = await Client.putStuff(`api/exchanges/`+ogRow._id, data)
+    // use update to persist state immutability - update certain exchange coinData with result
+    const updatedExchange = update(ogRow, {
+      accountNeeded: {$set: result.accountNeeded},
+      coinData: {$set: result.coinData},
+      coinsSupported: {$set: result.coinsSupported},
+      depositFee: {$set: result.depositFee},
+      purchaseOptions: {$set: result.purchaseOptions},
+      service: {$set: result.service},
+      social: {$set: result.social},
+      support: {$set: result.support},
+      trading: {$set: result.trading},
+      verify: {$set: result.verify},
+      website: {$set: result.website},
+      withdrawalFee: {$set: result.withdrawalFee},
+      ux: {$set: result.ux}
     });
+    // replace certain exchange with updated exchange data
+    const exchanges = update(this.state.exchanges, {$splice: [[row.index, 1, updatedExchange]]})
+    // set state with updated exchanges, leaving original state record
+    this.setState({
+      exchanges
+    })
   }
 
   setActiveCell = (row, coin) => {
@@ -102,7 +93,7 @@ class ExchangeTable extends Component {
     return result;
   }
 
-  render(){
+  render() {
     const { exchanges, loading } = this.state;
     const { coinData } = this.props;
     const SHAPESHIFT = 'ShapeShift';
@@ -204,7 +195,7 @@ class ExchangeTable extends Component {
         columns: [{
           Header: <MdSort/>,
           accessor: 'name',
-          Cell: row => (<a target="_blank" without rel="noopener noreferrer" href={row.original.website ? row.original.website : '/'}>{row.row.name}</a>)
+          Cell: row => (<a target="_blank" rel="noopener noreferrer" href={row.original.website ? row.original.website : '/'}>{row.row.name}</a>)
           // style: {transform: rotateX(180deg)};
         }]
       },

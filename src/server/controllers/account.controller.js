@@ -6,14 +6,11 @@ const WALLET = 'wallet';
 
 // create new account data
 function create(req, res, next){
-  console.log('**********CREATE REQ BODY:', req.body)
   const account = new Account({
     username: req.body.username,
     name: req.body.name,
     wallets: []
   });
-
-  console.log('********* NEW account:', account)
 
   if(req.body.wallets){
     Helper.setSubSchemaData(req.body.wallets, account.wallets, WALLET);
@@ -32,7 +29,6 @@ function get(req, res){
 // get all accounts
 function list(req, res, next){
   Account.list()
-          // .then(accounts => res.json(accounts))
           .then((accounts) => {
             res.json(accounts);
           })
@@ -63,7 +59,6 @@ function remove(req, res, next){
 
 // update one account
 function update(req, res, next){
-  console.log('************UPDATE REQ.BODY:',req.body)
   const account = req.account;
   account.username = req.body.username;
   account.name = req.body.name;

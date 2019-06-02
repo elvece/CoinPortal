@@ -14,7 +14,6 @@ const BTC = 'BTC';
 
 // create new exchange data
 function create(req, res, next){
-  // console.log(' ****** CREATE REQ BODY:',req.body)
   const exchange = new Exchange({
     accountNeeded: req.body.accountNeeded,
     depositFee: req.body.depositFee,
@@ -31,8 +30,6 @@ function create(req, res, next){
     website: req.body.website,
     withdrawalFee: req.body.withdrawalFee
   });
-
-  // console.log(' ****** NEW EXCHANGE:',exchange)
 
   if(req.body.social){
     Helper.setSubSchemaData(req.body.social, exchange.social, SOCIAL);
@@ -58,7 +55,6 @@ function list(req, res, next){
             processPriceChange(exchanges).then((exchanges) => {
               res.json(exchanges);
             })
-              // res.json(exchanges);
           })
           .catch((e) => {
             console.log(' ****** LIST EXCHANGE ERROR:', e);
@@ -87,7 +83,6 @@ function remove(req, res, next){
 
 // update one exchange
 function update(req, res, next){
-  // console.log('************UPDATE REQ.BODY:',req.body)
   const exchange = req.exchange;
   exchange.accountNeeded = req.body.accountNeeded;
   exchange.depositFee = req.body.depositFee;
@@ -147,7 +142,6 @@ function getExternalExchangeData(url){
       return data;
     })
     .catch((err) => {
-      console.log(' ****** getExternalExchangeData ERROR: ', err);
       return err;
     })
 }

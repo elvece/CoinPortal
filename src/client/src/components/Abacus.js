@@ -56,25 +56,21 @@ class Abacus extends Component {
       coinData: [],
       loading: true
     })
-    this.getCurrentBtcPrice = () => {
-      const _this = this;
-      Client.getStuff(`/api/coins/price/bitcoin`, function(result){
-        _this.setState({
-          coinData: _this.state.coinData.concat([result[0]]),
-          loading: false
-        });
-      })
-      Client.getStuff(`/api/coins/price/ethereum`, function(result){
-        _this.setState({
-          coinData: _this.state.coinData.concat([result[0]]),
-          loading: false
-        });
-      })
-    };
+
+    this.getPrices = async () => {
+      const res = await Promise.all([
+        Client.getStuff(`/api/coins/price/bitcoin`),
+        Client.getStuff(`/api/coins/price/ethereum`)
+      ])
+      this.setState({
+        coinData: res.flat(),
+        loading: false
+      });
+    }
   }
 
   componentDidMount(){
-    this.getCurrentBtcPrice();
+    this.getPrices();
   }
 
   processTableData = (price, coin, exchange, payment) => {
