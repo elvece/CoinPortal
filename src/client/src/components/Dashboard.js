@@ -14,51 +14,22 @@ class Dashboard extends Component {
       coins: []
     };
 
-    //TODO reafactor into one method so DRY and chain as promises
-
-    this.getCurrentBtcPrice = () => {
-      const _this = this;
-      Client.getStuff(`/api/coins/price/bitcoin`, function(result){
-        _this.setState({
-          coins: _this.state.coins.concat([result[0]])
-        });
-      })
-      this.getCurrentEthPrice();
-    };
-
-    this.getCurrentEthPrice = () => {
-      const _this = this;
-      Client.getStuff(`/api/coins/price/ethereum`, function(result){
-        _this.setState({
-          coins: _this.state.coins.concat([result[0]])
-        });
-      })
-      this.getCurrentDashPrice();
-    };
-
-    this.getCurrentDashPrice = () => {
-      const _this = this;
-      Client.getStuff(`/api/coins/price/dash`, function(result){
-        _this.setState({
-          coins: _this.state.coins.concat([result[0]])
-        });
-      })
-      this.getCurrentLtcPrice();
-    };
-
-    this.getCurrentLtcPrice = () => {
-      const _this = this;
-      Client.getStuff(`/api/coins/price/litecoin`, function(result){
-        _this.setState({
-          coins: _this.state.coins.concat([result[0]]),
-          loading: false
-        });
-      })
-    };
+    this.getPrices = async () => {
+      const res = await Promise.all([
+        Client.getStuff(`/api/coins/price/bitcoin`),
+        Client.getStuff(`/api/coins/price/ethereum`),
+        Client.getStuff(`/api/coins/price/dash`),
+        Client.getStuff(`/api/coins/price/litecoin`),
+      ])
+      this.setState({
+        coins: res.flat(),
+        loading: false
+      });
+    }
   }
 
   componentDidMount(){
-    this.getCurrentBtcPrice();
+    this.getPrices();
   }
 
   render() {

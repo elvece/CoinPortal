@@ -5,7 +5,6 @@ import AccountChart from './AccountChart.js';
 import '../App.css';
 import CircularProgress from 'material-ui/CircularProgress';
 
-
 class AccountManager extends Component {
   constructor(props){
     super(props);
@@ -17,8 +16,7 @@ class AccountManager extends Component {
     };
 
     this.serverRequest = () => {
-      super()
-      Client.getStuff(`api/accounts/`, function(result){
+      Client.getStuff(`api/accounts/`, result => {
         this.setState({
           accounts: result,
           loading: false
