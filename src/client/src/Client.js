@@ -6,7 +6,7 @@ function getStuff(url, cb) {
   })
     .then(checkStatus)
     .then(parseJSON)
-    .then(cb);
+    // .then(cb);
 }
 
 function postStuff(url, data, cb){
@@ -18,7 +18,7 @@ function postStuff(url, data, cb){
     body: JSON.stringify(data)
   }).then(checkStatus)
     .then(parseJSON)
-    .then(cb);
+    // .then(cb);
 }
 
 function putStuff(url, data, cb){
@@ -30,7 +30,7 @@ function putStuff(url, data, cb){
     body: JSON.stringify(data)
   }).then(checkStatus)
     .then(parseJSON)
-    .then(cb);
+    // .then(cb);
 }
 
 function checkStatus(response) {
@@ -45,12 +45,7 @@ function checkStatus(response) {
 }
 
 function parseJSON(response) {
-  try {
-    return JSON.parse(response)
-  } catch (e) {
-    console.error(e)
-  }
-  return response
+  return response.json()
 }
 
 const Client = { getStuff, postStuff, putStuff};
