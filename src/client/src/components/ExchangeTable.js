@@ -204,7 +204,7 @@ class ExchangeTable extends Component {
         columns: [{
           Header: <MdSort/>,
           accessor: 'name',
-          Cell: row => (<a target="_blank" href={row.original.website ? row.original.website : '/'}>{row.row.name}</a>)
+          Cell: row => (<a target="_blank" without rel="noopener noreferrer" href={row.original.website ? row.original.website : '/'}>{row.row.name}</a>)
           // style: {transform: rotateX(180deg)};
         }]
       },
