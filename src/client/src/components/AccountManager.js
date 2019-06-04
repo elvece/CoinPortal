@@ -15,13 +15,12 @@ class AccountManager extends Component {
       username: ''
     };
 
-    this.serverRequest = () => {
-      Client.getStuff(`api/accounts/`, result => {
-        this.setState({
-          accounts: result,
-          loading: false
-        });
-      })
+    this.serverRequest = async () => {
+      const result = await Client.getStuff(`api/accounts/`)
+      this.setState({
+        accounts: result,
+        loading: false
+      });
     };
 
     this.handleChange = this.handleChange.bind(this);
