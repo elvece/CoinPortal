@@ -2,6 +2,8 @@
 
   'use strict';
 
+  const path = require('path');
+
   routeConfig.init = function (app) {
 
     // *** routes *** //
