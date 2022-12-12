@@ -30,7 +30,7 @@
     "chai-http": "^4.3.0",
     "gulp-jscs": "^3.0.2",
     "gulp-jshint": "^2.1.0",
-    "gulp-nodemon": "^2.2.1",
+    "gulp-nodemon": "^2.5.0",
     "gulp-plumber": "^1.2.1",
     "jshint": "^2.10.2",
     "jshint-stylish": "^2.2.1",
