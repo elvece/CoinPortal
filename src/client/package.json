@@ -10,7 +10,7 @@
     "react-chartjs-2": "^2.7.6",
     "react-dom": "^15.6.2",
     "react-icons": "^2.2.7",
-    "react-router-dom": "^4.3.1",
+    "react-router-dom": "^7.5.2",
     "react-scripts": "^5.0.1",
     "react-table": "6.8.6",
     "react-tooltip": "^3.10.0"
